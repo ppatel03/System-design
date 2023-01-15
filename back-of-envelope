@@ -1,0 +1,14 @@
+Links :
+
+https://bytebytego.com/courses/system-design-interview/back-of-the-envelope-estimation
+
+https://matthewdbill.medium.com/back-of-envelope-calculations-cheat-sheet-d6758d276b05
+
+
+Estimates in KB
+
+Send 1 KB sequential from 1 Gbps network = 10 us  
+Send 1 KB sequential from memory = 0.25 us   (4 GB/s = 0.25 *  10 ^ -6 s) 
+Send 1 KB sequential from disk = 0.03 ms     (30 MB/s = 0.03 * 10 ^ -3 s ) 
+Send 1 KB sequential from cache = 0.03 ms     (30 MB/s = 0.03 * 10 ^ -3 s ) 
+
