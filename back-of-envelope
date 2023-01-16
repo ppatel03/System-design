@@ -12,3 +12,15 @@ Send 1 KB sequential from memory = 0.25 us   (4 GB/s = 0.25 *  10 ^ -6 s)
 Send 1 KB sequential from disk = 0.03 ms     (30 MB/s = 0.03 * 10 ^ -3 s ) 
 Send 1 KB sequential from cache = 0.03 ms     (30 MB/s = 0.03 * 10 ^ -3 s ) 
 
+Benchmarks on common systems
+
+Cache
+Azure Redis Cache : 
+  53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
+  230 us (https://redis.io/docs/management/optimization/latency/)
+
+
+
+
+
+
