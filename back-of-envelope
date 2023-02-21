@@ -153,11 +153,50 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                 
                 
 ================================================================
-    - Sharding
+    - Sharding / Partitioning 
         Resources
           https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/sharding.md
           https://coursehunters.online/t/educative-io-design-gurus-grokking-the-system-design-interview-part-5/584
+          Horizontal, Vertical and Directory based paritioning
+            Directory based paritioning has work around to solve some challenges with Horizontal and Vertical?
+          What's the best Partitioning criteria ?
+            Consitent hashing which is combination of hash and list based partitioning
+          Commom problems with Sharding / Partitioning
+            Joins -> Denormalization
+            Referential Integrity
+            Hot shard problem needs rebalancing
+              How to rebalance ? 
+              It would take downtime, check directory based partitioning as per our educative.io resource.
+              But consistent hashing can solve this problem better - https://medium.com/nerd-for-tech/consistent-hashing-6524e48ac648
+              Great guide above - check consistent hashing with gossip protocol so that each partition knows where to fetch data from db
+          Applications of consistent hashing ?
+          Apache Cassandra, Dynamo DB
+ 
+ ================================================================
+
+    - Indexing
+        Resources
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/indexes.md
+          What is a database index ? 
+            https://www.codecademy.com/article/sql-indexes
+          Pros
+            helps in speeding up the search 
+          Cons
+            lowers write/update/delete performance
+          When to use indexes ?
+            In the case of data sets that are many terabytes in size but with very small payloads (e.g., 1 KB), 
+            indexes are a necessity for optimizing data access. Finding a small payload in such a large dataset can be a real challenge since
+            we can’t possibly iterate over that much data in any reasonable time. Furthermore, it is very likely that such a large data set is 
+            spread over several physical devices—this means we need some way to find the correct physical location of the desired data. 
+            Indexes are the best way to do this.
+            
+   ================================================================
+
+     - Proxy 
+        Resources
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/proxies.md
         
+          
           
         
         
