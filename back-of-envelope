@@ -47,12 +47,25 @@ Azure Redis Cache :
 
 
 ================================================================
+================================================================
+================================================================
+
 References
+
+Dump : https://coursehunters.online/t/educative-io-design-gurus-grokking-the-system-design-interview-part-5/584
+Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
+
+
+================================================================
+
 - Key characteristics
     Resources
       https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/key-characteristics.md 
     Scalability, Availability, Reliability, Efficiency and Servicability/Manageability
     -> Remember an Avaiability system does not means Reliable but Reliable system is always available. 
+    
+================================================================
+
     
 - Load balancing
     Resources
@@ -97,9 +110,60 @@ References
          - supports caching
          - supports secure auth
        Nginx supports L7
+================================================================
+
       
+  - Caching
+    Resources
+      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/caching.md
+      Distributed cache on Application server VS Global cache like Redis, (mostly preferred)
+      CDN is another form of cache for static content but its often expensive
       
-      
+          
+       What are different caching strategies ? 
+          https://codeahoy.com/2017/08/11/caching-strategies-and-how-to-choose-the-right-one/
+          Cache-Aside (application server has cache aside like Redis, Memcache and DB separately)
+            - Pros : logic controlled by application server, resilent to cache failures, data model in cache vs db could be different
+            - Cons : stale data in cache for db writes
+          Read-Through Cache (application server reads from cache only)
+            - Pros : logic controlled by cache, read-heavy, good consistency when combined with write through 
+            - Cons : needs data model to be consistent, first time data always results in cache miss
+
+          Belpw are Cache writes invalidation policy 
+
+          Write through (data is written to cache and synced with storage)
+            - Pros : fast retreival and data consistent systems
+            - Cons : slow writes though
+          Write around (data is written to storage, not cache)
+            - Pros : Saves write operation on the cache
+            - Cons : recently written data creates a cache miss and higher latency.
+          Write back (data is written to cache only, then synced later to storage)
+            - Pros : fast retreival, low latency read / writes
+            - Cons : Risk of data loss
+            
+        Real applications of 
+          1. read-through, write-through for high consistency
+                DynamoDB Accelerator (DAX) for dynamoDB
+          2. read-through, write-around for high performance for situations where data is written once and read less frequently or never.
+                real-time logs, chatroom messages
+          3. cache-aside, write back cache to absorb spikes during peak load
+                custom applications using redis
+          4. write back cache
+                InnoDB which is relational database storage engine. Queries are first written to memory and eventually flushed to the disk.
+                
+                
+================================================================
+    - Sharding
+        Resources
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/sharding.md
+          https://coursehunters.online/t/educative-io-design-gurus-grokking-the-system-design-interview-part-5/584
+        
+          
+        
+        
+  
+  
+
       
       
 
