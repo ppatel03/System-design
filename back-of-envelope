@@ -46,5 +46,62 @@ Azure Redis Cache :
 
 
 
+================================================================
+References
+- Key characteristics
+    Resources
+      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/key-characteristics.md 
+    Scalability, Availability, Reliability, Efficiency and Servicability/Manageability
+    -> Remember an Avaiability system does not means Reliable but Reliable system is always available. 
+    
+- Load balancing
+    Resources
+      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/load-balancing.md
+      https://www.cloudflare.com/learning/performance/types-of-load-balancing-algorithms/
+      https://igotanoffer.com/blogs/tech/load-balancing-system-design-interview
+    Static load balancing - round robin, weight round robin, IP hash
+    Dynamic load balanacing - least connection, least resource, least response time, least bandwidht
+    When to use Static ?
+      If the server pool and the requests are both homogeneous, and there is only one balancer
+    When to use Dynamic ?
+      if the requests are heterogenous, Least Load is helpful to prevent servers from being intermittently overloaded.
+      
+    What are Hardware load balancers ?
+      They have high performant hardware resources like L4 and L7. 
+      Read about L4 and L7 here https://levelup.gitconnected.com/l4-vs-l7-load-balancing-d2012e271f56
+      
+    What are Software load balancers ?
+      They run on standard servers and are less hardware optimized, but cheaper to set up and run. Example, Nginx or HAProxy. For Nginx 100s video, 
+      refer https://www.youtube.com/watch?v=JKxlsvZXG7c. Nginx can serve routing to different servers, rate limiting, handle spikes,
+      reverse proxy, security, cache, etc. 
+      
+    When to use Software or Hardware ?
+      Tip : Since software load balancing can run on ordinary hardware and supports, always prefer software load balancer. Example Nginx
+       
+      
+    What is proxy server, reverse proxy and API Gateway ? How is different from load balancer
+      proxy vs reverse proxy vs load balancer : https://www.youtube.com/watch?v=MiqrArNSxSM
+      Proxy : just protects the client side
+      Reverse Proxy : protects the server by serving as proxy for all backend services - routing, rate limitng, load balancing
+      API gateway : rate limiting, routing, handle spikes
+      Load balancer : only performs load balancing
+      
+      So Reverse proxy can perform both API Gateway and Load Balancing. Example nginx.
+      A load balancer can never be API gateway or reverse proxy.
+      
+     Always choose Nginx ? Why ?
+       Has triats of load balancing + reverse proxy + API gateway
+         - supports load balancing
+         - supports reverse proxy 
+         - supports rate limiting
+         - supports caching
+         - supports secure auth
+       Nginx supports L7
+      
+      
+      
+      
+      
+
 
 
