@@ -4,6 +4,27 @@ https://bytebytego.com/courses/system-design-interview/back-of-the-envelope-esti
 
 https://matthewdbill.medium.com/back-of-envelope-calculations-cheat-sheet-d6758d276b05
 
+Tips :
+- Ask functional requirements first (example, ability to post tweet, view tweet)
+- Ask DAU. If MAU is provided, atleast ask % of daily users. 
+- Ask user activity : example read vs write ratio, or number of writes (example, 2 tweets per day)
+- Ask non-functional requirements 
+  These are very important and can convert entire inteview in your favor. Example if latency is 1s, then you do not need complex caching architecture.
+    -- Latency 
+           this would help decide whether you really need low latency optimizations like cache, or not. 
+           Remember today mosts have 1 Gbps network which has 10 us to transfer 1 KB
+    -- Availability 
+          this would help decide the redundancy and reliability - example mostly 99.99% a day means you can compromise 10s (10 ^ 5 * 10 ^ -4)
+          of unavailability or being unrelible. With this you can even decide that, your system could be out of sync from third part servers for 10s in a
+          day
+
+QPS estimate
+- 1 day ~ 10^5 s
+- 1 month ~ 3 * 10 ^ 6s and further ~ 10 ^ 6s
+- 1 week ~ 7 * 10 ^ 5s and further ~ 10 ^ 6s
+----- For time constraints, do not hesitate to round off large amounts
+
+Distributed Systems estimate
 
 Estimates in KB
 
