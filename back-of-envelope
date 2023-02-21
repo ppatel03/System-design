@@ -108,6 +108,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
          - supports reverse proxy 
          - supports rate limiting
          - supports caching
+         - supports request grouping
          - supports secure auth
        Nginx supports L7
 ================================================================
