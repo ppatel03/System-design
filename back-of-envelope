@@ -333,6 +333,26 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
     ====================================================================================
     
     Client-Server Communication
+    
+      Resource : 
+        https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/client-server-communication.md
+        
+      Types : 
+      1. Standard HTTP Web Request : client opens the connection, gets response from the server and terminate the connection 
+      2. Ajax Polling : client performs HTTP Web Request above periodically (say every 1 s). May create unecessary empty responses if server is not ready.
+      3. Long Polling : client performs HTTP Web Request and waits for long time till response is received (say 1 min). Then sends request again.
+      4. Web Socket: persistent connection between a client and a server that both parties can use to start sending data at any time.
+      
+      When to use Long Polling vs Web Socket ? 
+        https://ably.com/blog/websockets-vs-long-polling
+        https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o
+        
+        Clearly Websockets have many advantages over long polling and thus are appropriate for many applications which require consistent low latency 
+        full duplex high frequency communication such as chat applications and real time applications.
+        
+        Scaling up 
+        Websockets have problems with load distribution due to persistent connection.
+        Long polling will have equal load distribution after its long timeout
 
       
 
