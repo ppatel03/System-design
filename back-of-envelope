@@ -196,7 +196,26 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
      - Proxy 
         Resources
           https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/proxies.md
-        
+          
+          Usage : 
+          filter requests, log requests, cache, encryption and most important batch request. Further, it can get smarter to o collapse requests 
+          for data that is spatially close together in the storage (consecutively on disk). This strategy will result in decreasing request latency. 
+          For example, let’s say a bunch of servers request parts of file: part1, part2, part3, etc. We can set up our proxy in such a way 
+          that it can recognize the spatial locality of the individual requests, thus collapsing them into a single request and reading complete file, 
+          which will greatly minimize the reads from the data origin.
+          
+          Proxy are of two types 
+          Client proxy to protect the clients
+          Server proxy to protect the servers. Also called reverse proxy
+          
+          Should we use proxy then?
+          Only use proxy to protect the client.
+          For server side, Always Nginx since its open source and supports both reverse proxy + load balancing + API gateway.
+          
+          
+   
+      ================================================================
+
           
           
         
