@@ -239,7 +239,58 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         Redundancy and Replication
         
           Resource : 
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/redundancy.md
+          
+          When to use Redundant system :
+          Always. its a key concept of distributed system.
+          Always prefer shared nothing architecture so that each node can operate independently and can scale.
+          
+          
+    ====================================================================================
+        SQL vs NoSQL
+        
+          Resource : 
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/sql-vs-nosql.md
+          
+          SQL 
+          Relational databases store data in rows and columns. Example, MySQL, Oracle, MS SQL Server, SQLite, Postgres
+          
+          NoSQL 
+          Key-value :  Example, DynamoDB, Redis, Memcache
+          Document DB : Example, MongoDB, 
+          Wide-Column Database : Example, HBase, Cassandra - https://hevodata.com/learn/columnar-databases/
+          Graph Databases : Example, Neo4j
+          
+          Differences between both 
+          Storage : SQL is tables but NoSQL has different storage models
+          Schema : changing schema with SQL is possible but requires whole database modification
+          Querying : using SQL for SQL dbs. 
+          Scalability : SQL is vertically scalable and possible to scale it horizontally but has limitations. NoSQL is horizontally scalable
+          Reliability or ACID : Definitely SQL ensures ACID but NoSQL solutions sacrifice ACID compliance for performance and scalability.
+          
+          When to use SQL
+            ACID compliance for e-commerce and finanicial transactions
+            Your data is structured and unchanging.
+            
+          When to use NoSQL
+            - Storing large volumes of data that often have little to no structure. 
+            - Making the most of cloud computing and storage. Cloud-based storage is an excellent cost-saving solution 
+            but requires data to be easily spread across multiple servers to scale up. 
+            - Rapid development. NoSQL is extremely useful for rapid development as it doesn’t need to be prepped ahead of time. 
+            
+          What about write performance ? 
+            I think SQL provides more flexibility on write performance than NoSQL.
+            
+            
+          
+          
+          
+          
+          
+          
+          
 
+          
 
           
         
