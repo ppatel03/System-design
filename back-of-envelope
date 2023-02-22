@@ -342,6 +342,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
       2. Ajax Polling : client performs HTTP Web Request above periodically (say every 1 s). May create unecessary empty responses if server is not ready.
       3. Long Polling : client performs HTTP Web Request and waits for long time till response is received (say 1 min). Then sends request again.
       4. Web Socket: persistent connection between a client and a server that both parties can use to start sending data at any time.
+      5. SSE :  persistent onnection between a client and a server where server send data to the client but not the reverse
       
       When to use Long Polling vs Web Socket ? 
         https://ably.com/blog/websockets-vs-long-polling
@@ -353,6 +354,15 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         Scaling up 
         Websockets have problems with load distribution due to persistent connection.
         Long polling will have equal load distribution after its long timeout
+        
+     When to use Web Socker vs Server Sent Events ?
+        Websocket for bi-directional communication whole SSE for server to client communication
+        https://blog.bitsrc.io/websockets-vs-server-sent-events-968659ab0870
+        
+        WebSockets are widely used and valued in technological solutions such as real-time polling, chat, media players, multiplayer games, etc.
+        Server-Sent Events: There are many applications where sending data from the client isn’t necessary. 
+        SSEs are especially useful in status updates, social-media news feeds, push notifications, newsletters, etc.
+     
 
       
 
