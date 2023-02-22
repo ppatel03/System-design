@@ -315,6 +315,29 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         https://medium.com/nerd-for-tech/consistent-hashing-6524e48ac648 - Explains well about rebalancing
         https://bytebytego.com/courses/system-design-interview/design-consistent-hashing
         
+      How does it work ? 
+        Hashing is done in the range where it maps the key to the integer in that range. Example 0 -> 255 are the integers placed in ring form 
+        such that values are wrapped around.
+        
+        1. the servers are mapped to the integers in that range
+        2. to map key to a server, simply hash the key to the integer in that range and move clockwise till you find the server (could be binary search)
+        
+        Now how this is better :
+        1. adding a server : say S1 is added at position 20 and is near S2 at position 25. Then keys from before 20 wuld map to S1.
+        2. removing a server : say S1 is removed at position 20 and was near S2 at position 25. Then  all keys even before 20 would map to S2. 
+        3. uniform distribution : add “virtual replicas”. Instead of mapping each server to a single point on the ring, 
+            we map it to multiple points on the ring, i.e. replicas. 
+        4. easy to rebalance : when server is added or removed, only its next clockwise neighbouring server is affected and requires re-mapping of keys.
+        
+        
+    ====================================================================================
+    
+    Client-Server Communication
+
+      
+
+
+        
         
         
         
