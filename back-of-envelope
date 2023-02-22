@@ -69,7 +69,13 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
     -> Remember an Avaiability system does not means Reliable but Reliable system is always available. 
     
     High level storage based on read : write ratio
-    If Read ratio is high than writes, remember to apply master/slave architecture for storage  replica for reads and master/primary for write 
+      https://bytebytego.com/courses/system-design-interview/proximity-service
+      If Read ratio is high than writes, remember to apply master/slave architecture for storage  replica for reads and master/primary for write 
+    
+    Sharding and Replicating 
+      https://bytebytego.com/courses/system-design-interview/proximity-service
+      These are two different concepts and usually you need both. Sharding is very common though.
+      However, if your DB requirements are not huge (say 10 GB), you can simply create replicas to distribute read load than sharding it
 
     
     
