@@ -282,7 +282,47 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
             I think SQL provides more flexibility on write performance than NoSQL.
             
             
-          
+  ====================================================================================
+  
+    CAP Theorem
+    Resource : 
+    https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/cap-theorem.md
+    
+    CAP theorem states that it is impossible for a distributed software system to simultaneously provide more than two out of three of 
+    the following guarantees (CAP): Consistency, Availability and Partition tolerance.
+    
+    We can only build a system that has any two of these three properties. Because, to be consistent, all nodes should see the same set of updates 
+    in the same order. But if the network suffers a partition, updates in one partition might not make it to the other partitions before a client 
+    reads from the out-of-date partition after having read from the up-to-date one. The only thing that can be done to cope with this possibility 
+    is to stop serving requests from the out-of-date partition, but then the service is no longer 100% available.
+
+    When to choose consistency over availability ? 
+      Banking, Payment systems
+    
+    When to choose consistency over availability ? 
+      Most distributed system use cases like Google Maps, Twitter, etc.
+      
+    Since reliability consists of both consistency and availability, ASK YOUR interviewer what it means for system to be 99.99% reliable
+    
+    
+   ====================================================================================
+ 
+    Consistent Hashing
+    
+    Resource 
+      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/consistent-hashing.md
+      Recommended ones 
+        https://medium.com/nerd-for-tech/consistent-hashing-6524e48ac648 - Explains well about rebalancing
+        https://bytebytego.com/courses/system-design-interview/design-consistent-hashing
+        
+        
+      
+
+
+    
+    
+    
+
           
           
           
