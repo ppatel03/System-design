@@ -139,7 +139,10 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         Alternative to Redis pub/sub is "Earlang" - is a general programming language and runtime environment built for highly distributed and concurrent applications.
 
          
-      
+    Distributed Message Queue
+    https://bytebytego.com/courses/system-design-interview/distributed-message-queue
+
+
       
 
     
