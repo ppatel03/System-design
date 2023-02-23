@@ -111,13 +111,24 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           For any request, server is not obligated to send the response.
           Example, 1. for periodic location update -> initiated by client but no response.
                     2. for receiving update from friends -> initiated by server without client request
+
+        WEBsocket servers operational complexity
+          Since websocket servers are stateful, hard to auto-scale up / down needs extra care with load balancer help.
                     
         Cache considerations
           only store most recent user location update. 
           also if cache goes down, no need to pre-fill since it will be having new updates via periodic mechanism
+
+        Suggesting Cassandra for heavy-write horizontal scaled db ????
+
+
                     
         TODO : 
         Study more about Websocket connection working
+        Study about relational database sharding
+        Study about Cassandra (why columnar db is preferrable for write heavy)
+        Study about redis well
+        Data structure about pub/sub model : queue and hashmap for tracking purpose
          
       
       
