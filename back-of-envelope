@@ -48,6 +48,10 @@ Azure Redis Cache :
   53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
   230 us (https://redis.io/docs/management/optimization/latency/)
 
+OpenTSDB / InfluxDB
+ 8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series
+ (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
+
 
 
 
@@ -226,7 +230,23 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           Learn about how SSO work
 
     Metrics Monitoring and Alerting System
-      
+        https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system
+
+        Candidate: What is the scale of the infrastructure we are monitoring with this system?
+            Interviewer: 100 million daily active users, 1,000 server pools, and 100 machines per pool.
+        The infrastructure being monitored is large-scale.
+            100 million daily active users
+            Assume we have 1,000 server pools, 100 machines per pool, 100 metrics per machine => ~10 million metrics
+
+        Data storage system
+          a relational database is not optimized for operations you would commonly perform against time-series data. For example, computing the moving average in a rolling time window requires complicated SQL that is difficult to read. Moreover, a general-purpose relational database does not perform well under constant heavy write load. 
+
+          Again Cassandra was brought up in discussion for write heavy ??? Why ? 
+            May be its good for bulk new writes 
+          
+          OpenTSDB is a distributed time-series database, but since it is based on Hadoop and HBase, running a Hadoop/HBase cluster adds complexity. 
+
+
     
 ================================================================================================================================
 
