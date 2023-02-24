@@ -172,6 +172,10 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           Batching is pervasive in this design. 
           There is a tradeoff between throughput and latency. If the system is deployed as a traditional message queue where latency might be more important, the system could be tuned to use a smaller batch size.
 
+        Producer flow
+          This is very important since it will answer the question why Kafka can scale better.
+          Basically, zookeeper takes care of which broker to assign 
+
         Consumer flow
           most message queues choose the pull model instead of push  
 
@@ -220,7 +224,9 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           Learn about HTTPS encryption (uses Asymmetric encryption)
           Learn about end to end encrytion
           Learn about how SSO work
-    
+
+    Metrics Monitoring and Alerting System
+      
     
 ================================================================================================================================
 
