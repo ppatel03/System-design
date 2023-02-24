@@ -238,6 +238,20 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
             100 million daily active users
             Assume we have 1,000 server pools, 100 machines per pool, 100 metrics per machine => ~10 million metrics
 
+            Storage : 
+            1 month : ~ 10 ^ 6 (10 mil metrics) * 10 ^ 6  * 10 KB 
+                    : ~ 10 ^ 13 KB
+                    : ~10 ^ 4 TB
+            > 1 month : ~ 10 ^ 3 TB
+            1 year : 12 * 1 month ~ 10 ^ 5 TB
+
+            Burst read  : 
+            UI QPS : (100 million DAU / 10 ^ 5) * 2 (peak) 
+                   : 2K QPS
+            Bandwidth QPS : 2000 QPS * (100 metrics) * 10 ^ 6 (1 week) * 1 KB
+                          :  ~ 10 ^ 11 KB
+                          :  ~ 10 ^ 5 GB 
+
         Data storage system
           a relational database is not optimized for operations you would commonly perform against time-series data. For example, computing the moving average in a rolling time window requires complicated SQL that is difficult to read. Moreover, a general-purpose relational database does not perform well under constant heavy write load. 
 
