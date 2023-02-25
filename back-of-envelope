@@ -514,7 +514,8 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
             - Rapid development. NoSQL is extremely useful for rapid development as it doesn’t need to be prepped ahead of time. 
             
           What about write performance ? 
-            I think SQL provides more flexibility on write performance than NoSQL.
+            I think SQL provides more flexibility on write performance than NoSQL. 
+            However, Cassandra seems to be the choice
             
             
   ====================================================================================
