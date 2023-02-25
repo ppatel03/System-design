@@ -287,17 +287,36 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
 
         Alerting system - build vs buy 
-          There are many industrial-scale alerting systems available off-the-shelf, and most provide tight integration with the popular time-series databases. Many of these alerting systems integrate well with existing notification channels, such as email and PagerDuty. In the real world, it is a tough call to justify building your own alerting system. In interview settings, especially for a senior position, be ready to justify your decision.
-
-
-
+          There are many industrial-scale alerting systems available off-the-shelf, and most provide tight integration with the popular time-series databases. Many of these alerting systems integrate well with existing notification channels, such as email and PagerDuty. In the real world, it is a tough call to justify building your own alerting system. In interview settings, especially for a senior position, be ready to justify your decision
 
         TODO : 
         TCP vs UDP
         Hot vs Cold Storage : https://www.youtube.com/watch?v=90EBp9wkoYM
  
 
+  Ad Click Event Aggregation
+      https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
 
+      Choose the right database
+        When it comes to choosing the right database, we need to evaluate the following:
+        What does the data look like? Is the data relational? Is it a document or a blob?
+        Is the workflow read-heavy, write-heavy, or both?
+        Is transaction support needed?
+        Do the queries rely on many online analytical processing (OLAP) functions [3] like SUM, COUNT?
+
+        As shown in the back of the envelope estimation, the average write QPS is 10,000, and the peak QPS can be 50,000, so the system is write-heavy. On the read side, raw data is used as backup and a source for recalculation, so in theory, the read volume is low.
+        Relational databases can do the job, but scaling the write can be challenging. NoSQL databases like Cassandra and InfluxDB are more suitable because they are optimized for write and time-range queries.
+      
+      Asynchronous processing
+        The design we currently have is synchronous. This is not good because the capacity of producers and consumers is not always equal. Consider the following case; if there is a sudden increase in traffic and the number of events produced is far beyond what consumers can handle, consumers might get out-of-memory errors or experience an unexpected shutdown. If one component in the synchronous link is down, the whole system stops working.
+
+        A common solution is to adopt a message queue (Kafka) to decouple producers and consumers. This makes the whole process asynchronous and producers/consumers can be scaled independently.
+
+
+
+      TODO:
+      Study about different types of database 
+      s3 
     
 ================================================================================================================================
 
