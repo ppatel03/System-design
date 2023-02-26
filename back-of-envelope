@@ -525,12 +525,17 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
             Saga. A saga is a sequence of local transactions. Each transaction updates and publishes a message to trigger the next transaction step. If a step fails, the saga executes compensating transactions to undo the changes that were made by preceding transactions [13]. 2PC works as a single commit to perform ACID transactions while Saga consists of multiple steps and relies on eventual consistency.
 
-
-
-
     TODO
       Read about acid system design ?
       Mysql and MySQL benchmarking ?
+
+
+  
+  Payment System
+    https://bytebytego.com/courses/system-design-interview/payment-system
+
+    Back-of-the-envelope estimation
+      The system needs to process 1 million transactions per day, which is 1,000,000 transactions / 10^5 seconds = 10 transactions per second (TPS). 10 TPS is not a big number for a typical database, which means the focus of this system design interview is on how to correctly handle payment transactions, rather than aiming for high throughput.
 
     
 ================================================================================================================================
@@ -740,6 +745,8 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           When to use SQL
             ACID compliance for e-commerce and finanicial transactions
             Your data is structured and unchanging.
+            Often Read heavy and low-write
+
             
           When to use NoSQL
             - Storing large volumes of data that often have little to no structure. 
