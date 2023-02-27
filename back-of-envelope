@@ -36,23 +36,42 @@ Estimates in KB
 Send 1 KB sequential from 1 Gbps network = 10 us  
 Send 1 KB sequential from memory  = 0.25 us   (4 GB/s = 0.25 *  10 ^ -6 s) 
 Send 1 KB sequential from disk    = 30 us     (30 MB/s = 0.03 * 10 ^ -3 s ) 
-Send 1 KB sequential from cache   = 1 us    (1 GB/s = 1 * 10 ^ -6 s ) 
+Send 1 KB sequential from cache   = 1 us    (1 GB/s = 1 * 10 ^ -6 s )
+Round trip within the same datacenter	 = 500 us 
+Send packet CA (California) ->Netherlands->CA	= 150 ms 
 
 So network is 3 times faster than disk
 memory is 40 times faster than network
 
 Benchmarks on common systems
 
-Cache
+Cache benchmarking
 Azure Redis Cache : 
   53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
   230 us (https://redis.io/docs/management/optimization/latency/)
 
-OpenTSDB / InfluxDB
- 8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series
- (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
+SQL DB benchmarking
+    1. MySQL benchmarking
+       (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
+       Recommend 4 * number of cores parallel for ~ 200 us based on simple primary key look ups. For example, 120 parellel requests for 32 cores will take 200 us
+       1K requests on 32 will take ~ 1ms for simply select query
 
- S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3 )
+       Some facts
+       - MySQL client <-> server is socket based connection
+       - per connection -> one user thread
+       - Max connection limit for MySQL = 100 K
+       - size of user thread depends on THD connection data structure which is per connection ~ 10 MB 
+       - max THD ~ 10K 
+       - So recommended min size of your MySQL = 10 MB * 10 K = 100 GB ??
+
+
+NoSQL value DB benchmarking
+    1. Timeseries : OpenTSDB / InfluxDB
+          8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series
+          (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
+
+    2. Object storage / cold storage benchmarking
+        S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3 )
 
 
 
