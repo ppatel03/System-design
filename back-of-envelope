@@ -87,6 +87,11 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
     In a push model, a collection agent is commonly installed on every server being monitored. Aggregation is an effective way to reduce the volume of data sent to the metrics collector. If the push traffic is high and the metrics collector rejects the push with an error, the agent could keep a small buffer of data locally (possibly by storing them locally on disk), and resend them later.
     If a server goes down or cannot handle burst traffic, then you loose the message.
 
+  Tips to ensure consistency 
+    - To maintain data consistency between internal services, ensuring exactly-once processing is very important.
+    - To maintain data consistency between the internal service and external service (PSP), we usually rely on idempotency and reconciliation.
+    - For replicas, ensure acknowledge only if all replicas respond to read/write update. 
+
     
    
 ================================================================================================================================
@@ -394,7 +399,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
           Consumers. Inside a consumer group, the rebalancing mechanism helps to scale the consumers by adding or removing nodes.When there are hundreds of Kafka consumers in the system, consumer rebalance can be quite slow and could take a few minutes or even more. Therefore, if more consumers need to be added, try to do it during off-peak hours to minimize the impact.
         
-        Brokers (Remember each broker has multiple topics and and each topic has multiple partitions. Each consumer group is attached to one topic and each consumer in consumer group is attached to partitions)
+        Brokers (Remember each broker has multiple topics and and each topic has multiple partitions for parallelization. Each consumer group can be attached to many topics but no two consumers in same consumer group is attached to one partitions. Each consumer in the group maintains its own offset to the partition)
 
           Hashing key
 
@@ -527,6 +532,8 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
     TODO
       Read about acid system design ?
+      Read about 2 phase commit ? 
+      Ensure Acid with distributed systems ? 
       Mysql and MySQL benchmarking ?
 
 
@@ -535,8 +542,144 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
     https://bytebytego.com/courses/system-design-interview/payment-system
 
     Back-of-the-envelope estimation
-      The system needs to process 1 million transactions per day, which is 1,000,000 transactions / 10^5 seconds = 10 transactions per second (TPS). 10 TPS is not a big number for a typical database, which means the focus of this system design interview is on how to correctly handle payment transactions, rather than aiming for high throughput.
+        The system needs to process 1 million transactions per day, which is 1,000,000 transactions / 10^5 seconds = 10 transactions per second (TPS). 10 TPS is not a big number for a typical database, which means the focus of this system design interview is on how to correctly handle payment transactions, rather than aiming for high throughput.
 
+
+    Step 2 - Propose High-Level Design and Get Buy-In
+        At a high level, the payment flow is broken down into two steps to reflect how money flows:
+
+        Pay-in flow
+        Pay-out flow
+
+        Pay-in flow
+
+          Payment service
+            The payment service accepts payment events from users and coordinates the payment process. The first thing it usually does is a risk check, assessing for compliance with regulations such as AML/CFT [2], and for evidence of criminal activity such as money laundering or financing of terrorism.
+
+          Payment Service Provider (PSP)
+            A PSP moves money from account A to account B. In this simplified example, the PSP moves the money out of the buyer’s credit card account.
+
+          Ledger
+            The ledger keeps a financial record of the payment transaction. he ledger system is very important in post-payment analysis, such as calculating the total revenue of the e-commerce website or forecasting future revenue.
+
+          Wallet (for seller)
+            The wallet keeps the account balance of the merchant. It may also record how much a given user has paid in total.
+
+
+    APIs for payment service
+        POST /v1/payments
+            This endpoint executes a payment event.
+            You may have noticed that the data type of the “amount” field is “string,” rather than “double”. Double is not a good choice because:
+              Different protocols, software, and hardware may support different numeric precisions in serialization and deserialization. This difference might cause unintended rounding errors.
+              The number could be extremely big (for example, Japan’s GDP is around 5x1014 yen for the calendar year 2020), or extremely small (for example, a satoshi of Bitcoin is 10-8).
+        GET /v1/payments/{:id}
+            This endpoint returns the execution status of a single payment order based on payment_order_id.
+
+    The data model for payment service
+        When we select a storage solution for a payment system, performance is usually not the most important factor.
+        Usually, we prefer a traditional relational database with ACID transaction support over NoSQL/NewSQL.
+        payment event 
+                    Name	              Type
+                    checkout_id	        string PK
+                    buyer_info	        string
+                    credit_card_info	  depends on the card provider
+                    is_payment_done	    boolean
+
+        payment order
+                            Name	                Type
+                        payment_order_id	      String PK
+                        checkout_id	          string FK
+                        buyer_account	          string
+                        amount	                string
+                        currency	                string
+                        payment_order_status	    string
+                        ledger_updated	          boolean
+                        wallet_updated	          boolean
+        Double-entry ledger system
+            There is a very important design principle in the ledger system: the double-entry principle (also called double-entry accounting/bookkeeping [6]). Double-entry system is fundamental to any payment system and is key to accurate bookkeeping. It records every payment transaction into two separate ledger accounts with the same amount. 
+            The double-entry system states that the sum of all the transaction entries must be 0. One cent lost means someone else gains a cent.
+
+      Hosted payment page
+          Most companies prefer not to store credit card information internally because if they do, they have to deal with complex regulations such as Payment Card Industry Data Security Standard (PCI DSS) [8] in the United States. To avoid handling credit card information, companies use hosted credit card pages provided by PSPs. For websites, it is a widget or an iframe, while for mobile applications, it may be a pre-built page from the payment SDK. 
+
+      Pay-out flow
+          The components of the pay-out flow are very similar to the pay-in flow. One difference is that instead of using PSP to move money from the buyer’s credit card to the e-commerce website’s bank account, the pay-out flow uses a third-party pay-out provider to move money from the e-commerce website’s bank account to the seller’s bank account.
+
+      Step 3 - Design Deep Dive
+          PSP integration
+            If a company chooses not to store sensitive payment information due to complex regulations and security concerns, PSP provides a hosted payment page to collect card payment details and securely store them in PSP. This is the approach most companies take.
+
+          Reconciliation
+            When system components communicate asynchronously, there is no guarantee that a message will be delivered, or a response will be returned.
+            External systems, such as PSPs or banks, prefer asynchronous communication as well. So how can we ensure correctness in this case?
+            The answer is reconciliation. This is a practice that periodically compares the states among related services in order to verify that they are in agreement. It is usually the last line of defense in the payment system.
+            Every night the PSP or banks send a settlement file to their clients. The settlement file contains the balance of the bank account, together with all the transactions that took place on this bank account during the day. The reconciliation system parses the settlement file and compares the details with the ledger system.
+
+          Handling payment processing delays
+            The payment service must be able to handle these payment requests that take a long time to process. If the buy page is hosted by an external PSP, which is quite common these days, the PSP would handle these long-running payment requests in the following ways:
+
+              The PSP would return a pending status to our client. Our client would display that to the user. Our client would also provide a page for the customer to check the current payment status.
+
+              The PSP tracks the pending payment on our behalf, and notifies the payment service of any status update via the webhook the payment service registered with the PSP.
+              Alternatively, instead of updating the payment service via a webhook, some PSP would put the burden on the payment service to poll the PSP for status updates on any pending payment requests.
+          
+          Communication among internal services
+              Synchronous communication
+
+                Synchronous communication like HTTP works well for small-scale systems, but its shortcomings become obvious as the scale increases. It creates a long request and response cycle that depends on many services. The drawbacks of this approach are:
+                Low performance. If any one of the services in the chain doesn’t perform well, the whole system is impacted.
+                Poor failure isolation. If PSPs or any other services fail, the client will no longer receive a response.
+                Tight coupling. The request sender needs to know the recipient.
+                Hard to scale. Without using a queue to act as a buffer, it’s not easy to scale the system to support a sudden increase in traffic.
+          
+              Asynchronous 
+                Single receiver (point to point model in distributed message queue)
+                Multiple receivers (pub sub model) .. eg. kafka
+                  This model maps well to the payment system, as the same request might trigger multiple side effects such as sending push notifications, updating financial reporting, analytics,
+
+          Handling failed payments
+              Tracking payment state
+              Retry queue and dead letter queue
+
+          Exactly-once 
+              We will explain how to implement at-least-once using retry, and at-most-once using idempotency check.
+
+              Retry
+                Immediate retry OR Fixed intervals OR increment intervals OR exponential backoff OR Cancel
+                Determining the appropriate retry strategy is difficult. There is no “one size fits all” solution. As a general guideline, use exponential backoff if the network issue is unlikely to be resolved in a short amount of time.
+
+              Scenario 1: The payment system integrates with PSP using a hosted payment page, and the client clicks the pay button twice.
+              Scenario 2: The payment is successfully processed by the PSP, but the response fails to reach our payment system due to network errors. The user clicks the “pay” button again or the client retries the payment.
+
+              Idempotency
+                From an API standpoint, idempotency means clients can make the same call repeatedly and produce the same result.
+                For communication between clients (web and mobile applications) and servers, an idempotency key is usually a unique value that is generated by the client and expires after a certain period of time. A UUID is commonly used as an idempotency key and it is recommended by many tech companies such as Stripe [19] and PayPal [20]. To perform an idempotent payment request, an idempotency key is added to the HTTP header: <idempotency-key: key_value>.
+
+                Scenario 1: what if a customer clicks the “pay” button quickly twice?
+
+                  To support idempotency, we can use the database's unique key constraint. For example, the primary key of the database table is served as the idempotency key. Here is how it works:
+
+                      When the payment system receives a payment, it tries to insert a row into the database table.
+
+                      A successful insertion means we have not seen this payment request before.
+
+                      If the insertion fails because the same primary key already exists, it means we have seen this payment request before. The second request will not be processed.
+
+                Scenario 2: The payment is successfully processed by the PSP, but the response fails to reach our payment system due to network errors. Then the user clicks the “pay” again.
+                    When the user clicks the “pay” button again, the payment order is the same, so the token sent to the PSP is the same. Because the token is used as the idempotency key on the PSP side, it is able to identify the double payment and return the status of the previous execution.
+
+          Consistency
+              To maintain data consistency between internal services, ensuring exactly-once processing is very important.
+
+              To maintain data consistency between the internal service and external service (PSP), we usually rely on idempotency and reconciliation. If the external service supports idempotency, we should use the same idempotency key for payment retry operations. Even if an external service supports idempotent API, reconciliation is still needed because we shouldn’t assume the external system is always right.
+
+          Payment security
+              use HTTPS with SSL (public key encryption), API gateway for rate limiting to avoid DDOS, use tokens to avoid Card theft 
+
+
+      TODO : 
+        Note about synchronous and asynchronous communication, importance of reconciliation
+        Ensure all replicas are always in-sync. We could use consensus algorithms such as Paxos [21] and Raft [22], or use consensus-based distributed databases such as YugabyteDB [23] or CockroachDB [24].
     
 ================================================================================================================================
 
