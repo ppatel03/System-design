@@ -92,8 +92,33 @@ NoSQL value DB benchmarking
     3. Cassandra
 
           100s video : https://www.youtube.com/watch?v=ziq7FUKpCS8
+          Slower version of 100s : https://www.youtube.com/watch?v=YjYWsN1vek8 
+
+          
 
     4. MongoDB
+
+    5. Cassandra                          vs               MongoDB 
+                        https://www.youtube.com/watch?v=3z2EzILA3Rk 
+        column data model                                   json document data model
+          no config server(ring structure)                 mongo master, slave and mongo config servers for replication
+        high availability due to multiple masters           master -> slave takes time
+        accept writes in parallel                           write capacity is limited since they just go to master
+        similar to SQL                                        based on json formatting
+
+          When mongo DB
+            query also based on secondary indexing and flexible querying
+            built in data aggregation framework
+            read-heavy workload
+
+          When Cassandra 
+           query based on primary key indexing 
+           100% uptime guarantee due to replication and inconsistency resolution
+           high write speed
+           language support for SQL
+           write-heavy, read-heavy workload
+           eventual consistency (as per bytebytego - https://bytebytego.com/courses/system-design-interview/design-a-key-value-store )
+
 
 Attempt to standardized DB selection criteria 
     MySQL vs MongoDB : https://kinsta.com/blog/mongodb-vs-mysql/
@@ -800,6 +825,120 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         TODO : 
             learn about Email protocols : SMTP for sending, POP and IMAP for retreiving
 
+
+  Key value store
+      https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
+
+      consistency 
+        R + W > N 
+          Dynamo and Cassandra adopt eventual consistency, which is our recommended consistency model for our key-value store.
+      
+      inconsistency resolved with versioning
+
+      Handling failures 
+        detection
+          gossip protocol
+        temporary failure
+          sloppy quorum
+        permanent failure
+          merkle tree
+
+      Write path
+        Please note the proposed designs for write/read paths are primary based on the architecture of Cassandra 
+        1. The write request is persisted on a commit log file.
+        2. Data is saved in the memory cache.
+        3. When the memory cache is full or reaches a predefined threshold, data is flushed to SSTable [9] on disk. Note: A sorted-string table (SSTable) is a sorted list of <key, value> pairs. For readers interested in learning more about SStable, refer to the reference material [9].
+      Read path 
+        After a read request is directed to a specific node, it first checks if data is in the memory cache. If so, the data is returned to the client 
+        If the data is not in memory, it will be retrieved from the disk instead. We need an efficient way to find out which SSTable contains the key. Bloom filter [10] is commonly used to solve this problem.
+
+
+
+
+  S3-like Object Storage
+      https://bytebytego.com/courses/system-design-interview/s3-like-object-storage
+
+      Storage System 101
+          Block storage
+            Block storage came first, in the 1960s. Common storage devices like hard disk drives (HDD) and solid-state drives (SSD) that are physically attached to servers are all considered as block storage.
+            Some applications like a database or a virtual machine engine manage these blocks directly in order to squeeze every drop of performance out of them.
+
+          File storage
+            File storage is built on top of block storage. It provides a higher-level abstraction to make it easier to handle files and directories. Data is stored as files under a hierarchical directory structure. 
+
+          Object storage
+            Object storage is new. It makes a very deliberate tradeoff to sacrifice performance for high durability, vast scale, and low cost. It targets relatively “cold” data and is mainly used for archival and backup. Object storage stores all data as objects in a flat structure. There is no hierarchical directory structure. Data access is normally provided via a RESTful API. It is relatively slow compared to other storage types. Most public cloud service providers have an object storage offering, such as AWS S3, Google object storage, and Azure blob storage.
+
+        Functional requirements
+          Bucket creation.
+          Object uploading and downloading.
+          Object versioning.
+          Listing objects in a bucket.
+        
+        Non-functional requirements
+          100 PB of data
+          Data durability is 6 nines
+          Service availability is 4 nines
+          Storage efficiency. Reduce storage costs while maintaining a high degree of reliability and performance.
+
+        Back of envelope
+            IOPS. Let’s assume one hard disk (SATA interface, 7200 rpm) is capable of doing 100~150 random seeks per second (100-150 IOPS).
+
+            With those assumptions, we can estimate the total number of objects the system can persist. To simplify the calculation, let’s use the median size for each object type (0.5MB for small objects, 32MB for medium objects, and 200MB for large objects). A 40% storage usage ratio gives us:
+
+            100 PB = 100*1000*1000*1000 MB = 10^11 MB
+
+            10^11*0.4/( 0.2*0.5MB + 0.6 *32MB + 0.2*200MB) = 0.68 billion objects.
+
+            If we assume the metadata of an object is about 1KB in size, we need 0.68 TB space to store all metadata information. 
+
+
+      Step 2 - Propose High-Level Design and Get Buy-In
+          few interesting properties of object storage
+            Object immutability
+            Key-value store.
+            Write once, read many times.
+            Support both small and large objects. 
+              Object size may vary and we need to support both.
+              The design philosophy of object storage is very similar to that of the UNIX file system. In UNIX, when we save a file in the local file system, it does not save the filename and file data together. Instead, the filename is stored in a data structure called “inode” [10], and the file data is stored in different disk locations. The inode contains a list of file block pointers that point to the disk locations of the file data. 
+              The object storage works similarly. In object storage, the metadata store uses the ID of the object to find the corresponding object data in the data store, via a network request. 
+              Separating metadata and object data simplifies the design. The data store contains immutable data while the metadata store contains mutable data. This separation enables us to implement and optimize these two components independently.
+
+        High-level design
+          Load balancer, 
+          API service
+          Identity and access management (IAM).
+          Data store
+          Metadata store
+
+      Step 3 - Design Deep Dive
+
+        Data store
+
+            Data routing service
+              This service has the following responsibilities: 
+                Query the placement service to get the best data node to store data.
+                Read data from data nodes and return it to the API service.
+                Write data to data nodes.
+
+            Placement service
+              The placement service determines which data nodes (primary and replicas) should be chosen to store an object.
+              The placement service continuously monitors all data nodes through heartbeats.
+
+            Data node
+              The data node stores the actual object data. It ensures reliability and durability by replicating data to multiple data nodes, also called a replication group.
+              Each data node has a data service daemon running on it. The data service daemon continuously sends heartbeats to the placement service. The heartbeat message includes the following essential information:
+                  How many disk drives (HDD or SSD) does the data node manage?
+                  How much data is stored on each drive?
+
+        Data persistence flow
+
+
+
+      TODO
+        Study about iSCSI, Fibre channel protocol
+        Study about SMB and NFS protocol
+        Study about Paxos [13] or Raft [14] consensus protocol.
     
 ================================================================================================================================
 
