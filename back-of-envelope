@@ -50,11 +50,14 @@ Azure Redis Cache :
   53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
   230 us (https://redis.io/docs/management/optimization/latency/)
 
-SQL DB benchmarking
+SQL DB benchmarking - Relational
     1. MySQL benchmarking
        (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
        Recommend 4 * number of cores parallel for ~ 200 us based on simple primary key look ups. For example, 120 parellel requests for 32 cores will take 200 us
        1K requests on 32 will take ~ 1ms for simply select query
+
+       - Max size set by MySQL
+         256 TB (https://dev.mysql.com/doc/mysql-reslimits-excerpt/8.0/en/table-size-limit.html#:~:text=You%20are%20using%20a%20MyISAM,2567%20%E2%88%92%201%20bytes)
 
        Some facts
        - MySQL client <-> server is socket based connection
@@ -63,6 +66,19 @@ SQL DB benchmarking
        - size of user thread depends on THD connection data structure which is per connection ~ 10 MB 
        - max THD ~ 10K 
        - So recommended min size of your MySQL = 10 MB * 10 K = 100 GB ??
+
+       - MySQL sorting (https://www.pankajtanwar.in/blog/what-is-the-sorting-algorithm-behind-order-by-query-in-mysql)
+          External merge sort (quick sort + merge sort) if data doesn’t fits into the memory
+          Quick sort, if data fits into the memory and we want all of it
+          Heap sort, if data fits into the memory but we are using LIMIT to fetch only some results
+          Index lookup (not exactly a sorting algorithm, just a pre-calculated binary tree)
+
+       - MySQL query cache (https://docs.oracle.com/cd/E17952_01/mysql-5.1-en/query-cache.html)
+          As of MySQL 5.1.63, the query cache is not supported for partitioned tables, and is automatically disabled for queries involving partitioned tables. The query cache cannot be enabled for such queries. 
+
+       - MySQL sharding (https://stackoverflow.com/questions/1610887/how-to-partition-mysql-across-multiple-servers)
+          this is different from mysql partitioning (https://vertabelo.com/blog/everything-you-need-to-know-about-mysql-partitions/)
+
 
 
 NoSQL value DB benchmarking
@@ -73,7 +89,43 @@ NoSQL value DB benchmarking
     2. Object storage / cold storage benchmarking
         S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3 )
 
+    3. Cassandra
 
+          100s video : https://www.youtube.com/watch?v=ziq7FUKpCS8
+
+    4. MongoDB
+
+Attempt to standardized DB selection criteria 
+    MySQL vs MongoDB : https://kinsta.com/blog/mongodb-vs-mysql/
+
+    When MySQL
+    if ACID, 
+      then MYSQL (high confidence)
+    if reasonable size (< 1 TB) not expected to scale rapidly,
+      if heavy reads (reading from read replicas is faster) 
+        if low writes 
+          then MySQL (high confidence)
+        if heavy writes (else have to keep synchronizing)
+          then MySQL (low confidence)
+    If db needs rapid scale (size keeps growing)
+      if manual sharding is needed ( say by user id )
+        if sharding has all related rows (try to denormalize)
+          if there are less aggregations 
+            then MySQL (high confidence)
+          if there are more aggregations 
+            then MySQL (medium confidence since aggregations with sharding could be achieved with noSQL DBs like Cassandra)
+    If db needs better search performance (not full text search)  
+      if index-ing on fixed columns,
+        then MySQL (high confidence)
+      if db experience heavy writes
+        then MySQL (low confidence since indexes increases write latency)   
+
+  Open questions
+    1. Why is MySQL better for read heavy low write workload ? answered above
+    2. MySQL is better for ACID systems and structured ? How ? 
+    2. Why is Cassandra (noSQL) better for read less write heavy workload ?
+    3. Aggregation on sharded MySQL needs Application level handling vs Cassandra or HBase(Column) can handle this since they are built on top of distributed systems . Fact and derived above
+    4. How MySQL indexing works ? 
 
 
 ================================================================
@@ -699,6 +751,55 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
       TODO : 
         Note about synchronous and asynchronous communication, importance of reconciliation
         Ensure all replicas are always in-sync. We could use consensus algorithms such as Paxos [21] and Raft [22], or use consensus-based distributed databases such as YugabyteDB [23] or CockroachDB [24].
+
+  Distributed Email Service
+      https://bytebytego.com/courses/system-design-interview/distributed-email-service
+
+        Back-of-the-envelope estimation
+            
+            Assume metadata is stored in a database. Storage requirement for maintaining metadata in 1 year: 1 billion users * 40 (avg) emails / day * 365 days * 50 KB = 730 PB.
+            Assume 20% of emails contain an attachment and the average attachment size is 500 KB.
+            Storage for attachments in 1 year is: 1 billion users * 40 emails / day * 365 days * 20% * 500 KB = 1,460 PB
+
+            From this back-of-the-envelope calculation, it’s clear we would deal with a lot of data. So, it’s likely that we need a distributed database solution.
+
+
+        Step 2 - Propose High-Level Design and Get Buy-In
+            Email knowledge 101
+              Email protocols
+              Domain name service (DNS)
+              Attachment
+            Traditional mail servers
+              Traditional mail server architecture
+                  Alice logs in to her Outlook client, composes an email, and presses the “send” button. The email is sent to the Outlook mail server. The communication protocol between the Outlook client and the mail server is SMTP.
+
+                  Outlook mail server queries the DNS (not shown in the diagram) to find the address of the recipient’s SMTP server. In this case, it is Gmail’s SMTP server. Next, it transfers the email to the Gmail mail server. The communication protocol between the mail servers is SMTP.
+
+                  The Gmail server stores the email and makes it available to Bob, the recipient.
+
+                  Gmail client fetches new emails through the IMAP/POP server when Bob logs in to Gmail.
+
+              Storage
+                  In a traditional mail server, emails were stored in local file directories and each email was stored in a separate file with a unique name.
+                  As the email volume grew and the file structure became more complex, disk I/O became a bottleneck. The local directories also don’t satisfy our high availability and reliability requirements.
+
+
+            Distributed mail servers
+                Email APIs
+                  Due to the length limitations of this book, we cover only some of the most important APIs for webmail. A common way for webmail to communicate is through the HTTP protocol.
+
+                  1. Endpoint: POST /v1/messages
+                  2. Endpoint: GET /v1/folders
+                  3. Endpoint: GET /v1/folders/{:folder_id}/messages
+                  4. Endpoint: GET /v1/messages/{:message_id}
+
+                Distributed mail server architecture
+                  While it is easy to set up an email server that handles a small number of users, it is difficult to scale beyond one server. This is mainly because traditional email servers were designed to work with a single server only.
+
+
+        TODO : 
+            learn about Email protocols : SMTP for sending, POP and IMAP for retreiving
+
     
 ================================================================================================================================
 
@@ -917,8 +1018,9 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
             - Rapid development. NoSQL is extremely useful for rapid development as it doesn’t need to be prepped ahead of time. 
             
           What about write performance ? 
-            I think SQL provides more flexibility on write performance than NoSQL. 
+            I think SQL provides more flexibility on write performance than NoSQL. But this is contradicting
             However, Cassandra seems to be the choice
+
             
             
   ====================================================================================
