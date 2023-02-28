@@ -852,7 +852,8 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         After a read request is directed to a specific node, it first checks if data is in the memory cache. If so, the data is returned to the client 
         If the data is not in memory, it will be retrieved from the disk instead. We need an efficient way to find out which SSTable contains the key. Bloom filter [10] is commonly used to solve this problem.
 
-
+    TODO
+      SSTable - Cassandra, RocksDB
 
 
   S3-like Object Storage
@@ -932,13 +933,33 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                   How much data is stored on each drive?
 
         Data persistence flow
+            given a UUID for the object as an input, the placement service returns the replication group for the object. How does the placement service do this? Keep in mind that this lookup needs to be deterministic, and it must survive the addition or removal of replication groups. Consistent hashing is a common implementation of such a lookup function. Refer to [15] for more information.
 
+        How data is organized
+          A simple solution is to store each object in a stand-alone file. This works, but the performance suffers when there are many small files. Two issues arise when having too many small files on a file system. 
+            Fragmentation : First, it wastes many data blocks. A file system stores files in discrete disk blocks. Disk blocks have the same size, and the size is fixed when the volume is initialized. The typical block size is around 4 KB.
+
+            I-Node limits in OS : Second, it could exceed the system’s inode capacity. The file system stores the location and other information about a file in a special type of block called inode. For most file systems, the number of inodes is fixed when the disk is initialized. With millions of small files, it runs the risk of consuming all inodes. 
+
+            To address these issues, we can merge many small objects into a larger file. It works conceptually like a write-ahead log (WAL). When we save an object, it is appended to an existing read-write file. When the read-write file reaches its capacity threshold – usually set to a few GBs – the read-write file is marked as read-only, and a new read-write file is created to receive new objects. Once a file is marked as read-only, it can only serve read requests. Figure 12 explains how this process works.
+
+            Note that write access to the read-write file must be serialized. As shown in Figure 12, objects are stored in order, one after the other, in the read-write file. To maintain this on-disk layout, multiple cores processing incoming write requests in parallel must take their turns to write to the read-write file. For a modern server with a large number of cores processing many incoming requests in parallel, this seriously restricts write throughput. To fix this, we could provide dedicated read-write files, one for each core processing incoming requests.
+
+        Object lookup
+           With each data file holding many small objects, how does the data node locate an object by UUID? The data node needs the following information:
+              The data file that contains the object
+              The starting offset of the object in the data file
+              The size of the object
+            We considered two options for storing this mapping: a file-based key-value store such as RocksDB [16] or a relational database. RocksDB is based on SSTable [17], and it is fast for writes but slower for reads. A relational database usually uses a B+ tree [18] based storage engine, and it is fast for reads but slower for writes. As mentioned earlier, the data access pattern is write once and read multiple times. Since a relational database provides better read performance, it is a better choice than RocksDB.
+
+            How should we deploy this relational database? At our scale, the data volume for the mapping table is massive. Deploying a single large cluster to support all data nodes could work, but is difficult to manage. Note that this mapping data is isolated within each data node. There is no need to share this across data nodes. To take advantage of this property, we could simply deploy a simple relational database on each data node. SQLite [19] is a good choice here. It is a file-based relational database with a solid reputation.
 
 
       TODO
         Study about iSCSI, Fibre channel protocol
         Study about SMB and NFS protocol
         Study about Paxos [13] or Raft [14] consensus protocol.
+        Study about write-ahead log (WAL) which is also used in queue data structure
     
 ================================================================================================================================
 
