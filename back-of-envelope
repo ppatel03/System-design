@@ -20,13 +20,33 @@ Tips :
     
 
 QPS estimate
+- Read : Write ratio
   DO NOT divided by no. of seconds to get QPS if its explictly mentioned about concurrent users say 10% of DAU. In such cases, QPS = 10% DAU
 - 1 day ~ 10^5 s
 - 1 month ~ 3 * 10 ^ 6s and further ~ 10 ^ 6s
 - 1 week ~ 7 * 10 ^ 5s and further ~ 10 ^ 6s
 ----- For time constraints, do not hesitate to round off large amounts
 
-Read : Write ratio
+How to use non-functional requirements in decison making
+
+  Bandwidth (assume to be 1 GBps ~ 100 MBps which means 1 KB = 10us) 
+    - can help reason your latency
+    - can help reason your replication or multiple servers
+    - can help reason your sharding for database (remember max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) 
+
+  Durability  (I even refer as availability + data correctness with techniques like checksum, parity)
+    - can help reason how much to replicate. 
+        Example, say 99.999999% (six 9's) durability can be achieved assuming failure rate of one server is 0.01% (say 99.99% guarantee for ec2 on aws). This means you need 2 servers atleast which means 1 replica (0.0001 ^ 2 = 0.00000001. So 1 - 0.00000001 ~ 0.99999999 * 100 ~ 99.999999% ) 
+    - can help to reason out if you need checksum for data integrity
+
+  Availability
+    - can help reason how much to replicate. See above
+    - can help reason for latency 
+
+  Consistency
+    - can help reason for high latency 
+    - can help reason for low replication
+    - can help reason for MySQL if complicated with ACID
 
 
 Distributed Systems estimate
@@ -138,7 +158,7 @@ Benchmarking on common systems
                   if there are less aggregations 
                     then MySQL (high confidence)
                   if there are more aggregations 
-                    then MySQL (medium confidence since aggregations with sharding could be achieved with noSQL DBs like Cassandra)
+                    then MySQL (medium confidence since aggregations with sharding could be achieved with noSQL DBs like MongoDB, Cassandra)
             If db needs better search performance (not full text search)  
               if index-ing on fixed columns,
                 then MySQL (high confidence)
