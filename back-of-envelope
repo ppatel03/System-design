@@ -1002,6 +1002,8 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
               Scale the bucket table (bandiwdth factor reasoned out to get replicas)
                 Since there is usually a limit on the number of buckets a user can create, the size of the bucket table is small. Let’s assume we have 1 million customers, each customer owns 10 buckets and each record takes 1 KB. 
                 That means we need 10 GB (1 million * 10 * 1KB) of storage space. The whole table can easily fit in a modern database server. However, a single database server might not have enough CPU or network bandwidth to handle all read requests. If so, we can spread the read load among multiple database replicas.
+                
+              Scale the object table
 
 
 
