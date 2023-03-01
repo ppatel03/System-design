@@ -31,126 +31,126 @@ Read : Write ratio
 
 Distributed Systems estimate
 
-Estimates in KB
+    Estimates in KB
 
-Send 1 KB sequential from 1 Gbps network = 10 us  
-Send 1 KB sequential from memory  = 0.25 us   (4 GB/s = 0.25 *  10 ^ -6 s) 
-Send 1 KB sequential from disk    = 30 us     (30 MB/s = 0.03 * 10 ^ -3 s ) 
-Send 1 KB sequential from cache   = 1 us    (1 GB/s = 1 * 10 ^ -6 s )
-Round trip within the same datacenter	 = 500 us 
-Send packet CA (California) ->Netherlands->CA	= 150 ms 
+    Send 1 KB sequential from 1 Gbps network = 10 us  
+    Send 1 KB sequential from memory  = 0.25 us   (4 GB/s = 0.25 *  10 ^ -6 s) 
+    Send 1 KB sequential from disk    = 30 us     (30 MB/s = 0.03 * 10 ^ -3 s ) 
+    Send 1 KB sequential from cache   = 1 us    (1 GB/s = 1 * 10 ^ -6 s )
+    Round trip within the same datacenter	 = 500 us 
+    Send packet CA (California) ->Netherlands->CA	= 150 ms 
 
-So network is 3 times faster than disk
-memory is 40 times faster than network
+    So network is 3 times faster than disk
+    memory is 40 times faster than network
 
-Benchmarks on common systems
+Benchmarking on common systems
 
-Cache benchmarking
-Azure Redis Cache : 
-  53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
-  230 us (https://redis.io/docs/management/optimization/latency/)
+    Cache benchmarking
 
-SQL DB benchmarking - Relational
-    1. MySQL benchmarking
-       (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
-       Recommend 4 * number of cores parallel for ~ 200 us based on simple primary key look ups. For example, 120 parellel requests for 32 cores will take 200 us
-       1K requests on 32 will take ~ 1ms for simply select query
+      Azure Redis Cache : 
+        53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
+        230 us (https://redis.io/docs/management/optimization/latency/)
 
-       - Max size set by MySQL
-         256 TB (https://dev.mysql.com/doc/mysql-reslimits-excerpt/8.0/en/table-size-limit.html#:~:text=You%20are%20using%20a%20MyISAM,2567%20%E2%88%92%201%20bytes)
+    SQL DB benchmarking - Relational
+        1. MySQL benchmarking
+          (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
+          Recommend 4 * number of cores parallel for ~ 200 us based on simple primary key look ups. For example, 120 parellel requests for 32 cores will take 200 us
+          1K requests on 32 will take ~ 1ms for simply select query
 
-       Some facts
-       - MySQL client <-> server is socket based connection
-       - per connection -> one user thread
-       - Max connection limit for MySQL = 100 K
-       - size of user thread depends on THD connection data structure which is per connection ~ 10 MB 
-       - max THD ~ 10K 
-       - So recommended min size of your MySQL = 10 MB * 10 K = 100 GB ??
+          - Max size set by MySQL
+            256 TB (https://dev.mysql.com/doc/mysql-reslimits-excerpt/8.0/en/table-size-limit.html#:~:text=You%20are%20using%20a%20MyISAM,2567%20%E2%88%92%201%20bytes)
 
-       - MySQL sorting (https://www.pankajtanwar.in/blog/what-is-the-sorting-algorithm-behind-order-by-query-in-mysql)
-          External merge sort (quick sort + merge sort) if data doesn’t fits into the memory
-          Quick sort, if data fits into the memory and we want all of it
-          Heap sort, if data fits into the memory but we are using LIMIT to fetch only some results
-          Index lookup (not exactly a sorting algorithm, just a pre-calculated binary tree)
+          Some facts
+          - MySQL client <-> server is socket based connection
+          - per connection -> one user thread
+          - Max connection limit for MySQL = 100 K
+          - size of user thread depends on THD connection data structure which is per connection ~ 10 MB 
+          - max THD ~ 10K 
+          - So recommended min size of your MySQL = 10 MB * 10 K = 100 GB ??
 
-       - MySQL query cache (https://docs.oracle.com/cd/E17952_01/mysql-5.1-en/query-cache.html)
-          As of MySQL 5.1.63, the query cache is not supported for partitioned tables, and is automatically disabled for queries involving partitioned tables. The query cache cannot be enabled for such queries. 
+          - MySQL sorting (https://www.pankajtanwar.in/blog/what-is-the-sorting-algorithm-behind-order-by-query-in-mysql)
+              External merge sort (quick sort + merge sort) if data doesn’t fits into the memory
+              Quick sort, if data fits into the memory and we want all of it
+              Heap sort, if data fits into the memory but we are using LIMIT to fetch only some results
+              Index lookup (not exactly a sorting algorithm, just a pre-calculated binary tree)
 
-       - MySQL sharding (https://stackoverflow.com/questions/1610887/how-to-partition-mysql-across-multiple-servers)
-          this is different from mysql partitioning (https://vertabelo.com/blog/everything-you-need-to-know-about-mysql-partitions/)
+          - MySQL query cache (https://docs.oracle.com/cd/E17952_01/mysql-5.1-en/query-cache.html)
+              As of MySQL 5.1.63, the query cache is not supported for partitioned tables, and is automatically disabled for queries involving partitioned tables. The query cache cannot be enabled for such queries. 
 
-
-
-NoSQL value DB benchmarking
-    1. Timeseries : OpenTSDB / InfluxDB
-          8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series
-          (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
-
-    2. Object storage / cold storage benchmarking
-        S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3 )
-
-    3. Cassandra
-
-          100s video : https://www.youtube.com/watch?v=ziq7FUKpCS8
-          Slower version of 100s : https://www.youtube.com/watch?v=YjYWsN1vek8 
-
-          
-
-    4. MongoDB
-
-    5. Cassandra                          vs               MongoDB 
-                        https://www.youtube.com/watch?v=3z2EzILA3Rk 
-        column data model                                   json document data model
-          no config server(ring structure)                 mongo master, slave and mongo config servers for replication
-        high availability due to multiple masters           master -> slave takes time
-        accept writes in parallel                           write capacity is limited since they just go to master
-        similar to SQL                                        based on json formatting
-
-          When mongo DB
-            query also based on secondary indexing and flexible querying
-            built in data aggregation framework
-            read-heavy workload
-
-          When Cassandra 
-           query based on primary key indexing 
-           100% uptime guarantee due to replication and inconsistency resolution
-           high write speed
-           language support for SQL
-           write-heavy, read-heavy workload
-           eventual consistency (as per bytebytego - https://bytebytego.com/courses/system-design-interview/design-a-key-value-store )
+          - MySQL sharding (https://stackoverflow.com/questions/1610887/how-to-partition-mysql-across-multiple-servers)
+              this is different from mysql partitioning (https://vertabelo.com/blog/everything-you-need-to-know-about-mysql-partitions/)
 
 
-Attempt to standardized DB selection criteria 
-    MySQL vs MongoDB : https://kinsta.com/blog/mongodb-vs-mysql/
 
-    When MySQL
-    if ACID, 
-      then MYSQL (high confidence)
-    if reasonable size (< 1 TB) not expected to scale rapidly,
-      if heavy reads (reading from read replicas is faster) 
-        if low writes 
-          then MySQL (high confidence)
-        if heavy writes (else have to keep synchronizing)
-          then MySQL (low confidence)
-    If db needs rapid scale (size keeps growing)
-      if manual sharding is needed ( say by user id )
-        if sharding has all related rows (try to denormalize)
-          if there are less aggregations 
-            then MySQL (high confidence)
-          if there are more aggregations 
-            then MySQL (medium confidence since aggregations with sharding could be achieved with noSQL DBs like Cassandra)
-    If db needs better search performance (not full text search)  
-      if index-ing on fixed columns,
-        then MySQL (high confidence)
-      if db experience heavy writes
-        then MySQL (low confidence since indexes increases write latency)   
+    NoSQL value DB benchmarking
+        1. Timeseries : OpenTSDB / InfluxDB
+              8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series
+              (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
 
-  Open questions
-    1. Why is MySQL better for read heavy low write workload ? answered above
-    2. MySQL is better for ACID systems and structured ? How ? 
-    2. Why is Cassandra (noSQL) better for read less write heavy workload ?
-    3. Aggregation on sharded MySQL needs Application level handling vs Cassandra or HBase(Column) can handle this since they are built on top of distributed systems . Fact and derived above
-    4. How MySQL indexing works ? 
+        2. Object storage / cold storage benchmarking
+            S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3 )
+
+        3. Cassandra
+
+              100s video : https://www.youtube.com/watch?v=ziq7FUKpCS8
+              Slower version of 100s : https://www.youtube.com/watch?v=YjYWsN1vek8 
+              
+
+        4. MongoDB
+
+        5. Cassandra                          vs               MongoDB 
+                            https://www.youtube.com/watch?v=3z2EzILA3Rk 
+            column data model                                   json document data model
+            no config server(ring structure)                    mongo master, slave and mongo config servers for replication
+            high availability due to multiple masters           master -> slave takes time
+            accept writes in parallel                           write capacity is limited since they just go to master
+            similar to SQL                                        based on json formatting
+
+              When mongo DB
+                query also based on secondary indexing and flexible querying
+                built in data aggregation framework
+                read-heavy workload
+
+              When Cassandra 
+                query based on primary key indexing 
+                100% uptime guarantee due to replication and inconsistency resolution
+                high write speed
+                language support for SQL
+                write-heavy, read-heavy workload
+                eventual consistency (as per bytebytego - https://bytebytego.com/courses/system-design-interview/design-a-key-value-store )
+
+
+        Attempt to standardized DB selection criteria 
+            MySQL vs MongoDB : https://kinsta.com/blog/mongodb-vs-mysql/
+
+            When MySQL
+            if ACID, 
+              then MYSQL (high confidence)
+            if reasonable size (< 1 TB) not expected to scale rapidly,
+              if heavy reads (reading from read replicas is faster) 
+                if low writes 
+                  then MySQL (high confidence)
+                if heavy writes (else have to keep synchronizing)
+                  then MySQL (low confidence)
+            If db needs rapid scale (size keeps growing)
+              if manual sharding is needed ( say by user id )
+                if sharding has all related rows (try to denormalize)
+                  if there are less aggregations 
+                    then MySQL (high confidence)
+                  if there are more aggregations 
+                    then MySQL (medium confidence since aggregations with sharding could be achieved with noSQL DBs like Cassandra)
+            If db needs better search performance (not full text search)  
+              if index-ing on fixed columns,
+                then MySQL (high confidence)
+              if db experience heavy writes
+                then MySQL (low confidence since indexes increases write latency)   
+
+          Open questions
+            1. Why is MySQL better for read heavy low write workload ? answered above
+            2. MySQL is better for ACID systems and structured ? How ? 
+            2. Why is Cassandra (noSQL) better for read less write heavy workload ?
+            3. Aggregation on sharded MySQL needs Application level handling vs Cassandra or HBase(Column) can handle this since they are built on top of distributed systems . Fact and derived above
+            4. How MySQL indexing works ? 
 
 
 ================================================================
@@ -953,6 +953,38 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
             We considered two options for storing this mapping: a file-based key-value store such as RocksDB [16] or a relational database. RocksDB is based on SSTable [17], and it is fast for writes but slower for reads. A relational database usually uses a B+ tree [18] based storage engine, and it is fast for reads but slower for writes. As mentioned earlier, the data access pattern is write once and read multiple times. Since a relational database provides better read performance, it is a better choice than RocksDB.
 
             How should we deploy this relational database? At our scale, the data volume for the mapping table is massive. Deploying a single large cluster to support all data nodes could work, but is difficult to manage. Note that this mapping data is isolated within each data node. There is no need to share this across data nodes. To take advantage of this property, we could simply deploy a simple relational database on each data node. SQLite [19] is a good choice here. It is a file-based relational database with a solid reputation.
+
+          Durability
+
+            Hardware failure and failure domain
+              Let’s assume the spinning hard drive has an annual failure rate of 0.81% [20]. This number highly depends on the model and make. Making 3 copies of data gives us 1-(0.0081)^3=~0.999999 reliability.
+              For a complete durability evaluation, we also need to consider the impacts of different failure domains. A failure domain is a physical or logical section of the environment that is negatively affected when a critical service experiences problems.
+              server (node) -> rack -> datacenter which means replication have to be for every failure domain
+
+            Erasure coding (parity)
+              Making three full copies of data gives us roughly 6 nines of data durability. Are there other options to further increase durability? Yes, erasure coding is one option.
+              Erasure coding [22] deals with data durability differently. It chunks data into smaller pieces (placed on different servers) and creates parities for redundancy. In the event of failures, we can use chunk data and parities to reconstruct the data. 
+              Its cheaper, more durable, but needs more compute resources and read + write performance
+
+            How much extra space does erasure coding need? For every two chunks of data, we need one parity block, so the storage overhead is 50% (Figure 17). While in 3-copy replication, the storage overhead is 200%
+
+            Correctness verification
+              If a disk fails completely and the failure can be detected, it can be treated as a data node failure. In this case, we can reconstruct data using erasure coding. However, in-memory data corruption is a regular occurrence in large-scale systems. This problem can be addressed by verifying checksums.
+              There are many checksum algorithms, such as MD5 [26], SHA1[27], HMAC [28], etc. A good checksum algorithm usually outputs a significantly different value even for a small change made to the input. For this chapter, we choose a simple checksum algorithm such as MD5.
+              In our design, we append the checksum at the end of each object. Before a file is marked as read-only, we add a checksum of the entire file at the end.
+
+            Metadata data model
+              Schema
+                The database schema needs to support the following 3 queries:
+                Query 1: Find the object ID by object name.
+                Query 2: Insert and delete an object based on the object name.
+                Query 3: List objects in a bucket sharing the same prefix.
+              Scale the bucket table (bandiwdth factor reasoned out to get replicas)
+                Since there is usually a limit on the number of buckets a user can create, the size of the bucket table is small. Let’s assume we have 1 million customers, each customer owns 10 buckets and each record takes 1 KB. 
+                That means we need 10 GB (1 million * 10 * 1KB) of storage space. The whole table can easily fit in a modern database server. However, a single database server might not have enough CPU or network bandwidth to handle all read requests. If so, we can spread the read load among multiple database replicas.
+
+
+
 
 
       TODO
