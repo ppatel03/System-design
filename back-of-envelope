@@ -108,7 +108,7 @@ Benchmarking on common systems
               (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
 
         2. Object storage / cold storage benchmarking
-            S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3 )
+            S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3)
 
         3. Cassandra
 
