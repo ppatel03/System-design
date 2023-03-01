@@ -999,13 +999,36 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                 Query 1: Find the object ID by object name.
                 Query 2: Insert and delete an object based on the object name.
                 Query 3: List objects in a bucket sharing the same prefix.
+
               Scale the bucket table (bandiwdth factor reasoned out to get replicas)
                 Since there is usually a limit on the number of buckets a user can create, the size of the bucket table is small. Let’s assume we have 1 million customers, each customer owns 10 buckets and each record takes 1 KB. 
                 That means we need 10 GB (1 million * 10 * 1KB) of storage space. The whole table can easily fit in a modern database server. However, a single database server might not have enough CPU or network bandwidth to handle all read requests. If so, we can spread the read load among multiple database replicas.
                 
               Scale the object table
+                The object table holds the object metadata. The dataset at our design scale will likely not fit in a single database instance. We can scale the object table by sharding.
+                We choose to shard by a combination of bucket_name and object_name. This is because most of the metadata operations are based on the object URI, for example, finding the object ID by URI or uploading an object via URI. To evenly distribute the data, we can use the hash of the (bucket_name, object_name) as the sharding key. Remember you can have multiple versions of same object name
+
+              Prefer denormalized table of bucket and object so that it can be sharded just by bucket id. Use Cassandra for high available, heavy reads, heavy writes and eventual consistency.
+
+            Object versioning
+
+                To support versioning, the object table for the metadata store has a column called object_version that is only used if versioning is enabled. Instead of overwriting the existing record, a new record is inserted with the same bucket_id and object_name as the old record, but with a new object_id and object_version. The object_id is the UUID for the new object returned in step 3. The object_version is a TIMEUUID [29] generated when the new row is inserted. No matter which database we choose for the metadata store, it should be efficient to look up the current version of an object. The current version has the largest TIMEUUID of all the entries with the same object_name. See Figure 23 for an illustration of how we store versioned metadata.
+
+                * When we delete an object, all versions remain in the bucket and we insert a delete marker. This avoids going back to the file and delete.
+
+            Optimizing uploads of large files
+                In the back-of-the-envelope estimation, we estimated that 20% of the objects are large. Some might be larger than a few GBs. It is possible to upload such a large object file directly, but it could take a long time. If the network connection fails in the middle of the upload, we have to start over. A better solution is to slice a large object into smaller parts and upload them independently. After all the parts are uploaded, the object store re-assembles the object from the parts. This process is called multipart upload.
+
+            Garbage collection
+                  - deleted marked objects
+                  - half uploaded data
+                  - corrupted data
+                The garbage collector does not remove objects from the data store, right away. Deleted objects will be periodically cleaned up with a compaction mechanism.
+
+                The garbage collector is also responsible for reclaiming unused space in replicas. For replication, we delete the object from both primary and backup nodes. For erasure coding, if we use (8+4) setup, we delete the object from all 12 nodes.
 
 
+            
 
 
 
