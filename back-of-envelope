@@ -1027,11 +1027,6 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
                 The garbage collector is also responsible for reclaiming unused space in replicas. For replication, we delete the object from both primary and backup nodes. For erasure coding, if we use (8+4) setup, we delete the object from all 12 nodes.
 
-
-            
-
-
-
       TODO
         Study about iSCSI, Fibre channel protocol
         Study about SMB and NFS protocol
