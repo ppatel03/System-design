@@ -1002,9 +1002,10 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
       https://www.cloudflare.com/learning/performance/types-of-load-balancing-algorithms/
       https://igotanoffer.com/blogs/tech/load-balancing-system-design-interview
     Static load balancing - round robin, weight round robin, IP hash
-    Dynamic load balanacing - least connection, least resource, least response time, least bandwidht
+    Dynamic load balanacing - least connection, least resource, least response time, least bandwidth
     When to use Static ?
-      If the server pool and the requests are both homogeneous, and there is only one balancer
+      If the server pool and the requests are both homogeneous, and there is only one balancer. Stateless servers handling single api can use static load balancer
+      
     When to use Dynamic ?
       if the requests are heterogenous, Least Load is helpful to prevent servers from being intermittently overloaded.
       
