@@ -127,10 +127,12 @@ Benchmarking on common systems
               
               Cassandra indexing
                 Paritioning : https://www.youtube.com/watch?v=Np5RJpCiCzM
-                Clustering : 
+                Clustering used as sort key : https://www.youtube.com/watch?v=OCakxrzwuU4 
+                  Remember data in cassandra on disk supports SSTable which is sorted string table.
+                  So searching could be done in logN times like relational or mongoDB
 
                 Practical 
-                    Cassandra indexing (partition + clustering key) : https://www.youtube.com/watch?v=S9rmf4X7E_E
+                    Cassandra indexing (partition + clustering which is sort key) : https://www.youtube.com/watch?v=S9rmf4X7E_E
 
         4. MongoDB
               How Mongo DB search works : https://www.youtube.com/watch?v=tSgPhxZdhLk&t=96s 
