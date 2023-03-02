@@ -173,10 +173,11 @@ Benchmarking on common systems
         6. Dynamo DB
             Nice intro in https://bytebytego.com/courses/system-design-interview/real-time-gaming-leaderboard
 
-            DynamoDB is a fully managed NoSQL database that offers reliable performance and great scalability. To allow efficient access to data with attributes other than the primary key, we can leverage global secondary indexes [16] in DynamoDB. A global secondary index contains a selection of attributes from the parent table, but they are organized using a different primary key.
+            DynamoDB is a fully managed NoSQL database that offers reliable performance and great scalability. To allow efficient access to data with attributes other than the primary key, we can leverage global secondary indexes [16] in DynamoDB. A global secondary index contains a selection of attributes from the parent table, but they are organized using a different primary key. 
+            So Every global secondary index must have a partition key, and can have an optional sort key. The index key schema can be different from the base table schema. 
 
             DynamoDB splits data across multiple nodes using consistent hashing.
-            
+
 
         Attempt to standardized DB selection criteria 
             MySQL vs MongoDB : https://kinsta.com/blog/mongodb-vs-mysql/
