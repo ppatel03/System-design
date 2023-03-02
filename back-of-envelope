@@ -70,6 +70,10 @@ Benchmarking on common systems
       Azure Redis Cache : 
         53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
         230 us (https://redis.io/docs/management/optimization/latency/)
+        Redis QPS - 50K https://redis.io/docs/management/optimization/benchmarks/
+        Redis cluster also supports sharding with hash slot ( different from consistent hashing)
+        Redis cluster uses master-replica model
+        Redis Cluster does not guarantee strong consistency
 
     SQL DB benchmarking - Relational
         1. MySQL benchmarking
