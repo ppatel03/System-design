@@ -77,13 +77,17 @@ Benchmarking on common systems
 
     SQL DB benchmarking - Relational
         1. MySQL benchmarking
-          with primary key reads which is already indexed
-            (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
-            Recommend 4 * number of cores parallel for ~ 200 us based on simple primary key look ups. For example, 120 parellel requests for 48 cores will take 200 us
-            1K requests on 48 will take ~ 1ms for simply select query
+          - Read
+              a. with primary key reads which is already indexed
+                (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
+                Recommend 4 * number of cores parallel for ~ 200 us based on simple primary key look ups. For example, 120 (~4 * 32) parellel requests for 32 cores will take 200 us
+                1K requests on 32 will take ~ 1ms for simply select query
           
-          impact of write performance on indexing
-            4 times slower : https://logicalread.com/impact-of-adding-mysql-indexes-mc12/#.Y__7d-zMLuU 
+          - Write
+            7 K writes/s for 48 core http://minervadb.com/wp-content/uploads/2020/10/MySQL-8-Performance-Benchmarking-on-Amazon-EC2.pdf 
+            impact of write performance on indexing
+              4 times slower : https://logicalread.com/impact-of-adding-mysql-indexes-mc12/#.Y__7d-zMLuU 
+              ~1 K writes/s for 48 core
 
 
           - Max size set by MySQL
@@ -146,9 +150,10 @@ Benchmarking on common systems
                     Cassandra indexing (partition + clustering which is sort key) : https://www.youtube.com/watch?v=S9rmf4X7E_E
 
         4. MongoDB
-              How Mongo DB search works : https://www.youtube.com/watch?v=tSgPhxZdhLk&t=96s 
-              using index in B tree
-              MongoDB supports range-based or hash-based sharding - https://kinsta.com/blog/mongodb-vs-mysql/
+              - How Mongo DB search works : https://www.youtube.com/watch?v=tSgPhxZdhLk&t=96s 
+                  using index in B tree
+              - MongoDB supports range-based or hash-based sharding - https://kinsta.com/blog/mongodb-vs-mysql/
+              - For aggregations, Instead of map-reduce, you should use an aggregation pipeline. Aggregation pipelines provide better performance and usability than map-reduce. https://www.mongodb.com/docs/manual/core/map-reduce/
 
         5. Cassandra                          vs               MongoDB 
                             https://www.youtube.com/watch?v=3z2EzILA3Rk 
