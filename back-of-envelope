@@ -1221,7 +1221,18 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
               The sequencer is the key component that makes the matching engine deterministic. It stamps every incoming order with a sequence ID before it is processed by the matching engine. It also stamps every pair of executions (fills) completed by the matching engine with sequence IDs. 
               It is similar to having two Kafka event streams connected to the matching engine, one for incoming orders and the other for outgoing executions. In fact, we could have used Kafka if its latency was lower and more predictable. 
             Order manager
+              It sends the order for risk checks. 
+              It checks the order against the user’s wallet and verifies that there are sufficient funds to cover the trade.
+              It sends the order to the sequencer where the order is stamped with a sequence ID. 
+              The order manager should be fast, efficient, and accurate.
             Client gateway
+              The client gateway is on the critical path and is latency-sensitive. It should stay lightweight. 
+              May be Nginx
+            Market data flow
+              The market data publisher (MDP) receives executions (fills) from the matching engine and builds the order books and candlestick charts from the stream of executions.
+            Reporting flow
+              One essential part of the exchange is reporting. The reporter is not on the trading critical path, but it is a critical part of the system. It provides trading history, tax reporting, compliance reporting, settlements, etc. Efficiency and latency are critical for the trading flow, but the reporter is less sensitive to latency. Accuracy and compliance are key factors for the reporter.
+
 
 
               
