@@ -1246,6 +1246,14 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                   Constant lookup time. Operation includes: getting volume at a price level or between price levels.
 
                   Fast add/cancel/execute operations, preferably O(1) time complexity. Operations include: placing a new order, canceling an order, and matching an order.
+            Step 3 - Design Deep Dive
+
+              Performance
+                Latency = ∑executionTimeAlongCriticalPath
+                  gateway -> order manager -> sequencer -> matching engine
+
+
+
 
 
 
