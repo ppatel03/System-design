@@ -1158,12 +1158,25 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                 An alternative solution to consider is NoSQL databases. 
                 NoSQL databases such as Amazon’s DynamoDB [15], Cassandra, or MongoDB can be a good fit.
 
+                DynamoDB is a fully managed NoSQL database that offers reliable performance and great scalability. To allow efficient access to data with attributes other than the primary key + sort key, we can leverage global secondary indexes [16] in DynamoDB.
+                To avoid a linear scan, we need to add indexes. Our first attempt is to use “game_name#{year-month}” as the partition key and the score as the sort key. 
+                This works, but it runs into issues at a high load. DynamoDB splits data across multiple nodes using consistent hashing. Each item lives in a corresponding node based on its partition key. We want to structure the data so that data is evenly distributed across partitions. In our table design (Figure 23), all the data for the most recent month would be stored in one partition and that partition becomes a hot partition. How can we solve this problem?
+
+                    GSI : We can further split data into N partitions and append a partition number (user_id % number_of_partitions) to the partition key. 
+                    What we end up with are N partitions that are all sorted within their own partition (locally sorted). If we assume we had 3 partitions, then in order to fetch the top 10 leaderboard, we would use the approach called “scatter-gather” mentioned earlier. We would fetch the top 10 results in each of the partitions (this is the “scatter” portion), and then we would allow the application to sort the results among all the partitions (this is the “gather” portion). 
+                    --> Map- Reduce concept
+
+                However, similar to the Redis partition solution mentioned earlier, this approach doesn’t provide a straightforward solution for determining the relative rank of a user. But it is possible to get the percentile of a user’s position, which could be good enough. In real life, telling a player that they are in the top 10-20% might be better than showing the exact rank at eg.1,200,001. Therefore, if the scale is large enough that we needed to shard, we could assume that the score distributions are roughly the same across all shards. If this assumption is true, we could have a cron job that analyzes the distribution of the score for each shard, and caches that result.
+
+            Faster retrieval and breaking tie
+
+            System failure recovery
 
 
-
-
-
-
+      TODO : 
+       great learnings on custom partition vs uses existing sharding provided by Redis.
+       Check if Redis can use Map-Reduce (which looks like it)
+       Check scatter-gather for dynamo
     
 ================================================================================================================================
 
