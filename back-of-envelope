@@ -1232,6 +1232,18 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
               The market data publisher (MDP) receives executions (fills) from the matching engine and builds the order books and candlestick charts from the stream of executions.
             Reporting flow
               One essential part of the exchange is reporting. The reporter is not on the trading critical path, but it is a critical part of the system. It provides trading history, tax reporting, compliance reporting, settlements, etc. Efficiency and latency are critical for the trading flow, but the reporter is less sensitive to latency. Accuracy and compliance are key factors for the reporter.
+            API Design
+              POST /v1/order
+              GET /execution?symbol={:symbol}&orderId={:orderId}&startTime={:startTime}&endTime={:endTime}
+              GET /marketdata/orderBook/L2?symbol={:symbol}&depth={:depth}
+              GET /marketdata/candles?symbol={:symbol}&resolution={:resolution}&startTime={:startTime}&endTime={:endTime}
+            Data models
+
+
+
+
+
+
 
 
 
