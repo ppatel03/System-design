@@ -1237,7 +1237,17 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
               GET /execution?symbol={:symbol}&orderId={:orderId}&startTime={:startTime}&endTime={:endTime}
               GET /marketdata/orderBook/L2?symbol={:symbol}&depth={:depth}
               GET /marketdata/candles?symbol={:symbol}&resolution={:resolution}&startTime={:startTime}&endTime={:endTime}
-            Data models
+            Data 
+              Product, order, execution
+                In the critical trading path, orders and executions are not stored in a database. To achieve high performance, this path executes trades in memory and leverages hard disk or shared memory to persist and share orders and executions. Specifically, orders and executions are stored in the sequencer for fast recovery, and data is archived after the market closes. We discuss an efficient implementation of the sequencer in the deep dive section.
+              Order book
+                An order book is a list of buy and sell orders for a specific security or financial instrument, organized by price level [12] [13]. It is a key data structure in the matching engine for fast order matching. An efficient data structure for an order book must satisfy these requirements:
+
+                  Constant lookup time. Operation includes: getting volume at a price level or between price levels.
+
+                  Fast add/cancel/execute operations, preferably O(1) time complexity. Operations include: placing a new order, canceling an order, and matching an order.
+
+
 
 
 
