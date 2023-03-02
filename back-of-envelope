@@ -1105,7 +1105,6 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
             Redis solution
               Redis has a specific data type called sorted sets that are ideal for solving leaderboard system design problems.
-              Redis has a specific data type called sorted sets that are ideal for solving leaderboard system design problems.
 
               What are sorted sets?
                 A sorted set is a data type similar to a set. Each member of a sorted set is associated with a score. The members of a set must be unique, but scores may repeat. The score is used to rank the sorted set in ascending order.
@@ -1116,6 +1115,43 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                 Another related factor to consider is CPU and I/O usage. Our peak QPS from the back-of-the-envelope estimation is 2500 updates/sec. This is well within the performance envelope of a single Redis server.
 
                 One concern about the Redis cache is persistence, as a Redis node might fail. Luckily, Redis does support persistence, but restarting a large Redis instance from disk is slow. Usually, Redis is configured with a read replica, and when the main instance fails, the read replica is promoted, and a new read replica is attached.
+
+          Step 3 - Design Deep Dive
+            To use a cloud provider or not
+                Manage our own services
+                Build on the cloud
+                  AWS Lambda is one of the most popular serverless computing platforms. It allows us to run code without having to provision or manage the servers ourselves. It runs only when needed and will scale automatically based on traffic. Serverless is one of the hottest topics in cloud services and is supported by all major cloud service providers. 
+                  Advantage with AWS Lambda : autoscaling as per DAU growth and based on pay as you go model
+
+            Scaling Redis
+                Let’s imagine we have 500 million DAU, which is 100 times our original scale. Now our worst-case scenario for the size of the leaderboard goes up to 65 GB (650 MB *100), and our QPS goes up to 250,000 (2,500 * 100) queries per second. This calls for a sharding solution.
+
+                Data sharding
+                    We consider sharding in one of the following two ways: fixed or hash partitions.
+
+                    Fixed partition
+
+                    Hash partition
+                      Redis cluster provides a way to shard data automatically across multiple Redis nodes. It doesn’t use consistent hashing but a different form of sharding, where every key is part of a hash slot. There are 16384 hash slots [11] and we can compute the hash slot of a given key by doing CRC16(key) % 16384
+
+                      Retrieving the top 10 players on the leaderboard is more complicated. We need to gather the top 10 players from each shard and have the application sort the data. 
+
+                      This approach has a few limitations:
+                        When we need to return top K results (where K is a very large number) on the leaderboard, the latency is high because a lot of entries are returned from each shard and need to be sorted.
+                        Latency is high if we have lots of partitions because the query has to wait for the slowest partition.
+                        Another issue with this approach is that it doesn’t provide a straightforward solution for determining the rank of a specific user.
+
+                    Therefore, we lean towards the first proposal: fixed partition.
+
+            Sizing a Redis node
+                Redis provides a tool called Redis-benchmark that allows us to benchmark the performance of the Redis setup, by simulating multiple clients executing multiple queries and returning the number of requests per second for the given hardware.
+
+            Alternative solution: NoSQL
+                An alternative solution to consider is NoSQL databases. 
+                NoSQL databases such as Amazon’s DynamoDB [15], Cassandra, or MongoDB can be a good fit.
+
+
+
 
 
 
