@@ -148,6 +148,7 @@ Benchmarking on common systems
         4. MongoDB
               How Mongo DB search works : https://www.youtube.com/watch?v=tSgPhxZdhLk&t=96s 
               using index in B tree
+              MongoDB supports range-based or hash-based sharding - https://kinsta.com/blog/mongodb-vs-mysql/
 
         5. Cassandra                          vs               MongoDB 
                             https://www.youtube.com/watch?v=3z2EzILA3Rk 
