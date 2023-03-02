@@ -63,6 +63,8 @@ Distributed Systems estimate
     So network is 3 times faster than disk
     memory is 40 times faster than network
 
+    Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
+
 Benchmarking on common systems
 
     Cache benchmarking
