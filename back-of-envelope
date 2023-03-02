@@ -1032,6 +1032,24 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         Study about SMB and NFS protocol
         Study about Paxos [13] or Raft [14] consensus protocol.
         Study about write-ahead log (WAL) which is also used in queue data structure
+
+  Real-time Gaming Leaderboard
+
+      Back-of-the-envelope estimation
+        With 5 million DAU, if the game had an even distribution of players during a 24-hour period, we would have an average of 50 users per second (5,000,000 DAU / 10^5 seconds = ~50).
+        QPS for users scoring a point: if a user plays 10 games per day on average, the QPS for users scoring a point is: 50 * 10 = ~500. Peak QPS is 5x of the average: 500 * 5 = 2,500.
+
+      Step 2 - Propose High-Level Design and Get Buy-In
+      
+        API design
+            POST /v1/scores
+            GET /v1/scores
+            GET /v1/scores/{:user_id}
+
+
+
+
+
     
 ================================================================================================================================
 
