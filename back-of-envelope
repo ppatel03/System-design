@@ -1183,6 +1183,53 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
        great learnings on custom partition vs uses existing sharding provided by Redis.
        Check if Redis can use Map-Reduce (which looks like it)
        Check scatter-gather for dynamo
+
+
+
+  Stock Exchange
+      https://bytebytego.com/courses/system-design-interview/stock-exchange
+
+    Back-of-the-envelope estimation
+      Let’s do some simple back-of-the-envelope calculations to understand the scale of the system:
+
+      100 symbols
+      1 billion orders per day
+      NYSE Stock Exchange is open Monday through Friday from 9:30 am to 4:00 pm Eastern Time. That’s 6.5 hours in total.
+      QPS: 1 billion / 6.5 / 3600 = ~43,000 or just 10K if rounded
+      Peak QPS: 5 * QPS = 215,000. The trading volume is significantly higher when the market first opens in the morning and before it closes in the afternoon.
+
+    Step 2 - Propose High-Level Design and Get Buy-In
+      Business Knowledge 
+        Broker
+        Institutional client
+        Limit order
+        Market order
+        Market data levels
+        Candlestick chart
+        FIX
+          FIX protocol [8], which stands for Financial Information eXchange protocol, was created in 1991. It is a vendor-neutral communications protocol for exchanging securities transaction information. See below for an example of a securities transaction encoded in FIX.
+      High-level design
+        Note that the trading flow (steps 1 to 14) is on the critical path, while the market data flow and reporting flow are not. They have different latency requirements.
+        * its Important to know what components in the design are latency 
+        
+        Trading flow
+            Matching engine
+              Maintain the order book for each symbol. An order book is a list of buy and sell orders for a symbol. We explain the construction of an order book in the Data models section later.
+              Match buy and sell orders. A match results in two executions (fills), with one each for the buy and sell sides. The matching function must be fast and accurate.
+              Distribute the execution stream as market data.
+            Sequencer
+              The sequencer is the key component that makes the matching engine deterministic. It stamps every incoming order with a sequence ID before it is processed by the matching engine. It also stamps every pair of executions (fills) completed by the matching engine with sequence IDs. 
+              It is similar to having two Kafka event streams connected to the matching engine, one for incoming orders and the other for outgoing executions. In fact, we could have used Kafka if its latency was lower and more predictable. 
+            Order manager
+              
+
+
+
+
+
+
+
+
     
 ================================================================================================================================
 
