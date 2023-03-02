@@ -1073,6 +1073,45 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
             GET /v1/scores
             GET /v1/scores/{:user_id}
 
+        High-level architecture
+
+          When a player wins a game, the client sends a request to the game service.
+          The game service ensures the win is valid and calls the leaderboard service to update the score.
+          The leaderboard service updates the user’s score in the leaderboard store.
+          A player makes a call to the leaderboard service directly to fetch leaderboard data, including:
+            a. top 10 leaderboard.
+            b. the rank of the player on the leaderboard.
+
+          Should the client talk to the leaderboard service directly?
+            In the alternative design, the score is set by the client. This option is not secure because it is subject to man-in-the-middle attack [x], where players can put in a proxy and change scores at will. Therefore, we need the score to be set on the server-side.
+
+          Do we need a message queue between the game service and the leaderboard service?
+            The answer to this question highly depends on how the game scores are used. If data can be consumed by multiple consumers, such as leaderboard service, analytics service, push notification service, etc. This is especially true when the game is a turn-based or multi-player game in which we need to notify other players about the score update.
+            As this is not an explicit requirement based on the conversation with the interviewer, we do not use a message queue in our design.
+
+          Data models
+            One of the key components in the system is the leaderboard store. We will discuss three potential solutions: relational database, Redis, and NoSQL (NoSQL solution is explained in deep dive).
+
+            Relational database solution
+              This solution works when the data set is small, but the query becomes very slow when there are millions of rows. Let’s take a look at why.
+
+              To figure out the rank of a user, we need to sort every single player into their correct spot on the leaderboard so we can determine exactly what the correct rank is. Remember that there can be duplicate scores as well, so the rank isn’t just the position of the user in the list.
+
+              SQL databases are not performant when we have to process large amounts of continuously changing information. So even with indexes, your write performance could get compromised
+
+            Redis solution
+              Redis has a specific data type called sorted sets that are ideal for solving leaderboard system design problems.
+              Redis has a specific data type called sorted sets that are ideal for solving leaderboard system design problems.
+
+              What are sorted sets?
+                A sorted set is a data type similar to a set. Each member of a sorted set is associated with a score. The members of a set must be unique, but scores may repeat. The score is used to rank the sorted set in ascending order.
+
+                Our leaderboard use case maps perfectly to sorted sets. Internally, a sorted set is implemented by two data structures: a hash table and a skip list [1]. The hash table maps users to scores and the skip list maps scores to users. In sorted sets, users are sorted by scores. 
+                A skip list is a list structure that allows for fast search. It consists of a base sorted linked list and multi-level indexes.
+
+
+
+
 
 
 
