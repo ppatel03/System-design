@@ -1113,9 +1113,9 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                 Our leaderboard use case maps perfectly to sorted sets. Internally, a sorted set is implemented by two data structures: a hash table and a skip list [1]. The hash table maps users to scores and the skip list maps scores to users. In sorted sets, users are sorted by scores. 
                 A skip list is a list structure that allows for fast search. It consists of a base sorted linked list and multi-level indexes.
 
+                Another related factor to consider is CPU and I/O usage. Our peak QPS from the back-of-the-envelope estimation is 2500 updates/sec. This is well within the performance envelope of a single Redis server.
 
-
-
+                One concern about the Redis cache is persistence, as a Redis node might fail. Luckily, Redis does support persistence, but restarting a large Redis instance from disk is slow. Usually, Redis is configured with a read replica, and when the main instance fails, the read replica is promoted, and a new read replica is attached.
 
 
 
