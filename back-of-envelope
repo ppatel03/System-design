@@ -1263,7 +1263,18 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                   Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.`
 
               Event sourcing
+                  Figure 18 shows an event sourcing design using the mmap event store as a message bus. This looks very much like the Pub-Sub model in Kafka. In fact, if there is no strict latency requirement, Kafka could be used.
 
+                This design follows the high-level design closely, but there are some adjustments to make it work more efficiently in the event sourcing paradigm.
+
+                  The first difference is the order manager. The order manager becomes a reusable library that is embedded in different components.
+                  Another key difference is that the sequencer is nowhere to be seen. What happened to it?
+
+                  With the event sourcing design, we have one single event store for all messages. Note that the event store entry contains a “sequence” field. This field is injected by the sequencer.    
+
+                  Unlike the sequencer in the high-level design which also functions as a message store, the sequencer here only does one simple thing and is super fast. Figure 19 shows a design for the sequencer in a memory-map (MMap) environment.
+
+                  The sequencer pulls events from the ring buffer that is local to each component. For each event, it stamps a sequence ID on the event and sends it to the event store. We can have backup sequencers for high availability in case the primary sequencer goes down.  
 
 
 
