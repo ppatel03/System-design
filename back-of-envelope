@@ -73,9 +73,14 @@ Benchmarking on common systems
 
     SQL DB benchmarking - Relational
         1. MySQL benchmarking
-          (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
-          Recommend 4 * number of cores parallel for ~ 200 us based on simple primary key look ups. For example, 120 parellel requests for 48 cores will take 200 us
-          1K requests on 48 will take ~ 1ms for simply select query
+          with primary key reads which is already indexed
+            (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
+            Recommend 4 * number of cores parallel for ~ 200 us based on simple primary key look ups. For example, 120 parellel requests for 48 cores will take 200 us
+            1K requests on 48 will take ~ 1ms for simply select query
+          
+          impact of write performance on indexing
+            4 times slower : https://logicalread.com/impact-of-adding-mysql-indexes-mc12/#.Y__7d-zMLuU 
+
 
           - Max size set by MySQL
             256 TB (https://dev.mysql.com/doc/mysql-reslimits-excerpt/8.0/en/table-size-limit.html#:~:text=You%20are%20using%20a%20MyISAM,2567%20%E2%88%92%201%20bytes)
@@ -104,6 +109,8 @@ Benchmarking on common systems
               https://www.youtube.com/watch?v=YuRO9-rOgv4 using B tree
 
               B tree performance : https://www.youtube.com/watch?v=FgWbADOG44s 
+
+            
 
 
 
