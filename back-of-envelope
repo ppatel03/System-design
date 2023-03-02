@@ -1221,6 +1221,9 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
               The sequencer is the key component that makes the matching engine deterministic. It stamps every incoming order with a sequence ID before it is processed by the matching engine. It also stamps every pair of executions (fills) completed by the matching engine with sequence IDs. 
               It is similar to having two Kafka event streams connected to the matching engine, one for incoming orders and the other for outgoing executions. In fact, we could have used Kafka if its latency was lower and more predictable. 
             Order manager
+            Client gateway
+
+
               
 
 
