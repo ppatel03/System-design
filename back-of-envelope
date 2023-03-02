@@ -100,6 +100,11 @@ Benchmarking on common systems
           - MySQL sharding (https://stackoverflow.com/questions/1610887/how-to-partition-mysql-across-multiple-servers)
               this is different from mysql partitioning (https://vertabelo.com/blog/everything-you-need-to-know-about-mysql-partitions/)
 
+          - MySQL indexing 
+              https://www.youtube.com/watch?v=YuRO9-rOgv4 using B tree
+
+              B tree performance : https://www.youtube.com/watch?v=FgWbADOG44s 
+
 
 
     NoSQL value DB benchmarking
@@ -115,8 +120,21 @@ Benchmarking on common systems
               100s video : https://www.youtube.com/watch?v=ziq7FUKpCS8
               Slower version of 100s : https://www.youtube.com/watch?v=YjYWsN1vek8 
               
+              Not super helpful though : 
+                Cassandra data model : https://www.youtube.com/watch?v=X-_vS8q4nu4&list=PLGkHHA2RcrgeV35CBtIlUjiXJzVXLxMbL&index=3
+                How Cassandra data is  stored :  https://www.youtube.com/watch?v=69dLARZxIVw&list=PLGkHHA2RcrgeV35CBtIlUjiXJzVXLxMbL&index=4 
+                How Cassandra read / write data : https://www.youtube.com/watch?v=t276nhhkkI8&t=523s
+              
+              Cassandra indexing
+                Paritioning : https://www.youtube.com/watch?v=Np5RJpCiCzM
+                Clustering : 
+
+                Practical 
+                    Cassandra indexing (partition + clustering key) : https://www.youtube.com/watch?v=S9rmf4X7E_E
 
         4. MongoDB
+              How Mongo DB search works : https://www.youtube.com/watch?v=tSgPhxZdhLk&t=96s 
+              using index in B tree
 
         5. Cassandra                          vs               MongoDB 
                             https://www.youtube.com/watch?v=3z2EzILA3Rk 
