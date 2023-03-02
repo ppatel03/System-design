@@ -1254,6 +1254,17 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                 Latency = ∑executionTimeAlongCriticalPath
                   gateway -> order manager -> sequencer -> matching engine
 
+                  To stay ahead of the competition, exchanges over time evolve their design to reduce the end-to-end latency on the critical path to tens of microseconds, primarily by exploring options to reduce or eliminate network and disk access latency. A time-tested design eliminates the network hops by putting everything on the same server. When all components are on the same server, they can communicate via mmap [17] as an event store (more on this later)
+
+                  Next, let’s focus our attention on the long rectangle labeled “mmap” at the center of Figure 15. “mmap” refers to a POSIX-compliant UNIX system call named `mmap(2)` that maps a file into the memory of a process.
+
+                  `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. The performance advantage is compounded when the backing file is in `/dev/shm`. `/dev/shm` is a memory-backed file system. When `mmap(2)` is done over a file in `/dev/shm`, the access to the shared memory does not result in any disk access at all.
+
+                  Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.`
+
+              Event sourcing
+
+
 
 
 
