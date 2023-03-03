@@ -65,6 +65,13 @@ Distributed Systems estimate
 
     Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
 
+  Choices with protocol
+    - TCP vs UDP
+        https://www.spiceworks.com/tech/networking/articles/tcp-vs-udp/#:~:text=UDP%20is%20faster%20and%20more,connection%20to%20start%20sending%20packets.
+        1. TCP is connection-oriented while UDP is connectionless
+        The UDP protocol is not suitable for sending electronic mail, viewing a web page, or downloading a file. However, it is preferred mainly for real-time applications like broadcasting or multitasking network traffic.
+
+
 Benchmarking on common systems
 
     Cache benchmarking
