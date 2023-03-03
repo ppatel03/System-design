@@ -1185,8 +1185,12 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                 However, similar to the Redis partition solution mentioned earlier, this approach doesn’t provide a straightforward solution for determining the relative rank of a user. But it is possible to get the percentile of a user’s position, which could be good enough. In real life, telling a player that they are in the top 10-20% might be better than showing the exact rank at eg.1,200,001. Therefore, if the scale is large enough that we needed to shard, we could assume that the score distributions are roughly the same across all shards. If this assumption is true, we could have a cron job that analyzes the distribution of the score for each shard, and caches that result.
 
             Faster retrieval and breaking tie
+                To store a map of the user id to the user object that we can display on the leaderboard. This allows for faster retrieval than having to go to the database to fetch the user object.
+
+                In the case of two players having the same scores, we could rank the users based on who received that score first.
 
             System failure recovery
+              The Redis cluster can potentially experience a large-scale failure. Given the design above, we could create a script that leverages the fact that the MySQL database records an entry with a timestamp each time a user won a game. We could iterate through all of the entries for each user, and call ZINCRBY once per entry, per user.
 
 
       TODO : 
