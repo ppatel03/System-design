@@ -1288,6 +1288,17 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                   For stateful components, such as the order manager and matching engine, we need to be able to copy state data across replicas. 
                   We could use reliable UDP [19] to efficiently broadcast the event messages to all warm servers.  
 
+              Fault tolerance
+                  Once the decision to failover is correctly made, how do we decide which server takes over? Fortunately, this is a well-understood problem. There are many battle-tested leader-election algorithms. We use Raft [22] as an example.
+
+              Matching algorithms
+                  The pseudocode uses the FIFO (First In First Out) matching algorithm. The order that comes in first at a certain price level gets matched first, and the last one gets matched last.
+
+              Determinism
+                  With functional determinism, the actual time when the event happens does not matter most of the time. What matters is the order of the events. In Figure 23, event timestamps from discrete uneven dots in the time dimension are converted to continuous dots, and the time spent on replay/recovery can be greatly reduced.
+                  
+                  Latency determinism means having almost the same latency through the system for each trade. This is key to the business. There is a mathematical way to measure this: the 99th percentile latency, or even more strictly, the 99.99th percentile latency. We can leverage HdrHistogram [26] to calculate latency. If the 99th percentile latency is low, the exchange offers stable performance across almost all the trades.
+
 
 
 
