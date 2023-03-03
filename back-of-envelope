@@ -6,7 +6,7 @@ https://matthewdbill.medium.com/back-of-envelope-calculations-cheat-sheet-d6758d
 
 Tips :
 - Ask functional requirements first (example, ability to post tweet, view tweet)
-- Ask DAU. If MAU is provided, atleast ask % of daily users. 
+- Ask DAU. If MAU is provided, atleast ask % of concurrent users. 
 - Ask user activity : example read vs write ratio, or number of writes (example, 2 tweets per day)
 - Ask non-functional requirements 
   These are very important and can convert entire inteview in your favor. Example if latency is 1s, then you do not need complex caching architecture if your data transfer is less than 100 MB (100 MBps max bandwidth today)
