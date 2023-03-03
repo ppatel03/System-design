@@ -1278,7 +1278,8 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
               High availability
                   For stateless services such as the client gateway, they could easily be horizontally scaled by adding more servers.
-                  For stateful components, such as the order manager and matching engine, we need to be able to copy state data across replicas.  
+                  For stateful components, such as the order manager and matching engine, we need to be able to copy state data across replicas. 
+                  We could use reliable UDP [19] to efficiently broadcast the event messages to all warm servers.  
 
 
 
