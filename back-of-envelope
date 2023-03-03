@@ -211,9 +211,9 @@ Benchmarking on common systems
               if manual sharding is needed ( say by user id )
                 if sharding has all related rows (try to denormalize)
                   if there are less aggregations 
-                    then MySQL (high confidence)
+                    then MySQL (medium confidence)
                   if there are more aggregations 
-                    then MySQL (medium confidence since aggregations with sharding could be achieved with noSQL DBs like MongoDB, Cassandra)
+                    then MySQL (low confidence since aggregations with sharding could be better achieved with noSQL DBs like MongoDB, Cassandra)
             If db needs better search performance (not full text search)  
               if index-ing on fixed columns,
                 then MySQL (high confidence)
