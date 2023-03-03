@@ -1274,7 +1274,11 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
                   Unlike the sequencer in the high-level design which also functions as a message store, the sequencer here only does one simple thing and is super fast. Figure 19 shows a design for the sequencer in a memory-map (MMap) environment.
 
-                  The sequencer pulls events from the ring buffer that is local to each component. For each event, it stamps a sequence ID on the event and sends it to the event store. We can have backup sequencers for high availability in case the primary sequencer goes down.  
+                  The sequencer pulls events from the ring buffer that is local to each component. For each event, it stamps a sequence ID on the event and sends it to the event store. We can have backup sequencers for high availability in case the primary sequencer goes down.
+
+              High availability
+                  For stateless services such as the client gateway, they could easily be horizontally scaled by adding more servers.
+                  For stateful components, such as the order manager and matching engine, we need to be able to copy state data across replicas.  
 
 
 
