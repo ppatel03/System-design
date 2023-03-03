@@ -781,7 +781,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
             If a company chooses not to store sensitive payment information due to complex regulations and security concerns, PSP provides a hosted payment page to collect card payment details and securely store them in PSP. This is the approach most companies take.
 
           Reconciliation
-            When system components communicate asynchronously, there is no guarantee that a message will be delivered, or a response will be returned.
+            When system components communicate asynchronously, there is no guarantee that a message will be delivered, or a response will be returned. So how can we ensure correctness in this case?
             External systems, such as PSPs or banks, prefer asynchronous communication as well. So how can we ensure correctness in this case?
             The answer is reconciliation. This is a practice that periodically compares the states among related services in order to verify that they are in agreement. It is usually the last line of defense in the payment system.
             Every night the PSP or banks send a settlement file to their clients. The settlement file contains the balance of the bank account, together with all the transactions that took place on this bank account during the day. The reconciliation system parses the settlement file and compares the details with the ledger system.
