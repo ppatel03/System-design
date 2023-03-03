@@ -80,6 +80,7 @@ Benchmarking on common systems
         53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
         230 us (https://redis.io/docs/management/optimization/latency/)
         Redis QPS - 50K https://redis.io/docs/management/optimization/benchmarks/
+        Redis also privides sorted set data structure. Our leaderboard use case maps perfectly to sorted sets. Internally, a sorted set is implemented by two data structures: a hash table and a skip list [1]. The hash table maps users to scores and the skip list maps scores to users. In sorted sets, users are sorted by scores. (https://bytebytego.com/courses/system-design-interview/real-time-gaming-leaderboard)
         Redis cluster also supports sharding with hash slot ( different from consistent hashing)
         Redis cluster uses master-replica model
         Redis Cluster does not guarantee strong consistency
@@ -104,8 +105,8 @@ Benchmarking on common systems
 
           Some facts
           - MySQL client <-> server is socket based connection
-          - per connection -> one user thread
           - Max connection limit for MySQL = 100 K
+          - per connection -> one user thread
           - size of user thread depends on THD connection data structure which is per connection ~ 10 MB 
           - max THD ~ 10K 
           - So recommended min size of your MySQL = 10 MB * 10 K = 100 GB ??
