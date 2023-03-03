@@ -32,7 +32,7 @@ How to use non-functional requirements in decison making
   Bandwidth (assume to be 1 GBps ~ 100 MBps which means 1 KB = 10us) 
     - can help reason your latency
     - can help reason your replication or multiple servers
-    - can help reason your sharding for database (remember max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) 
+    - can help reason your sharding for database (remember internal data center max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) 
 
   Durability  (I even refer as availability + data correctness with techniques like checksum, parity)
     - can help reason how much to replicate. 
