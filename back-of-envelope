@@ -1427,6 +1427,12 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                   This is why we added an out-of-order flag to the phase status table in the “Phase Status Table” section.
 
           Distributed transaction: Saga
+              Linear order execution
+                1. All operations are ordered in a sequence. Each operation is an independent transaction on its own database.
+
+                2. Operations are executed from the first to the last. When one operation has finished, the next operation is triggered.
+
+                3. When an operation has failed, the entire process starts to roll back from the current operation to the first operation in reverse order, using compensating transactions. So if a distributed transaction has n operations, we need to prepare 2n operations: n for the normal case and another n for the compensating transaction during rollback.
 
 
 
