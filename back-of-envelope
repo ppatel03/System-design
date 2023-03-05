@@ -1434,6 +1434,14 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
                 3. When an operation has failed, the entire process starts to roll back from the current operation to the first operation in reverse order, using compensating transactions. So if a distributed transaction has n operations, we need to prepare 2n operations: n for the normal case and another n for the compensating transaction during rollback.
 
+                How do we coordinate the operations? There are two ways to do it:
+
+                  Choreography (De-centralized). In a microservice architecture, all the services involved in the Saga distributed transaction do their jobs by subscribing to other services’ events. So it is fully decentralized coordination.
+
+                  Orchestration (Centralized). A single coordinator instructs all services to do their jobs in the correct order.
+
+                  The choice of which coordination model to use is determined by the business needs and goals. The challenge of the choreography solution is that services communicate in a fully asynchronous way, so each service has to maintain an internal state machine in order to understand what to do when other services emit an event. It can become hard to manage when there are many services. The orchestration solution handles complexity well, so it is usually the preferred solution in a digital wallet system.
+
 
 
 
