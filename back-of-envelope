@@ -90,6 +90,7 @@ Benchmarking on common systems
         53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
         230 us (https://redis.io/docs/management/optimization/latency/)
         Redis QPS - 50K https://redis.io/docs/management/optimization/benchmarks/
+        1 million TPS - https://bytebytego.com/courses/system-design-interview/digital-wallet 
         Redis also privides sorted set data structure. Our leaderboard use case maps perfectly to sorted sets. Internally, a sorted set is implemented by two data structures: a hash table and a skip list [1]. The hash table maps users to scores and the skip list maps scores to users. In sorted sets, users are sorted by scores. (https://bytebytego.com/courses/system-design-interview/real-time-gaming-leaderboard)
         Redis cluster also supports sharding with hash slot ( different from consistent hashing)
         Redis cluster uses master-replica model
