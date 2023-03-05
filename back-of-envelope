@@ -1395,25 +1395,45 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           Distributed transaction: Try-Confirm/Cancel (TC/C)
 
             TC/C is a type of compensating transaction [7] that has two steps:
-
               In the first phase, the coordinator asks all databases to reserve resources for the transaction.
               In the second phase, the coordinator collects replies from all databases:
                 If all databases reply with “yes”, the coordinator asks all databases to confirm the operation, which is the Try-Confirm process.
                 If any database replies with “no”, the coordinator asks all databases to cancel the operation, which is the Try-Cancel process.
             It’s important to note that the two phases in 2PC are wrapped in the same transaction, but in TC/C each phase is a separate transaction.
-
                 First phase: Try
                   For the database that contains account A, the coordinator starts a local transaction that reduces the balance of A by $1.
                   For the database that contains account C, the coordinator gives it a NOP (no operation.) To make the example adaptable for other scenarios, let’s assume the coordinator sends to this database a NOP command. The database does nothing for NOP commands and always replies to the coordinator with a success message.
-
                 Second phase: Confirm
                   If both databases reply “yes”, the wallet service starts the next Confirm phase.
-
                 Second phase: Cancel
-
                   What if the first Try phase fails? In the example above we have assumed the NOP operation on account C always succeeds, although in practice it may fail. For example, account C might be an illegal account, and the regulator has mandated that no money can flow into or out of this account. In this case, the distributed transaction must be canceled and we have to clean up.
-
                   Because the balance of account A has already been updated in the transaction in the Try phase, it is impossible for the wallet service to cancel a completed transaction. What it can do is to start another transaction that reverts the effect of the transaction in the Try phase, which is to add $1 back to account A.
+
+                TC/C is also called a distributed transaction by compensation. It is a high-level solution because the compensation, also called the “undo,” is implemented in the business logic. The advantage of this approach is that it is database-agnostic. As long as a database supports transactions, TC/C will work. The disadvantage is that we have to manage the details and handle the complexity of the distributed transactions in the business logic at the application layer.
+
+              Phase status table
+                  We still have not yet answered the question asked earlier; what if the wallet service restarts in the middle of TC/C? When it restarts, all previous operation history might be lost, and the system may not know how to recover.
+                  The solution is simple. We can store the progress of a TC/C as phase status in a transactional database.
+
+              Unbalanced state
+                  Have you noticed that by the end of the Try phase, $1 is missing (Figure 11)?
+                  It violates a fundamental rule of accounting that the sum should remain the same after a transaction.
+                  The good news is that the transactional guarantee is still maintained by TC/C. TC/C comprises several independent local transactions. Because TC/C is driven by application, the application itself is able to see the intermediate result between these local transactions. On the other hand, the database transaction or 2PC version of the distributed transaction was maintained by databases that are invisible to high-level applications.
+
+              Out-of-order execution
+                  Let’s assume that the database that handles account C has some network issues and it receives the Cancel instruction before the Try instruction. In this case, there is nothing to cancel.
+                    The out-of-order Cancel operation leaves a flag in the database indicating that it has seen a Cancel operation, but it has not seen a Try operation yet.
+                    The Try operation is enhanced so it always checks whether there is an out-of-order flag, and it returns a failure if there is.
+                  This is why we added an out-of-order flag to the phase status table in the “Phase Status Table” section.
+
+          Distributed transaction: Saga
+
+
+
+
+
+
+
 
 
 
