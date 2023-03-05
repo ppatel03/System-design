@@ -1409,6 +1409,12 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                 Second phase: Confirm
                   If both databases reply “yes”, the wallet service starts the next Confirm phase.
 
+                Second phase: Cancel
+
+                  What if the first Try phase fails? In the example above we have assumed the NOP operation on account C always succeeds, although in practice it may fail. For example, account C might be an illegal account, and the regulator has mandated that no money can flow into or out of this account. In this case, the distributed transaction must be canceled and we have to clean up.
+
+                  Because the balance of account A has already been updated in the transaction in the Try phase, it is impossible for the wallet service to cancel a completed transaction. What it can do is to start another transaction that reverts the effect of the transaction in the Try phase, which is to add $1 back to account A.
+
 
 
 
