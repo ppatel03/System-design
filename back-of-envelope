@@ -1346,6 +1346,47 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
 
   Digital Wallet
+      https://bytebytego.com/courses/system-design-interview/digital-wallet
+
+      Step 2 - Propose High-Level Design and Get Buy-In
+
+        API Design
+
+          API	Detail
+          POST /v1/wallet/balance_transfer
+
+        In-memory sharding solution
+          For in-memory stores, one popular choice is Redis. One Redis node is not enough to handle 1 million TPS. We need to set up a cluster of Redis nodes and evenly distribute user accounts among them. This process is called partitioning or sharding.
+
+          The number of partitions and addresses of all Redis nodes can be stored in a centralized place. We could use Zookeeper [4] as a highly-available configuration storage solution.
+
+          The final component of this solution is a service that handles the transfer commands. We call it the wallet service and it has several key responsibilities.
+              Receives the transfer command
+              Validates the transfer command
+              If the command is valid, it updates the account balances for the two users involved in the transfer. In a cluster, the account balances are likely to be in different Redis nodes
+
+          In this example, we have 3 Redis nodes. There are three clients, A, B, and C. Their account balances are evenly spread across these three Redis nodes. There are two wallet service nodes in this example that handle the balance transfer requests. 
+          This design works, but it does not meet our correctness requirement. The wallet service updates two Redis nodes for each transfer. There is no guarantee that both updates would succeed.
+
+        Distributed transactions
+
+          Database sharding
+
+            The first step is to replace each Redis node with a transactional relational database node. 
+
+            Using transactional databases only solves part of the problem. As mentioned in the last section, it is very likely that one transfer command will need to update two accounts in two different databases. There is no guarantee that two update operations will be handled at exactly the same time. If the wallet service restarted right after it updated the first account balance, how can we make sure the second account will be updated as well?
+
+          Distributed transaction: two-phase commit
+
+            There are two ways to implement a distributed transaction: a low-level solution and a high-level solution. We will examine each of them.
+
+            The low-level solution relies on the database itself. The most commonly used algorithm is called two-phase commit (2PC).
+
+
+
+
+
+
 
 
 
