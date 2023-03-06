@@ -261,6 +261,7 @@ Distributed systems today and Benchmarking on common systems
             3. Aggregation on sharded MySQL needs Application level handling vs Cassandra or HBase(Column) can handle this since they are built on top of distributed systems . Fact and derived above
             4. How MySQL indexing works ? 
             5. Cassandra benchmarking ? 
+            6. Study about graphdbs ? 
 
 
 ================================================================
