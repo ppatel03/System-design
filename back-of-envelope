@@ -1473,6 +1473,50 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
                   The choice of which coordination model to use is determined by the business needs and goals. The challenge of the choreography solution is that services communicate in a fully asynchronous way, so each service has to maintain an internal state machine in order to understand what to do when other services emit an event. It can become hard to manage when there are many services. The orchestration solution handles complexity well, so it is usually the preferred solution in a digital wallet system.
 
+          Event sourcing
+              Background
+                In real life, a digital wallet provider may be audited. These external auditors might ask some challenging questions, for example:
+                Do we know the account balance at any given time?
+                How do we know the historical and current account balances are correct?
+                How do we prove that the system logic is correct after a code change?
+
+                One design philosophy that systematically answers those questions is event sourcing, which is a technique developed in Domain-Driven Design (DDD) [9].
+
+          Wallet service example
+              For the wallet service, the commands are balance transfer requests. These commands are put into a FIFO queue. One popular choice for the command queue is Kafka [10]
+              Let us assume the state (the account balance) is stored in a relational database. The state machine examines each command one by one in FIFO order. For each command, it checks whether the account has a sufficient balance. If yes, the state machine generates an event for each account.
+                Read commands from the command queue.
+                Read balance state from the database.
+                Validate the command. If it is valid, generate two events for each of the accounts.
+                Read the next Event.
+                Apply the Event by updating the balance in the database.
+
+          Reproducibility
+              The most important advantage that event sourcing has over other architectures is reproducibility.
+              In the distributed transaction solutions mentioned earlier, a wallet service saves the updated account balance (the state) into the database. It is difficult to know why the account balance was changed. Meanwhile, historical balance information is lost during the update operation. In the event sourcing design, all changes are saved first as immutable history. The database is only used as an updated view of what balance looks like at any given point in time.
+
+            Because of the audit capability, event sourcing is often chosen as the de facto solution for the wallet service.
+
+          Command-query responsibility segregation (CQRS)
+            So far, we have designed the wallet service to move money from one account to another efficiently. However, the client still does not know what the account balance is. 
+            Rather than publishing the state (balance information), event sourcing publishes all the events. The external world could rebuild any customized state itself. This design philosophy is called CQRS [11].
+            In CQRS, there is one state machine responsible for the write part of the state, but there can be many read-only state machines. For example, clients may want to know their balances and a read-only state machine could save state in a database to serve the balance query. Another state machine could build state for a specific time period to help investigate issues like possible double charges. The state information is an audit trail that could help to reconcile the financial records.
+
+      Design Deep Dive
+      
+          File-based state
+            In the previous design, state (balance information) is stored in a relational database. In a production environment, a database usually runs in a stand-alone server that can only be accessed through networks. Similar to the optimizations we did for command and event, state information can be saved to the local disk, as well.
+
+            More specifically, we can use SQLite [14], which is a file-based local relational database or use RocksDB [15], which is a local file-based key-value store.
+
+            RocksDB is chosen because it uses a log-structured merge-tree (LSM), which is optimized for write operations. To improve read performance, the most recent data is cached.
+
+
+      TODO
+        Study mmap
+
+              
+
 
 
 News Feed System
