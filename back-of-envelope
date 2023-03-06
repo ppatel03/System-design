@@ -80,6 +80,10 @@ Concensus algo
           The leader sends heartbeat messages (AppendEnties with no content as shown in Figure 21) to its followers. If a follower has not received heartbeat messages for a period of time, it triggers an election timeout that initiates a new election. The first follower that reaches election timeout becomes a candidate, and it asks the rest of the followers to vote (RequestVote). If the first follower receives a majority of votes, it becomes the new leader.
 
 
+Distributed systems best practices
+  Event sourcing
+      https://bytebytego.com/courses/system-design-interview/digital-wallet
+    One design philosophy that systematically answers those questions is event sourcing, which is a technique developed in Domain-Driven Design (DDD) [9].
 
 
 Distributed systems today and Benchmarking on common systems
