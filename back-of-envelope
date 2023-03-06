@@ -191,8 +191,31 @@ Distributed systems today and Benchmarking on common systems
                   Remember data in cassandra on disk supports SSTable which is sorted string table.
                   So searching could be done in logN times like relational or mongoDB
 
-                Practical 
+              Practical 
                     Cassandra indexing (partition + clustering which is sort key) : https://www.youtube.com/watch?v=S9rmf4X7E_E
+
+              Garbage collection
+                4.0 uses Z GC instead of G1 GC (java8 to java 16)
+
+              Cassandra and map-reduce
+                https://subscription.packtpub.com/book/data/9781787127296/1/ch01lvl1sec5/mapreduce-and-spark
+                Unlike MongoDB, Cassandra does not offer built-in MapReduce capabilities. But it can be integrated with Hadoop in order to perform MapReduce operations across Cassandra data sets, or Spark for real-time data analysis. 
+                
+
+              Benchmarking
+                - On Cheap heardware https://benchant.com/blog/cassandra-4-performance
+                  m5.large ( 2 core, 8 GB) 
+                  Read : 7 K ops/s
+                  Write : 7 K ops/s
+                  Read Latency : ~10 ma
+                  Write Latency : ~7 ms
+
+                - Expensive hardware https://www.scylladb.com/2021/08/19/cassandra-4-0-vs-cassandra-3-11-comparing-performance/
+                  i3.4xlarge (16 vCPUs, 122 GB)
+                   Read : 30 K ops/s
+                   Write : 20 K ops/s
+                   Read Latency : ~10 ms
+                   Write Latency : ~10 ms
 
         4. MongoDB
               - How Mongo DB search works : https://www.youtube.com/watch?v=tSgPhxZdhLk&t=96s 
