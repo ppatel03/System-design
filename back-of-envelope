@@ -87,6 +87,7 @@ Distributed systems today and Benchmarking on common systems
     Zookeeper 
      - centralized configuration
      - The number of partitions and addresses of all Redis nodes can be stored in a centralized place. We could use Zookeeper [4] as a highly-available configuration storage solution. (https://bytebytego.com/courses/system-design-interview/digital-wallet)
+     - Apache Zookeeper [7] is a popular open-source solution for service discovery. It registers all the available chat servers and picks the best chat server for a client based on predefined criteria. (https://bytebytego.com/courses/system-design-interview/design-a-chat-system)
 
     Cache benchmarking
 
