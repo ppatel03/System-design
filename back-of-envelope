@@ -225,6 +225,7 @@ Distributed systems today and Benchmarking on common systems
               - How Mongo DB sharding works : https://kinsta.com/blog/mongodb-vs-mysql/ 
               - Practical
                   set up mongo based sharding https://www.youtube.com/watch?v=mjSNKjTzeao 
+                  mongoDB gridFS https://www.youtube.com/watch?v=mZE3aBdr010 
 
 
         5. Cassandra                          vs               MongoDB 
