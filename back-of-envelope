@@ -88,6 +88,10 @@ Distributed systems best practices
 
 Distributed systems today and Benchmarking on common systems
 
+    Map Reduce
+      https://www.youtube.com/watch?v=MAJ0aW5g17c (awesome)
+        Example of GFS performing map function on worker servers and reduce using worker servers co-ordinated by master
+
     Zookeeper 
      - centralized configuration
      - The number of partitions and addresses of all Redis nodes can be stored in a centralized place. We could use Zookeeper [4] as a highly-available configuration storage solution. (https://bytebytego.com/courses/system-design-interview/digital-wallet)
