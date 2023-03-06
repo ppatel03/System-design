@@ -65,6 +65,7 @@ Distributed Systems estimate
 
     Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
 
+
 Choices with protocol
     - TCP vs UDP
         https://www.spiceworks.com/tech/networking/articles/tcp-vs-udp/#:~:text=UDP%20is%20faster%20and%20more,connection%20to%20start%20sending%20packets.
@@ -81,9 +82,16 @@ Concensus algo
 
 
 Distributed systems best practices
+
   Event sourcing
       https://bytebytego.com/courses/system-design-interview/digital-wallet
     One design philosophy that systematically answers those questions is event sourcing, which is a technique developed in Domain-Driven Design (DDD) [9].
+
+  Using LSMTree + SSTable are efficienct for heavy writes and heavy reads on noSQL databases. B tree is not
+      Great video : https://www.youtube.com/watch?v=I6jB0nM9SKU 
+      Good read : https://rahulpradeep.medium.com/sstables-and-lsm-trees-5ba6c5529325
+      This technique is used by Cassandra, RocksDB, Google BigTable, Apache HBase
+      MongoDB can be tuned to use LSM treee
 
 
 Distributed systems today and Benchmarking on common systems
@@ -156,8 +164,8 @@ Distributed systems today and Benchmarking on common systems
 
           - MySQL indexing 
               https://www.youtube.com/watch?v=YuRO9-rOgv4 using B tree
-
               B tree performance : https://www.youtube.com/watch?v=FgWbADOG44s 
+              Its inefficient as compared to B tree for writes : https://www.youtube.com/watch?v=I6jB0nM9SKU 
 
           - Practical
               how MySQL gurantees ACID : https://www.youtube.com/watch?v=0OYFsJ1-1YA
