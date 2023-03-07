@@ -310,6 +310,7 @@ Distributed systems today and Benchmarking on common systems
       Open questions
             1. Why is MySQL better for read heavy low write workload ? answered above
             2. MySQL is better for ACID systems and structured ? How ? 
+            2. How MySQL syncs with its replicas
             2. Why is Cassandra (noSQL) better for read less write heavy workload ?
             3. Aggregation on sharded MySQL needs Application level handling vs Cassandra or HBase(Column) can handle this since they are built on top of distributed systems . Fact and derived above
             4. How MySQL indexing works ? 
