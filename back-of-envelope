@@ -414,6 +414,9 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
       Vertical scaling
         Vertical scaling, also known as scaling up, is the scaling by adding more power (CPU, RAM, DISK, etc.) to an existing machine. There are some powerful database servers. According to Amazon Relational Database Service (RDS) [12], you can get a database server with 24 TB of RAM.
 
+      Horizontal scaling
+        Horizontal scaling, also known as sharding, is the practice of adding more servers.
+
 
 
 
