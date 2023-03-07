@@ -422,6 +422,14 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         Horizontal scaling, also known as sharding, is the practice of adding more servers.
 
 
+  Design A Rate Limiter
+    https://bytebytego.com/courses/system-design-interview/design-a-rate-limiter
+
+      Where to put the rate limiter?
+        Besides the client and server-side implementations, there is an alternative way. Instead of putting a rate limiter at the API servers, we create a rate limiter middleware, which throttles requests to your APIs as shown in Figure 2.
+        the rate limiter middleware throttles the third request and returns a HTTP status code 429. The HTTP 429 response status code indicates a user has sent too many requests.
+
+        Cloud microservices [4] have become widely popular and rate limiting is usually implemented within a component called API gateway.
 
 
 
