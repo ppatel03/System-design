@@ -244,28 +244,6 @@ Distributed systems today and Benchmarking on common systems
                   set up mongo based sharding https://www.youtube.com/watch?v=mjSNKjTzeao 
                   mongoDB gridFS https://www.youtube.com/watch?v=mZE3aBdr010 
 
-
-        5. Cassandra                          vs               MongoDB 
-                            https://www.youtube.com/watch?v=3z2EzILA3Rk 
-            column data model                                   json document data model
-            no config server(ring structure)                    mongo master, slave and mongo config servers for replication
-            high availability due to multiple masters           master -> slave takes time
-            accept writes in parallel                           write capacity is limited since they just go to master
-            similar to SQL                                        based on json formatting
-
-              When mongo DB
-                query also based on secondary indexing and flexible querying
-                built in data aggregation framework
-                read-heavy workload
-
-              When Cassandra 
-                query based on primary key indexing 
-                100% uptime guarantee due to replication and inconsistency resolution
-                high write speed
-                language support for SQL
-                write-heavy, read-heavy workload
-                eventual consistency (as per bytebytego - https://bytebytego.com/courses/system-design-interview/design-a-key-value-store )
-
         6. Dynamo DB
             Nice intro in https://bytebytego.com/courses/system-design-interview/real-time-gaming-leaderboard
 
@@ -300,15 +278,36 @@ Distributed systems today and Benchmarking on common systems
               if db experience heavy writes
                 then MySQL (low confidence since indexes increases write latency) 
 
-        2.  MySQL vs MongoDB
+      2.  MySQL vs MongoDB
 
-        3.  MongoFB vs Cassandra
+      3.  MongoDB vs Cassandra
+            https://www.youtube.com/watch?v=3z2EzILA3Rk 
 
-        4. When S3
+                Cassandra                          vs               MongoDB 
+            column data model                                   json document data model
+            no config server(ring structure)                    mongo master, slave and mongo config servers for replication
+            high availability due to multiple masters           master -> slave takes time
+            accept writes in parallel                           write capacity is limited since they just go to master
+            similar to SQL                                        based on json formatting
 
-        5. When Neo4j
+            When mongo DB
+              query also based on secondary indexing and flexible querying
+              built in data aggregation framework
+              read-heavy workload
 
-    Open questions
+            When Cassandra 
+                query based on primary key indexing 
+                100% uptime guarantee due to replication and inconsistency resolution
+                high write speed
+                language support for SQL
+                write-heavy, read-heavy workload
+                eventual consistency (as per bytebytego - https://bytebytego.com/courses/system-design-interview/design-a-key-value-store )
+
+      4. When S3
+
+      5. When Neo4j
+
+      Open questions
             1. Why is MySQL better for read heavy low write workload ? answered above
             2. MySQL is better for ACID systems and structured ? How ? 
             2. Why is Cassandra (noSQL) better for read less write heavy workload ?
