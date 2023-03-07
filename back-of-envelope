@@ -135,10 +135,10 @@ Distributed systems today and Benchmarking on common systems
             Today, a relational database running on a typical data center node can support a few thousand transactions per second.
 
 
-
           - Max size set by MySQL
             256 TB (https://dev.mysql.com/doc/mysql-reslimits-excerpt/8.0/en/table-size-limit.html#:~:text=You%20are%20using%20a%20MyISAM,2567%20%E2%88%92%201%20bytes)
             AWS limit : 64 TB
+            According to Amazon Relational Database Service (RDS) [12], you can get a database server with 24 TB of RAM.
 
           Some facts
           - MySQL client <-> server is socket based connection
