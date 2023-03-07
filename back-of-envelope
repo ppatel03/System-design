@@ -404,7 +404,12 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         A message queue is a durable component, stored in memory, that supports asynchronous communication. It serves as a buffer and distributes asynchronous requests.
 
       Logging, metrics, automation
-
+        Logging: Monitoring error logs is important
+        Metrics: Collecting different types of metrics help us to gain business insights and understand the health status of the system. Some of the following metrics are useful:
+          Host level metrics: CPU, Memory, disk I/O, etc.
+          Aggregated level metrics: for example, the performance of the entire database tier, cache tier, etc.
+          Key business metrics: daily active users, retention, revenue, etc.
+        Automation: When a system gets big and complex, we need to build or leverage automation tools to improve productivity. Continuous integration is a good practice, in which each code check-in is verified through automation, allowing teams to detect problems early. Besides, automating your build, test, deploy process, etc. could improve developer productivity significantly.
 
 
 
