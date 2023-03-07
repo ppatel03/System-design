@@ -59,6 +59,10 @@ Distributed Systems estimate
     Send 1 KB sequential from cache   = 1 us    (1 GB/s = 1 * 10 ^ -6 s )
     Round trip within the same datacenter	 = 500 us 
     Send packet CA (California) ->Netherlands->CA	= 150 ms 
+    Mutex lock/unlock =	100 ns
+    Disk seek	= 10 ms
+    SSD latency = 250 us
+    Memory read = 100 ns
 
     So network is 3 times faster than disk
     memory is 40 times faster than network
