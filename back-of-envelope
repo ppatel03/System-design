@@ -357,10 +357,14 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 ================================================================================================================================
 - Key learnings from system design
 
-    Scale for Zero to millions of users 
+  Scale for Zero to millions of users 
       https://bytebytego.com/courses/system-design-interview/scale-from-zero-to-millions-of-users
     
-    Proximity Service 
+      - If the master database goes offline, a slave database will be promoted to be the new master. All the database operations will be temporarily executed on the new master database. A new slave database will replace the old one for data replication immediately. In production systems, promoting a new master is more complicated as the data in a slave database might not be up to date. The missing data needs to be updated by running data recovery scripts. Although some other replication methods like multi-masters and circular replication could help, those setups are more complicated; and their discussions are beyond the scope of this course. Interested readers should refer to the listed reference materials [4] [5].
+
+
+
+  Proximity Service 
     https://bytebytego.com/courses/system-design-interview/proximity-service
     
         Different types of address look up
