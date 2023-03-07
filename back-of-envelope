@@ -61,7 +61,7 @@ Distributed Systems estimate
     Send packet CA (California) ->Netherlands->CA	= 150 ms 
     Mutex lock/unlock =	100 ns
     Disk seek	= 10 ms
-    SSD latency = 250 us
+    SSD latency = 16 us
     Memory read = 100 ns
 
     So network is 3 times faster than disk
