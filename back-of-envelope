@@ -275,8 +275,8 @@ Distributed systems today and Benchmarking on common systems
             DynamoDB splits data across multiple nodes using consistent hashing.
 
 
-        Attempt to standardized DB selection criteria 
-            MySQL vs MongoDB : https://kinsta.com/blog/mongodb-vs-mysql/
+  Attempt to standardized DB selection criteria 
+      1. MySQL vs noSQL 
 
             When MySQL
             if ACID, 
@@ -298,9 +298,17 @@ Distributed systems today and Benchmarking on common systems
               if index-ing on fixed columns,
                 then MySQL (high confidence)
               if db experience heavy writes
-                then MySQL (low confidence since indexes increases write latency)   
+                then MySQL (low confidence since indexes increases write latency) 
 
-          Open questions
+        2.  MySQL vs MongoDB
+
+        3.  MongoFB vs Cassandra
+
+        4. When S3
+
+        5. When Neo4j
+
+    Open questions
             1. Why is MySQL better for read heavy low write workload ? answered above
             2. MySQL is better for ACID systems and structured ? How ? 
             2. Why is Cassandra (noSQL) better for read less write heavy workload ?
