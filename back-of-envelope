@@ -477,6 +477,43 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
             Cons:
               The algorithm consumes a lot of memory because even if a request is rejected, its timestamp might still be stored in memory.
 
+        Sliding window counter algorithm (too complicated)
+
+      High-level architecture
+          The basic idea of rate limiting algorithms is simple. At the high-level, we need a counter to keep track of how many requests are sent from the same user, IP address, etc. If the counter is larger than the limit, the request is disallowed.
+          Where shall we store counters? Using the database is not a good idea due to slowness of disk access. In-memory cache is chosen because it is fast and supports time-based expiration strategy. For instance, Redis [11] is a popular option to implement rate limiting.
+
+        Rate limiting rules
+          Lyft open-sourced their rate-limiting component [12]. We will peek inside of the component and look at some examples of rate limiting rules:
+          This rule shows that clients are not allowed to login more than 5 times in 1 minute. Rules are generally written in configuration files and saved on disk.
+
+        Exceeding the rate limit
+          Rate limiter headers
+            How does a client know whether it is being throttled? And how does a client know the number of allowed remaining requests before being throttled? The answer lies in HTTP response headers. 
+            When a user has sent too many requests, a 429 too many requests error and X-Ratelimit-Retry-After header are returned to the client.
+
+        Rate limiter in a distributed environment
+          Race condition
+            Locks are the most obvious solution for solving race condition. However, locks will significantly slow down the system. Two strategies are commonly used to solve the problem: Lua script [13] and sorted sets data structure in Redis [8]. 
+
+          Synchronization issue
+            As the web tier is stateless, clients can send requests to a different rate limiter as shown on the right side of Figure 15. If no synchronization happens, rate limiter 1 does not contain any data about client 2. Thus, the rate limiter cannot work properly.
+            One possible solution is to use sticky sessions that allow a client to send traffic to the same rate limiter. This solution is not advisable because it is neither scalable nor flexible. A better approach is to use centralized data stores like Redis. 
+
+          Performance optimization
+            First, multi-data center setup is crucial for a rate limiter because latency is high for users located far away from the data center. 
+            Second, synchronize data with an eventual consistency model. If you are unclear about the eventual consistency model, refer to the “Consistency” section in the “Design a Key-value Store” chapter.
+
+          Monitoring
+            After the rate limiter is put in place, it is important to gather analytics data to check whether the rate limiter is effective. Primarily, we want to make sure:
+              The rate limiting algorithm is effective.
+              The rate limiting rules are effective.
+
+          Rate limiting at different levels. 
+            In this chapter, we only talked about rate limiting at the application level (HTTP: layer 7). It is possible to apply rate limiting at other layers. For example, you can apply rate limiting by IP addresses using Iptables [15] (IP: layer 3). Note: The Open Systems Interconnection model (OSI model) has 7 layers [16]: Layer 1: Physical layer, Layer 2: Data link layer, Layer 3: Network layer, Layer 4: Transport layer, Layer 5: Session layer, Layer 6: Presentation layer, Layer 7: Application layer.
+
+      TODO
+        - Study how Lua Script or Sorted Set prevents race conditions ? 
 
 
 
