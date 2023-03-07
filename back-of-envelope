@@ -433,6 +433,49 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
       Algorithms for rate limiting
 
+        Token bucket algorithm
+          The token bucket algorithm is widely used for rate limiting. It is simple, well understood and commonly used by internet companies. Both Amazon [5] and Stripe [6] use this algorithm to throttle their API requests.
+
+          The token bucket algorithm takes two parameters:
+            Bucket size: the maximum number of tokens allowed in the bucket
+            Refill rate: number of tokens put into the bucket every second
+
+          How many buckets do we need? This varies, and it depends on the rate-limiting rules. Here are a few examples.
+            It is usually necessary to have different buckets for different API endpoints. For instance, if a user is allowed to make 1 post per second, add 150 friends per day, and like 5 posts per second, 3 buckets are required for each user.
+            If we need to throttle requests based on IP addresses, each IP address requires a bucket.
+            If the system allows a maximum of 10,000 requests per second, it makes sense to have a global bucket shared by all requests.
+
+        Leaking bucket algorithm
+          Shopify, an ecommerce company, uses leaky buckets for rate-limiting [7].
+
+          The leaking bucket algorithm is similar to the token bucket except that requests are processed at a fixed rate. It is usually implemented with a first-in-first-out (FIFO) queue. The algorithm works as follows:
+
+            When a request arrives, the system checks if the queue is full. If it is not full, the request is added to the queue.
+            Otherwise, the request is dropped.
+            Requests are pulled from the queue and processed at regular intervals.
+
+        Fixed window counter algorithm
+            Fixed window counter algorithm works as follows:
+
+              The algorithm divides the timeline into fix-sized time windows and assign a counter for each window.
+              Each request increments the counter by one.
+              Once the counter reaches the pre-defined threshold, new requests are dropped until a new time window starts.
+
+              Cons:
+                Spike in traffic at the edges of a window could cause more requests than the allowed quota to go through.
+
+        Sliding window log algorithm
+            The sliding window log algorithm fixes the issue. It works as follows:
+
+                  The algorithm keeps track of request timestamps. Timestamp data is usually kept in cache, such as sorted sets of Redis [8].
+                  When a new request comes in, remove all the outdated timestamps. Outdated timestamps are defined as those older than the start of the current time window.
+                  Add timestamp of the new request to the log.
+                  If the log size is the same or lower than the allowed count, a request is accepted. Otherwise, it is rejected.
+
+            Pros:     
+              Rate limiting implemented by this algorithm is very accurate. In any rolling window, requests will not exceed the rate limit.
+            Cons:
+              The algorithm consumes a lot of memory because even if a request is rejected, its timestamp might still be stored in memory.
 
 
 
