@@ -411,6 +411,10 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           Key business metrics: daily active users, retention, revenue, etc.
         Automation: When a system gets big and complex, we need to build or leverage automation tools to improve productivity. Continuous integration is a good practice, in which each code check-in is verified through automation, allowing teams to detect problems early. Besides, automating your build, test, deploy process, etc. could improve developer productivity significantly.
 
+      Vertical scaling
+        Vertical scaling, also known as scaling up, is the scaling by adding more power (CPU, RAM, DISK, etc.) to an existing machine. There are some powerful database servers. According to Amazon Relational Database Service (RDS) [12], you can get a database server with 24 TB of RAM.
+
+
 
 
 
