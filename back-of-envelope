@@ -212,6 +212,11 @@ Distributed systems today and Benchmarking on common systems
               Cassandra and map-reduce
                 https://subscription.packtpub.com/book/data/9781787127296/1/ch01lvl1sec5/mapreduce-and-spark
                 Unlike MongoDB, Cassandra does not offer built-in MapReduce capabilities. But it can be integrated with Hadoop in order to perform MapReduce operations across Cassandra data sets, or Spark for real-time data analysis. 
+
+              Cassandra performance on writes + reads on indexes 
+                - LSM tree + SS tables
+                Great video : https://www.youtube.com/watch?v=I6jB0nM9SKU 
+                Good read : https://rahulpradeep.medium.com/sstables-and-lsm-trees-5ba6c5529325 
                 
 
               Benchmarking
