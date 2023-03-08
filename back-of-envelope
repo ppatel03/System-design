@@ -613,7 +613,15 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
               First, vector clocks add complexity to the client because it needs to implement conflict resolution logic.
               Second, the [server: version] pairs in the vector clock could grow rapidly. To fix this problem, we set a threshold for the length, and if it exceeds the limit, the oldest pairs are removed. This can lead to inefficiencies in reconciliation because the descendant relationship cannot be determined accurately. However, based on Dynamo paper [4], Amazon has not yet encountered this problem in production; therefore, it is probably an acceptable solution for most companies.
 
-          
+          Handling failures
+            Failure detection
+              all-to-all multicasting is a straightforward solution. However, this is inefficient when many servers are in the system.
+              A better solution is to use decentralized failure detection methods like gossip protocol. Gossip protocol works as follows:
+                  Each node maintains a node membership list, which contains member IDs and heartbeat counters.
+                  Each node periodically increments its heartbeat counter.
+                  Each node periodically sends heartbeats to a set of random nodes, which in turn propagate to another set of nodes.
+                  Once nodes receive heartbeats, membership list is updated to the latest info.
+            Handling temporary failures
 
 
 
