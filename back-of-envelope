@@ -349,7 +349,9 @@ Distributed systems today and Benchmarking on common systems
             5. Cassandra benchmarking ? 
             6. Study about graphdbs ? 
 
-
+ Operation system
+    User level threads vs Kernel level threads
+      https://www.youtube.com/watch?v=_5q8ZK6hwzM
 ================================================================
 ================================================================
 ================================================================
