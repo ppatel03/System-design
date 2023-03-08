@@ -522,7 +522,20 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
   Design Consistent Hashing
     https://bytebytego.com/courses/system-design-interview/design-consistent-hashing
 
-      
+    Consistent hashing is a special kind of hashing such that when a hash table is re-sized and consistent hashing is used, only k/n keys need to be remapped on average, where k is the number of keys, and n is the number of slots. In contrast, in most traditional hash tables, a change in the number of array slots causes nearly all keys to be remapped
+
+    Hash space and hash ring
+      In cryptography, SHA-1’s hash space goes from 0 to 2^160 - 1.
+
+    Hash servers
+      Using the same hash function f, we map servers based on server IP or name onto the ring. 
+
+    Hash keys
+      One thing worth mentioning is that hash function used here is different from the one in “the rehashing problem,” and there is no modular operation.
+
+    Two issues in the basic approach
+        1. Unequal paritition - space between two servers
+        2. Uneven key distributions
 
 
 
