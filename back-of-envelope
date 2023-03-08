@@ -573,6 +573,38 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
               AP (availability and partition tolerance) systems: an AP key-value store supports availability and partition tolerance while sacrificing consistency.
 
               CA (consistency and availability) systems: a CA key-value store supports consistency and availability while sacrificing partition tolerance. Since network failure is unavoidable, a distributed system must tolerate network partition. Thus, a CA system cannot exist in real-world applications.
+
+              it is crucial for a bank system to display the most up-to-date balance info. If inconsistency occurs due to a network partition, the bank system returns an error before the inconsistency is resolved.
+        
+        System components
+          The content below is largely based on three popular key-value store systems: Dynamo [4], Cassandra [5], and BigTable [6].
+
+          Data partition
+            Using consistent hashing to partition data has the following advantages:
+              Automatic scaling: servers could be added and removed automatically depending on the load.
+              Heterogeneity: the number of virtual nodes for a server is proportional to the server capacity. For example, servers with higher capacity are assigned with more virtual nodes.
+
+          Data replication
+            To achieve high availability and reliability, data must be replicated asynchronously over N servers, where N is a configurable parameter. These N servers are chosen using the following logic: after a key is mapped to a position on the hash ring, walk clockwise from that position and choose the first N servers on the ring to store data copies.
+            With virtual nodes, the first N nodes on the ring may be owned by fewer than N physical servers. To avoid this issue, we only choose unique servers while performing the clockwise walk logic.
+            Nodes in the same data center often fail at the same time due to power outages, network issues, natural disasters, etc. For better reliability, replicas are placed in distinct data centers, and data centers are connected through high-speed networks.
+
+          Consistency
+            A coordinator acts as a proxy between the client and the nodes.
+            If W + R > N, strong consistency is guaranteed (Usually N = 3, W = R = 2).
+            If W + R <= N, strong consistency is not guaranteed.
+
+            Dynamo and Cassandra adopt eventual consistency, which is our recommended consistency model for our key-value store. 
+
+          Inconsistency resolution: versioning
+            Versioning means treating each data modification as a new immutable version of data.
+            we need a versioning system that can detect conflicts and reconcile conflicts. A vector clock is a common technique to solve this problem. Let us examine how vector clocks work.
+            A vector clock is a [server, version] pair associated with a data item. It can be used to check if one version precedes, succeeds, or in conflict with others.
+            Assume a vector clock is represented by D([S1, v1], [S2, v2], …, [Sn, vn]), where D is a data item, v1 is a version counter, and s1 is a server number, etc. 
+            Even though vector clocks can resolve conflicts, there are two notable downsides. 
+              First, vector clocks add complexity to the client because it needs to implement conflict resolution logic.
+              Second, the [server: version] pairs in the vector clock could grow rapidly. To fix this problem, we set a threshold for the length, and if it exceeds the limit, the oldest pairs are removed. This can lead to inefficiencies in reconciliation because the descendant relationship cannot be determined accurately. However, based on Dynamo paper [4], Amazon has not yet encountered this problem in production; therefore, it is probably an acceptable solution for most companies.
+
           
 
 
