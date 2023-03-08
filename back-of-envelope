@@ -537,6 +537,19 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         1. Unequal paritition - space between two servers
         2. Uneven key distributions
 
+      A technique called virtual nodes or replicas is used to solve these problems.
+
+      Virtual nodes
+        A virtual node refers to the real node, and each server is represented by multiple virtual nodes on the ring. To find which server a key is stored on, we go clockwise from the key’s location and find the first virtual node encountered on the ring.
+        As the number of virtual nodes increases, the distribution of keys becomes more balanced. This is because the standard deviation gets smaller with more virtual nodes, leading to balanced data distribution. Standard deviation measures how data are spread out. The outcome of an experiment carried out by online research [2] shows that with one or two hundred virtual nodes, the standard deviation is between 5% (200 virtual nodes) and 10% (100 virtual nodes) of the mean. 
+
+      Find affected keys
+        server 4 is added onto the ring. The affected range starts from s4 (newly added node) and moves anticlockwise around the ring until a server is found (s3). Thus, keys located between s3 and s4 need to be redistributed to s4.
+
+        When a server (s1) is removed as shown in Figure 15, the affected range starts from s1 (removed node) and moves anticlockwise around the ring until a server is found (s0). Thus, keys located between s0 and s1 must be redistributed to s2.
+
+
+
 
 
   Proximity Service 
