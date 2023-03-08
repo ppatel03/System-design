@@ -559,7 +559,22 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
   Design A Key-value Store
     https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
-    
+
+      Distributed key-value store
+        When designing a distributed system, it is important to understand CAP (Consistency, Availability, Partition Tolerance) theorem.
+
+        CAP theorem
+          CAP theorem states it is impossible for a distributed system to simultaneously provide more than two of these three guarantees: consistency, availability, and partition tolerance. Let us establish a few definitions.
+
+          Nowadays, key-value stores are classified based on the two CAP characteristics they support:
+
+              CP (consistency and partition tolerance) systems: a CP key-value store supports consistency and partition tolerance while sacrificing availability.
+
+              AP (availability and partition tolerance) systems: an AP key-value store supports availability and partition tolerance while sacrificing consistency.
+
+              CA (consistency and availability) systems: a CA key-value store supports consistency and availability while sacrificing partition tolerance. Since network failure is unavoidable, a distributed system must tolerate network partition. Thus, a CA system cannot exist in real-world applications.
+          
+
 
 
 
