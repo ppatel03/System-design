@@ -644,6 +644,16 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
               Using Merkle trees, the amount of data needed to be synchronized is proportional to the differences between the two replicas, and not the amount of data they contain. In real-world systems, the bucket size is quite big. For instance, a possible configuration is one million buckets per one billion keys, so each bucket only contains 1000 keys.
 
+              Write path
+                Please note the proposed designs for write/read paths are primary based on the architecture of Cassandra [8].
+                1. The write request is persisted on a commit log file.
+                2. Data is saved in the memory cache.
+                3. When the memory cache is full or reaches a predefined threshold, data is flushed to SSTable [9] on disk. Note: A sorted-string table (SSTable) is a sorted list of <key, value> pairs. For readers interested in learning more about SStable, refer to the reference material [9].
+
+              Read path
+                After a read request is directed to a specific node, it first checks if data is in the memory cache. If so, the data is returned to the client.
+                If the data is not in memory, it will be retrieved from the disk instead. We need an efficient way to find out which SSTable contains the key. Bloom filter [10] is commonly used to solve this problem.
+
       TODO
       study about merklee tree
 
