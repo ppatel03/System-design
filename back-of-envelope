@@ -1292,37 +1292,6 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         TODO : 
             learn about Email protocols : SMTP for sending, POP and IMAP for retreiving
 
-
-  Key value store
-      https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
-
-      consistency 
-        R + W > N 
-          Dynamo and Cassandra adopt eventual consistency, which is our recommended consistency model for our key-value store.
-      
-      inconsistency resolved with versioning
-
-      Handling failures 
-        detection
-          gossip protocol
-        temporary failure
-          sloppy quorum
-        permanent failure
-          merkle tree
-
-      Write path
-        Please note the proposed designs for write/read paths are primary based on the architecture of Cassandra 
-        1. The write request is persisted on a commit log file.
-        2. Data is saved in the memory cache.
-        3. When the memory cache is full or reaches a predefined threshold, data is flushed to SSTable [9] on disk. Note: A sorted-string table (SSTable) is a sorted list of <key, value> pairs. For readers interested in learning more about SStable, refer to the reference material [9].
-      Read path 
-        After a read request is directed to a specific node, it first checks if data is in the memory cache. If so, the data is returned to the client 
-        If the data is not in memory, it will be retrieved from the disk instead. We need an efficient way to find out which SSTable contains the key. Bloom filter [10] is commonly used to solve this problem.
-
-    TODO
-      SSTable - Cassandra, RocksDB
-
-
   S3-like Object Storage
       https://bytebytego.com/courses/system-design-interview/s3-like-object-storage
 
