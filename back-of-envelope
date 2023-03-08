@@ -103,6 +103,16 @@ Failure handling algo
 
 Distributed systems best practices
 
+  Logging (errors), Metrics Monitoring (system level, business) and automated Deployment
+    Logging (errors)
+      - datadog
+    Metrics Monitoring (system level, business)
+      - datadog, 
+    Continuous integration
+        develop -> commit -> build -> test ->  deploy
+      https://blog.inedo.com/continuous-integration-performance-testing-best-practices 
+
+
   Event sourcing
       https://bytebytego.com/courses/system-design-interview/digital-wallet
     One design philosophy that systematically answers those questions is event sourcing, which is a technique developed in Domain-Driven Design (DDD) [9].
