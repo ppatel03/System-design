@@ -121,6 +121,8 @@ Distributed systems today and Benchmarking on common systems
         Redis cluster uses master-replica model
         Redis Cluster does not guarantee strong consistency
 
+        Sorted Set - https://redis.io/docs/data-types/sorted-sets/
+
     SQL DB benchmarking - Relational
         1. MySQL benchmarking
           - Indexed Read
