@@ -621,7 +621,13 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                   Each node periodically increments its heartbeat counter.
                   Each node periodically sends heartbeats to a set of random nodes, which in turn propagate to another set of nodes.
                   Once nodes receive heartbeats, membership list is updated to the latest info.
+
             Handling temporary failures
+              A technique called “sloppy quorum” [4] is used to improve availability. Instead of enforcing the quorum requirement, the system chooses the first W healthy servers for writes and first R healthy servers for reads on the hash ring. Offline servers are ignored.
+              If a server is unavailable due to network or server failures, another server will process requests temporarily. When the down server is up, changes will be pushed back to achieve data consistency. 
+
+            Handling permanent failures
+              What if a replica is permanently unavailable? To handle such a situation, we implement an anti-entropy protocol to keep replicas in sync. Anti-entropy involves comparing each piece of data on replicas and updating each replica to the newest version. A Merkle tree is used for inconsistency detection and minimizing the amount of data transferred.
 
 
 
