@@ -78,19 +78,27 @@ Choices with protocol
 
 Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems
-    - Raft 
+    - Raft (description below) using used for master-replica model
 
 
 Failure handling algo
-    - Sloppy quorum
-        for temporary failures
-    - for permenant failures
-      Raft 
-        helps to keep replicas in sync
-        Ensure all replicas are always in-sync and master->slave is elected correctly when master goes down. We could use consensus algorithms such as Paxos [21] and Raft [22], or use consensus-based distributed databases such as YugabyteDB [23] or CockroachDB [24].
-          - About Raft 
-            https://bytebytego.com/courses/system-design-interview/stock-exchange 
-            The leader sends heartbeat messages (AppendEnties with no content as shown in Figure 21) to its followers. If a follower has not received heartbeat messages for a period of time, it triggers an election timeout that initiates a new election. The first follower that reaches election timeout becomes a candidate, and it asks the rest of the followers to vote (RequestVote). If the first follower receives a majority of votes, it becomes the new leader.
+  - for temporary failures
+      1. Sloppy quorum
+        
+  - for permenant failures
+      1. Raft (also detects failures)
+          helps to keep replicas in sync
+          Ensure all replicas are always in-sync and master->slave is elected correctly when master goes down. We could use consensus algorithms such as Paxos [21] and Raft [22], or use consensus-based distributed databases such as YugabyteDB [23] or CockroachDB [24].
+          https://bytebytego.com/courses/system-design-interview/stock-exchange 
+          The leader sends heartbeat messages (AppendEnties with no content as shown in Figure 21) to its followers. If a follower has not received heartbeat messages for a period of time, it triggers an election timeout that initiates a new election. The first follower that reaches election timeout becomes a candidate, and it asks the rest of the followers to vote (RequestVote). If the first follower receives a majority of votes, it becomes the new leader.
+      2. Merklee tree (can detect and handle failures)
+          What if a replica is permanently unavailable? To handle such a situation, we implement an anti-entropy protocol to keep replicas in sync. Anti-entropy involves comparing each piece of data on replicas and updating each replica to the newest version. A Merkle tree is used for inconsistency detection and minimizing the amount of data transferred.
+          Quoted from Wikipedia [7]: “A hash tree or Merkle tree is a tree in which every non-leaf node is labeled with the hash of the labels or values (in case of leaves) of its child nodes. Hash trees allow efficient and secure verification of the contents of large data structures”.
+                Step 1: Divide key space into buckets (4 in our example) as shown in Figure 13. A bucket is used as the root level node to maintain a limited depth of the tree.
+                Step 2: Once the buckets are created, hash each key in a bucket using a uniform hashing method (Figure 14).
+                Step 3: Create a single hash node per bucket (Figure 15).
+                Step 4: Build the tree upwards till root by calculating hashes of children (Figure 16).
+          https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
 
 
 Distributed systems best practices
