@@ -655,7 +655,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
                 If the data is not in memory, it will be retrieved from the disk instead. We need an efficient way to find out which SSTable contains the key. Bloom filter [10] is commonly used to solve this problem.
 
       TODO
-      study about merklee tree
+       study about merklee tree
 
 
 
