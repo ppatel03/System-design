@@ -516,6 +516,8 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
       TODO
         - Study how Lua Script or Sorted Set prevents race conditions ? 
+            https://engineering.classdojo.com/blog/2015/02/06/rolling-rate-limiter/ 
+            https://www.youtube.com/watch?v=CRGPbCbRTHA 
 
 
 
