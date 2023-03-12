@@ -131,6 +131,7 @@ Distributed systems best practices
     
   Algo if element is the member of the set
     Use Bloom filter
+      https://www.youtube.com/watch?v=V3pzxngeLqw
       A bloom filter is a space-efficient probabilistic technique to test if an element is a member of a set. Refer to the reference material [2] for more details.
 
 Distributed systems today and Benchmarking on common systems
