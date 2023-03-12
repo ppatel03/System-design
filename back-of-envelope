@@ -366,6 +366,320 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
 
 ================================================================
+================================================================================================================================
+
+    
+- Load balancing
+    Resources
+      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/load-balancing.md
+      https://www.cloudflare.com/learning/performance/types-of-load-balancing-algorithms/
+      https://igotanoffer.com/blogs/tech/load-balancing-system-design-interview
+    Static load balancing - round robin, weight round robin, IP hash
+    Dynamic load balanacing - least connection, least resource, least response time, least bandwidth
+    When to use Static ?
+      If the server pool and the requests are both homogeneous, and there is only one balancer. Stateless servers handling single api can use static load balancer
+      
+    When to use Dynamic ?
+      if the requests are heterogenous, Least Load is helpful to prevent servers from being intermittently overloaded.
+      
+    What are Hardware load balancers ?
+      They have high performant hardware resources like L4 and L7. 
+      Read about L4 and L7 here https://levelup.gitconnected.com/l4-vs-l7-load-balancing-d2012e271f56
+      
+    What are Software load balancers ?
+      They run on standard servers and are less hardware optimized, but cheaper to set up and run. Example, Nginx or HAProxy. For Nginx 100s video, 
+      refer https://www.youtube.com/watch?v=JKxlsvZXG7c. Nginx can serve routing to different servers, rate limiting, handle spikes,
+      reverse proxy, security, cache, etc. 
+      
+    When to use Software or Hardware ?
+      Tip : Since software load balancing can run on ordinary hardware and supports, always prefer software load balancer. Example Nginx
+       
+      
+    What is proxy server, reverse proxy and API Gateway ? How is different from load balancer
+      proxy vs reverse proxy vs load balancer : https://www.youtube.com/watch?v=MiqrArNSxSM
+      Proxy : just protects the client side
+      Reverse Proxy : protects the server by serving as proxy for all backend services - routing, rate limitng, load balancing
+      API gateway : rate limiting, routing, handle spikes
+      Load balancer : only performs load balancing
+      
+      So Reverse proxy can perform both API Gateway and Load Balancing. Example nginx.
+      A load balancer can never be API gateway or reverse proxy.
+      
+     Always choose Nginx ? Why ?
+       Has triats of load balancing + reverse proxy + API gateway
+         - supports load balancing
+         - supports request forwarding based on different paths like api gateway
+         - supports reverse proxy 
+         - supports rate limiting
+         - supports caching
+         - supports request grouping
+         - supports secure auth SSL. Also does optimizations with keep alive connection and cache to avoid SSL handshake
+       Nginx supports L7
+================================================================
+
+      
+  - Caching
+    Resources
+      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/caching.md
+      Distributed cache on Application server VS Global cache like Redis, (mostly preferred)
+      CDN is another form of cache for static content but its often expensive
+      
+          
+       What are different caching strategies ? 
+          https://codeahoy.com/2017/08/11/caching-strategies-and-how-to-choose-the-right-one/
+          Cache-Aside (application server has cache aside like Redis, Memcache and DB separately)
+            - Pros : logic controlled by application server, resilent to cache failures, data model in cache vs db could be different
+            - Cons : stale data in cache for db writes
+          Read-Through Cache (application server reads from cache only)
+            - Pros : logic controlled by cache, read-heavy, good consistency when combined with write through 
+            - Cons : needs data model to be consistent, first time data always results in cache miss
+
+          Belpw are Cache writes invalidation policy 
+
+          Write through (data is written to cache and synced with storage)
+            - Pros : fast retreival and data consistent systems
+            - Cons : slow writes though
+          Write around (data is written to storage, not cache)
+            - Pros : Saves write operation on the cache
+            - Cons : recently written data creates a cache miss and higher latency.
+          Write back (data is written to cache only, then synced later to storage)
+            - Pros : fast retreival, low latency read / writes
+            - Cons : Risk of data loss
+            
+        Real applications of 
+          1. read-through, write-through for high consistency
+                DynamoDB Accelerator (DAX) for dynamoDB
+          2. read-through, write-around for high performance for situations where data is written once and read less frequently or never.
+                real-time logs, chatroom messages
+          3. cache-aside, write back cache to absorb spikes during peak load
+                custom applications using redis
+          4. write back cache
+                InnoDB which is relational database storage engine. Queries are first written to memory and eventually flushed to the disk.
+                
+                
+================================================================
+    - Sharding / Partitioning 
+        Resources
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/sharding.md
+          https://coursehunters.online/t/educative-io-design-gurus-grokking-the-system-design-interview-part-5/584
+          Horizontal, Vertical and Directory based paritioning
+            Directory based paritioning has work around to solve some challenges with Horizontal and Vertical?
+          What's the best Partitioning criteria ?
+            Consitent hashing which is combination of hash and list based partitioning
+          Commom problems with Sharding / Partitioning
+            Joins -> Denormalization
+            Referential Integrity
+            Hot shard problem needs rebalancing
+              How to rebalance ? 
+              It would take downtime, check directory based partitioning as per our educative.io resource.
+              But consistent hashing can solve this problem better - https://medium.com/nerd-for-tech/consistent-hashing-6524e48ac648
+              Great guide above - check consistent hashing with gossip protocol so that each partition knows where to fetch data from db
+          Applications of consistent hashing ?
+          Apache Cassandra, Dynamo DB
+ 
+ ================================================================
+
+    - Indexing
+        Resources
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/indexes.md
+          What is a database index ? 
+            https://www.codecademy.com/article/sql-indexes
+          Pros
+            helps in speeding up the search 
+          Cons
+            lowers write/update/delete performance
+          When to use indexes ?
+            In the case of data sets that are many terabytes in size but with very small payloads (e.g., 1 KB), 
+            indexes are a necessity for optimizing data access. Finding a small payload in such a large dataset can be a real challenge since
+            we can’t possibly iterate over that much data in any reasonable time. Furthermore, it is very likely that such a large data set is 
+            spread over several physical devices—this means we need some way to find the correct physical location of the desired data. 
+            Indexes are the best way to do this.
+            
+   ================================================================
+
+     - Proxy 
+        Resources
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/proxies.md
+          
+          Usage : 
+          filter requests, log requests, cache, encryption and most important batch request. Further, it can get smarter to o collapse requests 
+          for data that is spatially close together in the storage (consecutively on disk). This strategy will result in decreasing request latency. 
+          For example, let’s say a bunch of servers request parts of file: part1, part2, part3, etc. We can set up our proxy in such a way 
+          that it can recognize the spatial locality of the individual requests, thus collapsing them into a single request and reading complete file, 
+          which will greatly minimize the reads from the data origin.
+          
+          Proxy are of two types 
+          Client proxy to protect the clients
+          Server proxy to protect the servers. Also called reverse proxy
+          
+          Should we use proxy then?
+          Only use proxy to protect the client.
+          For server side, Always Nginx since its open source and supports both reverse proxy + load balancing + API gateway.
+          
+          
+   
+   ==============================================================================
+
+          Queues
+          
+            Resource :
+            - https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/queues.md
+            
+            When to use queue :
+            Queues are implemented on the asynchronous communication protocol, meaning when a client submits a task to a queue they 
+            are no longer required to wait for the results; instead, they need only acknowledgment that the request was properly received.
+            
+            Queues are also used for fault tolerance as they can provide some protection from service outages and failures. For example, 
+            we can create a highly robust queue that can retry service requests that have failed due to transient system failures
+            
+            When not to use queue :
+            When client expects respone in real-time
+            
+            Example of queues : 
+             RabbitMQ and Kafka (which is open source)
+             
+  ====================================================================================
+  
+        Redundancy and Replication
+        
+          Resource : 
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/redundancy.md
+          
+          When to use Redundant system :
+          Always. its a key concept of distributed system.
+          Always prefer shared nothing architecture so that each node can operate independently and can scale.
+          
+          
+    ====================================================================================
+        SQL vs NoSQL
+        
+          Resource : 
+          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/sql-vs-nosql.md
+          
+          SQL 
+          Relational databases store data in rows and columns. Example, MySQL, Oracle, MS SQL Server, SQLite, Postgres
+          
+          NoSQL 
+          Key-value :  Example, DynamoDB, Redis, Memcache
+          Document DB : Example, MongoDB, 
+          Wide-Column Database : Example, HBase, Cassandra - https://hevodata.com/learn/columnar-databases/
+          Graph Databases : Example, Neo4j
+          
+          Differences between both 
+          Storage : SQL is tables but NoSQL has different storage models
+          Schema : changing schema with SQL is possible but requires whole database modification
+          Querying : using SQL for SQL dbs. 
+          Scalability : SQL is vertically scalable and possible to scale it horizontally but has limitations. NoSQL is horizontally scalable
+          Reliability or ACID : Definitely SQL ensures ACID but NoSQL solutions sacrifice ACID compliance for performance and scalability.
+          
+          When to use SQL
+            ACID compliance for e-commerce and finanicial transactions
+            Your data is structured and unchanging.
+            Often Read heavy and low-write
+
+            
+          When to use NoSQL
+            - Storing large volumes of data that often have little to no structure. 
+            - Making the most of cloud computing and storage. Cloud-based storage is an excellent cost-saving solution 
+            but requires data to be easily spread across multiple servers to scale up. 
+            - Rapid development. NoSQL is extremely useful for rapid development as it doesn’t need to be prepped ahead of time. 
+            
+          What about write performance ? 
+            I think SQL provides more flexibility on write performance than NoSQL. But this is contradicting
+            However, Cassandra seems to be the choice
+
+            
+            
+  ====================================================================================
+  
+    CAP Theorem
+    Resource : 
+    https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/cap-theorem.md
+    
+    CAP theorem states that it is impossible for a distributed software system to simultaneously provide more than two out of three of 
+    the following guarantees (CAP): Consistency, Availability and Partition tolerance.
+    
+    We can only build a system that has any two of these three properties. Because, to be consistent, all nodes should see the same set of updates 
+    in the same order. But if the network suffers a partition, updates in one partition might not make it to the other partitions before a client 
+    reads from the out-of-date partition after having read from the up-to-date one. The only thing that can be done to cope with this possibility 
+    is to stop serving requests from the out-of-date partition, but then the service is no longer 100% available.
+
+    When to choose consistency over availability ? 
+      Banking, Payment systems
+    
+    When to choose consistency over availability ? 
+      Most distributed system use cases like Google Maps, Twitter, etc.
+      
+    Since reliability consists of both consistency and availability, ASK YOUR interviewer what it means for system to be 99.99% reliable
+    
+    
+   ====================================================================================
+ 
+    Consistent Hashing
+    
+    Resource 
+      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/consistent-hashing.md
+      Recommended ones 
+        https://medium.com/nerd-for-tech/consistent-hashing-6524e48ac648 - Explains well about rebalancing
+        https://bytebytego.com/courses/system-design-interview/design-consistent-hashing
+        
+      How does it work ? 
+        Hashing is done in the range where it maps the key to the integer in that range. Example 0 -> 255 are the integers placed in ring form 
+        such that values are wrapped around.
+        
+        1. the servers are mapped to the integers in that range
+        2. to map key to a server, simply hash the key to the integer in that range and move clockwise till you find the server (could be binary search)
+        
+        Now how this is better :
+        1. adding a server : say S1 is added at position 20 and is near S2 at position 25. Then keys from before 20 wuld map to S1.
+        2. removing a server : say S1 is removed at position 20 and was near S2 at position 25. Then  all keys even before 20 would map to S2. 
+        3. uniform distribution : add “virtual replicas”. Instead of mapping each server to a single point on the ring, 
+            we map it to multiple points on the ring, i.e. replicas. 
+        4. easy to rebalance : when server is added or removed, only its next clockwise neighbouring server is affected and requires re-mapping of keys.
+        
+        
+    ====================================================================================
+    
+    Client-Server Communication
+    
+      Resource : 
+        https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/client-server-communication.md
+        
+      Types : 
+      1. Standard HTTP Web Request : client opens the connection, gets response from the server and terminate the connection 
+      2. Ajax Polling : client performs HTTP Web Request above periodically (say every 1 s). May create unecessary empty responses if server is not ready.
+      3. Long Polling : client performs HTTP Web Request and waits for long time till response is received (say 1 min). Then sends request again.
+      4. Web Socket: persistent connection between a client and a server that both parties can use to start sending data at any time.
+      5. SSE :  persistent onnection between a client and a server where server send data to the client but not the reverse
+      
+      When to use Long Polling vs Web Socket ? 
+        https://ably.com/blog/websockets-vs-long-polling
+        https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o
+        
+        Clearly Websockets have many advantages over long polling and thus are appropriate for many applications which require consistent low latency 
+        full duplex high frequency communication such as chat applications and real time applications.
+        
+        Scaling up 
+        Websockets have problems with load distribution due to persistent connection.
+        Long polling will have equal load distribution after its long timeout
+        
+     When to use Web Socker vs Server Sent Events ?
+        Websocket for bi-directional communication whole SSE for server to client communication
+        https://blog.bitsrc.io/websockets-vs-server-sent-events-968659ab0870
+        
+        WebSockets are widely used and valued in technological solutions such as real-time polling, chat, media players, multiplayer games, etc.
+        Server-Sent Events: There are many applications where sending data from the client isn’t necessary. 
+        SSEs are especially useful in status updates, social-media news feeds, push notifications, newsletters, etc.
+
+      Keep alive : 
+        https://www.imperva.com/learn/performance/http-keep-alive/
+        - improves latency to avoid 3-way handskae and SSL/TLS connections
+        - less consumption of network resources to use single connection. This can drop network conjestion
+
+
+
+
+===============================================================
 
 - Key characteristics
     Resources
@@ -1871,349 +2185,3 @@ News Feed System
 =================================================================================
 
     
-================================================================================================================================
-
-    
-- Load balancing
-    Resources
-      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/load-balancing.md
-      https://www.cloudflare.com/learning/performance/types-of-load-balancing-algorithms/
-      https://igotanoffer.com/blogs/tech/load-balancing-system-design-interview
-    Static load balancing - round robin, weight round robin, IP hash
-    Dynamic load balanacing - least connection, least resource, least response time, least bandwidth
-    When to use Static ?
-      If the server pool and the requests are both homogeneous, and there is only one balancer. Stateless servers handling single api can use static load balancer
-      
-    When to use Dynamic ?
-      if the requests are heterogenous, Least Load is helpful to prevent servers from being intermittently overloaded.
-      
-    What are Hardware load balancers ?
-      They have high performant hardware resources like L4 and L7. 
-      Read about L4 and L7 here https://levelup.gitconnected.com/l4-vs-l7-load-balancing-d2012e271f56
-      
-    What are Software load balancers ?
-      They run on standard servers and are less hardware optimized, but cheaper to set up and run. Example, Nginx or HAProxy. For Nginx 100s video, 
-      refer https://www.youtube.com/watch?v=JKxlsvZXG7c. Nginx can serve routing to different servers, rate limiting, handle spikes,
-      reverse proxy, security, cache, etc. 
-      
-    When to use Software or Hardware ?
-      Tip : Since software load balancing can run on ordinary hardware and supports, always prefer software load balancer. Example Nginx
-       
-      
-    What is proxy server, reverse proxy and API Gateway ? How is different from load balancer
-      proxy vs reverse proxy vs load balancer : https://www.youtube.com/watch?v=MiqrArNSxSM
-      Proxy : just protects the client side
-      Reverse Proxy : protects the server by serving as proxy for all backend services - routing, rate limitng, load balancing
-      API gateway : rate limiting, routing, handle spikes
-      Load balancer : only performs load balancing
-      
-      So Reverse proxy can perform both API Gateway and Load Balancing. Example nginx.
-      A load balancer can never be API gateway or reverse proxy.
-      
-     Always choose Nginx ? Why ?
-       Has triats of load balancing + reverse proxy + API gateway
-         - supports load balancing
-         - supports request forwarding based on different paths like api gateway
-         - supports reverse proxy 
-         - supports rate limiting
-         - supports caching
-         - supports request grouping
-         - supports secure auth SSL. Also does optimizations with keep alive connection and cache to avoid SSL handshake
-       Nginx supports L7
-================================================================
-
-      
-  - Caching
-    Resources
-      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/caching.md
-      Distributed cache on Application server VS Global cache like Redis, (mostly preferred)
-      CDN is another form of cache for static content but its often expensive
-      
-          
-       What are different caching strategies ? 
-          https://codeahoy.com/2017/08/11/caching-strategies-and-how-to-choose-the-right-one/
-          Cache-Aside (application server has cache aside like Redis, Memcache and DB separately)
-            - Pros : logic controlled by application server, resilent to cache failures, data model in cache vs db could be different
-            - Cons : stale data in cache for db writes
-          Read-Through Cache (application server reads from cache only)
-            - Pros : logic controlled by cache, read-heavy, good consistency when combined with write through 
-            - Cons : needs data model to be consistent, first time data always results in cache miss
-
-          Belpw are Cache writes invalidation policy 
-
-          Write through (data is written to cache and synced with storage)
-            - Pros : fast retreival and data consistent systems
-            - Cons : slow writes though
-          Write around (data is written to storage, not cache)
-            - Pros : Saves write operation on the cache
-            - Cons : recently written data creates a cache miss and higher latency.
-          Write back (data is written to cache only, then synced later to storage)
-            - Pros : fast retreival, low latency read / writes
-            - Cons : Risk of data loss
-            
-        Real applications of 
-          1. read-through, write-through for high consistency
-                DynamoDB Accelerator (DAX) for dynamoDB
-          2. read-through, write-around for high performance for situations where data is written once and read less frequently or never.
-                real-time logs, chatroom messages
-          3. cache-aside, write back cache to absorb spikes during peak load
-                custom applications using redis
-          4. write back cache
-                InnoDB which is relational database storage engine. Queries are first written to memory and eventually flushed to the disk.
-                
-                
-================================================================
-    - Sharding / Partitioning 
-        Resources
-          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/sharding.md
-          https://coursehunters.online/t/educative-io-design-gurus-grokking-the-system-design-interview-part-5/584
-          Horizontal, Vertical and Directory based paritioning
-            Directory based paritioning has work around to solve some challenges with Horizontal and Vertical?
-          What's the best Partitioning criteria ?
-            Consitent hashing which is combination of hash and list based partitioning
-          Commom problems with Sharding / Partitioning
-            Joins -> Denormalization
-            Referential Integrity
-            Hot shard problem needs rebalancing
-              How to rebalance ? 
-              It would take downtime, check directory based partitioning as per our educative.io resource.
-              But consistent hashing can solve this problem better - https://medium.com/nerd-for-tech/consistent-hashing-6524e48ac648
-              Great guide above - check consistent hashing with gossip protocol so that each partition knows where to fetch data from db
-          Applications of consistent hashing ?
-          Apache Cassandra, Dynamo DB
- 
- ================================================================
-
-    - Indexing
-        Resources
-          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/indexes.md
-          What is a database index ? 
-            https://www.codecademy.com/article/sql-indexes
-          Pros
-            helps in speeding up the search 
-          Cons
-            lowers write/update/delete performance
-          When to use indexes ?
-            In the case of data sets that are many terabytes in size but with very small payloads (e.g., 1 KB), 
-            indexes are a necessity for optimizing data access. Finding a small payload in such a large dataset can be a real challenge since
-            we can’t possibly iterate over that much data in any reasonable time. Furthermore, it is very likely that such a large data set is 
-            spread over several physical devices—this means we need some way to find the correct physical location of the desired data. 
-            Indexes are the best way to do this.
-            
-   ================================================================
-
-     - Proxy 
-        Resources
-          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/proxies.md
-          
-          Usage : 
-          filter requests, log requests, cache, encryption and most important batch request. Further, it can get smarter to o collapse requests 
-          for data that is spatially close together in the storage (consecutively on disk). This strategy will result in decreasing request latency. 
-          For example, let’s say a bunch of servers request parts of file: part1, part2, part3, etc. We can set up our proxy in such a way 
-          that it can recognize the spatial locality of the individual requests, thus collapsing them into a single request and reading complete file, 
-          which will greatly minimize the reads from the data origin.
-          
-          Proxy are of two types 
-          Client proxy to protect the clients
-          Server proxy to protect the servers. Also called reverse proxy
-          
-          Should we use proxy then?
-          Only use proxy to protect the client.
-          For server side, Always Nginx since its open source and supports both reverse proxy + load balancing + API gateway.
-          
-          
-   
-   ==============================================================================
-
-          Queues
-          
-            Resource :
-            - https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/queues.md
-            
-            When to use queue :
-            Queues are implemented on the asynchronous communication protocol, meaning when a client submits a task to a queue they 
-            are no longer required to wait for the results; instead, they need only acknowledgment that the request was properly received.
-            
-            Queues are also used for fault tolerance as they can provide some protection from service outages and failures. For example, 
-            we can create a highly robust queue that can retry service requests that have failed due to transient system failures
-            
-            When not to use queue :
-            When client expects respone in real-time
-            
-            Example of queues : 
-             RabbitMQ and Kafka (which is open source)
-             
-  ====================================================================================
-  
-        Redundancy and Replication
-        
-          Resource : 
-          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/redundancy.md
-          
-          When to use Redundant system :
-          Always. its a key concept of distributed system.
-          Always prefer shared nothing architecture so that each node can operate independently and can scale.
-          
-          
-    ====================================================================================
-        SQL vs NoSQL
-        
-          Resource : 
-          https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/sql-vs-nosql.md
-          
-          SQL 
-          Relational databases store data in rows and columns. Example, MySQL, Oracle, MS SQL Server, SQLite, Postgres
-          
-          NoSQL 
-          Key-value :  Example, DynamoDB, Redis, Memcache
-          Document DB : Example, MongoDB, 
-          Wide-Column Database : Example, HBase, Cassandra - https://hevodata.com/learn/columnar-databases/
-          Graph Databases : Example, Neo4j
-          
-          Differences between both 
-          Storage : SQL is tables but NoSQL has different storage models
-          Schema : changing schema with SQL is possible but requires whole database modification
-          Querying : using SQL for SQL dbs. 
-          Scalability : SQL is vertically scalable and possible to scale it horizontally but has limitations. NoSQL is horizontally scalable
-          Reliability or ACID : Definitely SQL ensures ACID but NoSQL solutions sacrifice ACID compliance for performance and scalability.
-          
-          When to use SQL
-            ACID compliance for e-commerce and finanicial transactions
-            Your data is structured and unchanging.
-            Often Read heavy and low-write
-
-            
-          When to use NoSQL
-            - Storing large volumes of data that often have little to no structure. 
-            - Making the most of cloud computing and storage. Cloud-based storage is an excellent cost-saving solution 
-            but requires data to be easily spread across multiple servers to scale up. 
-            - Rapid development. NoSQL is extremely useful for rapid development as it doesn’t need to be prepped ahead of time. 
-            
-          What about write performance ? 
-            I think SQL provides more flexibility on write performance than NoSQL. But this is contradicting
-            However, Cassandra seems to be the choice
-
-            
-            
-  ====================================================================================
-  
-    CAP Theorem
-    Resource : 
-    https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/cap-theorem.md
-    
-    CAP theorem states that it is impossible for a distributed software system to simultaneously provide more than two out of three of 
-    the following guarantees (CAP): Consistency, Availability and Partition tolerance.
-    
-    We can only build a system that has any two of these three properties. Because, to be consistent, all nodes should see the same set of updates 
-    in the same order. But if the network suffers a partition, updates in one partition might not make it to the other partitions before a client 
-    reads from the out-of-date partition after having read from the up-to-date one. The only thing that can be done to cope with this possibility 
-    is to stop serving requests from the out-of-date partition, but then the service is no longer 100% available.
-
-    When to choose consistency over availability ? 
-      Banking, Payment systems
-    
-    When to choose consistency over availability ? 
-      Most distributed system use cases like Google Maps, Twitter, etc.
-      
-    Since reliability consists of both consistency and availability, ASK YOUR interviewer what it means for system to be 99.99% reliable
-    
-    
-   ====================================================================================
- 
-    Consistent Hashing
-    
-    Resource 
-      https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/consistent-hashing.md
-      Recommended ones 
-        https://medium.com/nerd-for-tech/consistent-hashing-6524e48ac648 - Explains well about rebalancing
-        https://bytebytego.com/courses/system-design-interview/design-consistent-hashing
-        
-      How does it work ? 
-        Hashing is done in the range where it maps the key to the integer in that range. Example 0 -> 255 are the integers placed in ring form 
-        such that values are wrapped around.
-        
-        1. the servers are mapped to the integers in that range
-        2. to map key to a server, simply hash the key to the integer in that range and move clockwise till you find the server (could be binary search)
-        
-        Now how this is better :
-        1. adding a server : say S1 is added at position 20 and is near S2 at position 25. Then keys from before 20 wuld map to S1.
-        2. removing a server : say S1 is removed at position 20 and was near S2 at position 25. Then  all keys even before 20 would map to S2. 
-        3. uniform distribution : add “virtual replicas”. Instead of mapping each server to a single point on the ring, 
-            we map it to multiple points on the ring, i.e. replicas. 
-        4. easy to rebalance : when server is added or removed, only its next clockwise neighbouring server is affected and requires re-mapping of keys.
-        
-        
-    ====================================================================================
-    
-    Client-Server Communication
-    
-      Resource : 
-        https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/client-server-communication.md
-        
-      Types : 
-      1. Standard HTTP Web Request : client opens the connection, gets response from the server and terminate the connection 
-      2. Ajax Polling : client performs HTTP Web Request above periodically (say every 1 s). May create unecessary empty responses if server is not ready.
-      3. Long Polling : client performs HTTP Web Request and waits for long time till response is received (say 1 min). Then sends request again.
-      4. Web Socket: persistent connection between a client and a server that both parties can use to start sending data at any time.
-      5. SSE :  persistent onnection between a client and a server where server send data to the client but not the reverse
-      
-      When to use Long Polling vs Web Socket ? 
-        https://ably.com/blog/websockets-vs-long-polling
-        https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o
-        
-        Clearly Websockets have many advantages over long polling and thus are appropriate for many applications which require consistent low latency 
-        full duplex high frequency communication such as chat applications and real time applications.
-        
-        Scaling up 
-        Websockets have problems with load distribution due to persistent connection.
-        Long polling will have equal load distribution after its long timeout
-        
-     When to use Web Socker vs Server Sent Events ?
-        Websocket for bi-directional communication whole SSE for server to client communication
-        https://blog.bitsrc.io/websockets-vs-server-sent-events-968659ab0870
-        
-        WebSockets are widely used and valued in technological solutions such as real-time polling, chat, media players, multiplayer games, etc.
-        Server-Sent Events: There are many applications where sending data from the client isn’t necessary. 
-        SSEs are especially useful in status updates, social-media news feeds, push notifications, newsletters, etc.
-
-      Keep alive : 
-        https://www.imperva.com/learn/performance/http-keep-alive/
-        - improves latency to avoid 3-way handskae and SSL/TLS connections
-        - less consumption of network resources to use single connection. This can drop network conjestion
-
-     
-
-      
-
-
-        
-        
-        
-        
-      
-
-
-    
-    
-    
-
-          
-          
-          
-          
-          
-          
-
-          
-
-          
-        
-        
-  
-  
-
-      
-      
-
-
-
