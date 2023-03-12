@@ -205,6 +205,10 @@ Distributed systems today and Benchmarking on common systems
               B tree performance : https://www.youtube.com/watch?v=FgWbADOG44s 
               Its inefficient as compared to B tree for writes : https://www.youtube.com/watch?v=I6jB0nM9SKU 
 
+          - MySQL replica sync
+              https://serverfault.com/questions/30605/how-fast-is-mysql-replication
+              MySQL replication happens as close to real-time as possible, as limited by disk and network I/O. The slaves open a socket to the master, which is kept open. When a transaction occurs on the master, it gets recorded in the binlog, and is simply replayed on the slave(s). If the socket between master and slave is interrupted, the binlog is replayed for the slave upon the next successful connection.
+
           - Practical
               how MySQL gurantees ACID : https://www.youtube.com/watch?v=0OYFsJ1-1YA
               Nice theoretical : https://www.youtube.com/watch?v=clPPKgYJC10 
