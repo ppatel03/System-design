@@ -258,7 +258,7 @@ Distributed systems today and Benchmarking on common systems
                   m5.large ( 2 core, 8 GB) 
                   Read : 7 K ops/s
                   Write : 7 K ops/s
-                  Read Latency : ~10 ma
+                  Read Latency : ~10 ms
                   Write Latency : ~7 ms
 
                 - Expensive hardware https://www.scylladb.com/2021/08/19/cassandra-4-0-vs-cassandra-3-11-comparing-performance/
