@@ -1,0 +1,94 @@
+Design A Rate Limiter
+    https://bytebytego.com/courses/system-design-interview/design-a-rate-limiter
+
+      Where to put the rate limiter?
+        Besides the client and server-side implementations, there is an alternative way. Instead of putting a rate limiter at the API servers, we create a rate limiter middleware, which throttles requests to your APIs as shown in Figure 2.
+        the rate limiter middleware throttles the third request and returns a HTTP status code 429. The HTTP 429 response status code indicates a user has sent too many requests.
+
+        Cloud microservices [4] have become widely popular and rate limiting is usually implemented within a component called API gateway.
+
+      Algorithms for rate limiting
+
+        Token bucket algorithm
+          The token bucket algorithm is widely used for rate limiting. It is simple, well understood and commonly used by internet companies. Both Amazon [5] and Stripe [6] use this algorithm to throttle their API requests.
+
+          The token bucket algorithm takes two parameters:
+            Bucket size: the maximum number of tokens allowed in the bucket
+            Refill rate: number of tokens put into the bucket every second
+
+          How many buckets do we need? This varies, and it depends on the rate-limiting rules. Here are a few examples.
+            It is usually necessary to have different buckets for different API endpoints. For instance, if a user is allowed to make 1 post per second, add 150 friends per day, and like 5 posts per second, 3 buckets are required for each user.
+            If we need to throttle requests based on IP addresses, each IP address requires a bucket.
+            If the system allows a maximum of 10,000 requests per second, it makes sense to have a global bucket shared by all requests.
+
+        Leaking bucket algorithm
+          Shopify, an ecommerce company, uses leaky buckets for rate-limiting [7].
+
+          The leaking bucket algorithm is similar to the token bucket except that requests are processed at a fixed rate. It is usually implemented with a first-in-first-out (FIFO) queue. The algorithm works as follows:
+
+            When a request arrives, the system checks if the queue is full. If it is not full, the request is added to the queue.
+            Otherwise, the request is dropped.
+            Requests are pulled from the queue and processed at regular intervals.
+
+        Fixed window counter algorithm
+            Fixed window counter algorithm works as follows:
+
+              The algorithm divides the timeline into fix-sized time windows and assign a counter for each window.
+              Each request increments the counter by one.
+              Once the counter reaches the pre-defined threshold, new requests are dropped until a new time window starts.
+
+              Cons:
+                Spike in traffic at the edges of a window could cause more requests than the allowed quota to go through.
+
+        Sliding window log algorithm
+            The sliding window log algorithm fixes the issue. It works as follows:
+
+                  The algorithm keeps track of request timestamps. Timestamp data is usually kept in cache, such as sorted sets of Redis [8].
+                  When a new request comes in, remove all the outdated timestamps. Outdated timestamps are defined as those older than the start of the current time window.
+                  Add timestamp of the new request to the log.
+                  If the log size is the same or lower than the allowed count, a request is accepted. Otherwise, it is rejected.
+
+            Pros:     
+              Rate limiting implemented by this algorithm is very accurate. In any rolling window, requests will not exceed the rate limit.
+            Cons:
+              The algorithm consumes a lot of memory because even if a request is rejected, its timestamp might still be stored in memory.
+
+        Sliding window counter algorithm (too complicated)
+
+      High-level architecture
+          The basic idea of rate limiting algorithms is simple. At the high-level, we need a counter to keep track of how many requests are sent from the same user, IP address, etc. If the counter is larger than the limit, the request is disallowed.
+          Where shall we store counters? Using the database is not a good idea due to slowness of disk access. In-memory cache is chosen because it is fast and supports time-based expiration strategy. For instance, Redis [11] is a popular option to implement rate limiting.
+
+        Rate limiting rules
+          Lyft open-sourced their rate-limiting component [12]. We will peek inside of the component and look at some examples of rate limiting rules:
+          This rule shows that clients are not allowed to login more than 5 times in 1 minute. Rules are generally written in configuration files and saved on disk.
+
+        Exceeding the rate limit
+          Rate limiter headers
+            How does a client know whether it is being throttled? And how does a client know the number of allowed remaining requests before being throttled? The answer lies in HTTP response headers. 
+            When a user has sent too many requests, a 429 too many requests error and X-Ratelimit-Retry-After header are returned to the client.
+
+        Rate limiter in a distributed environment
+          Race condition
+            Locks are the most obvious solution for solving race condition. However, locks will significantly slow down the system. Two strategies are commonly used to solve the problem: Lua script [13] and sorted sets data structure in Redis [8]. 
+
+          Synchronization issue
+            As the web tier is stateless, clients can send requests to a different rate limiter as shown on the right side of Figure 15. If no synchronization happens, rate limiter 1 does not contain any data about client 2. Thus, the rate limiter cannot work properly.
+            One possible solution is to use sticky sessions that allow a client to send traffic to the same rate limiter. This solution is not advisable because it is neither scalable nor flexible. A better approach is to use centralized data stores like Redis. 
+
+          Performance optimization
+            First, multi-data center setup is crucial for a rate limiter because latency is high for users located far away from the data center. 
+            Second, synchronize data with an eventual consistency model. If you are unclear about the eventual consistency model, refer to the “Consistency” section in the “Design a Key-value Store” chapter.
+
+          Monitoring
+            After the rate limiter is put in place, it is important to gather analytics data to check whether the rate limiter is effective. Primarily, we want to make sure:
+              The rate limiting algorithm is effective.
+              The rate limiting rules are effective.
+
+          Rate limiting at different levels. 
+            In this chapter, we only talked about rate limiting at the application level (HTTP: layer 7). It is possible to apply rate limiting at other layers. For example, you can apply rate limiting by IP addresses using Iptables [15] (IP: layer 3). Note: The Open Systems Interconnection model (OSI model) has 7 layers [16]: Layer 1: Physical layer, Layer 2: Data link layer, Layer 3: Network layer, Layer 4: Transport layer, Layer 5: Session layer, Layer 6: Presentation layer, Layer 7: Application layer.
+
+      TODO
+        - Study how Lua Script or Sorted Set prevents race conditions ? 
+            https://engineering.classdojo.com/blog/2015/02/06/rolling-rate-limiter/ 
+            https://www.youtube.com/watch?v=CRGPbCbRTHA 

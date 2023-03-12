@@ -1,0 +1,87 @@
+Design A Key-value Store
+    https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
+
+      Distributed key-value store
+        When designing a distributed system, it is important to understand CAP (Consistency, Availability, Partition Tolerance) theorem.
+
+        CAP theorem
+          CAP theorem states it is impossible for a distributed system to simultaneously provide more than two of these three guarantees: consistency, availability, and partition tolerance. Let us establish a few definitions.
+
+          Nowadays, key-value stores are classified based on the two CAP characteristics they support:
+
+              CP (consistency and partition tolerance) systems: a CP key-value store supports consistency and partition tolerance while sacrificing availability.
+
+              AP (availability and partition tolerance) systems: an AP key-value store supports availability and partition tolerance while sacrificing consistency.
+
+              CA (consistency and availability) systems: a CA key-value store supports consistency and availability while sacrificing partition tolerance. Since network failure is unavoidable, a distributed system must tolerate network partition. Thus, a CA system cannot exist in real-world applications.
+
+              it is crucial for a bank system to display the most up-to-date balance info. If inconsistency occurs due to a network partition, the bank system returns an error before the inconsistency is resolved.
+        
+        System components
+          The content below is largely based on three popular key-value store systems: Dynamo [4], Cassandra [5], and BigTable [6].
+
+          Data partition
+            Using consistent hashing to partition data has the following advantages:
+              Automatic scaling: servers could be added and removed automatically depending on the load.
+              Heterogeneity: the number of virtual nodes for a server is proportional to the server capacity. For example, servers with higher capacity are assigned with more virtual nodes.
+
+          Data replication
+            To achieve high availability and reliability, data must be replicated asynchronously over N servers, where N is a configurable parameter. These N servers are chosen using the following logic: after a key is mapped to a position on the hash ring, walk clockwise from that position and choose the first N servers on the ring to store data copies.
+            With virtual nodes, the first N nodes on the ring may be owned by fewer than N physical servers. To avoid this issue, we only choose unique servers while performing the clockwise walk logic.
+            Nodes in the same data center often fail at the same time due to power outages, network issues, natural disasters, etc. For better reliability, replicas are placed in distinct data centers, and data centers are connected through high-speed networks.
+
+          Consistency
+            A coordinator acts as a proxy between the client and the nodes.
+            If W + R > N, strong consistency is guaranteed (Usually N = 3, W = R = 2).
+            If W + R <= N, strong consistency is not guaranteed.
+
+            Dynamo and Cassandra adopt eventual consistency, which is our recommended consistency model for our key-value store. 
+
+          Inconsistency resolution: versioning
+            Versioning means treating each data modification as a new immutable version of data.
+            we need a versioning system that can detect conflicts and reconcile conflicts. A vector clock is a common technique to solve this problem. Let us examine how vector clocks work.
+            A vector clock is a [server, version] pair associated with a data item. It can be used to check if one version precedes, succeeds, or in conflict with others.
+            Assume a vector clock is represented by D([S1, v1], [S2, v2], …, [Sn, vn]), where D is a data item, v1 is a version counter, and s1 is a server number, etc. 
+            Even though vector clocks can resolve conflicts, there are two notable downsides. 
+              First, vector clocks add complexity to the client because it needs to implement conflict resolution logic.
+              Second, the [server: version] pairs in the vector clock could grow rapidly. To fix this problem, we set a threshold for the length, and if it exceeds the limit, the oldest pairs are removed. This can lead to inefficiencies in reconciliation because the descendant relationship cannot be determined accurately. However, based on Dynamo paper [4], Amazon has not yet encountered this problem in production; therefore, it is probably an acceptable solution for most companies.
+
+          Handling failures
+            Failure detection
+              all-to-all multicasting is a straightforward solution. However, this is inefficient when many servers are in the system.
+              A better solution is to use decentralized failure detection methods like gossip protocol. Gossip protocol works as follows:
+                  Each node maintains a node membership list, which contains member IDs and heartbeat counters.
+                  Each node periodically increments its heartbeat counter.
+                  Each node periodically sends heartbeats to a set of random nodes, which in turn propagate to another set of nodes.
+                  Once nodes receive heartbeats, membership list is updated to the latest info.
+
+            Handling temporary failures
+              A technique called “sloppy quorum” [4] is used to improve availability. Instead of enforcing the quorum requirement, the system chooses the first W healthy servers for writes and first R healthy servers for reads on the hash ring. Offline servers are ignored.
+              If a server is unavailable due to network or server failures, another server will process requests temporarily. When the down server is up, changes will be pushed back to achieve data consistency. 
+
+            Handling permanent failures
+              What if a replica is permanently unavailable? To handle such a situation, we implement an anti-entropy protocol to keep replicas in sync. Anti-entropy involves comparing each piece of data on replicas and updating each replica to the newest version. A Merkle tree is used for inconsistency detection and minimizing the amount of data transferred.
+              Quoted from Wikipedia [7]: “A hash tree or Merkle tree is a tree in which every non-leaf node is labeled with the hash of the labels or values (in case of leaves) of its child nodes. Hash trees allow efficient and secure verification of the contents of large data structures”.
+                Step 1: Divide key space into buckets (4 in our example) as shown in Figure 13. A bucket is used as the root level node to maintain a limited depth of the tree.
+                Step 2: Once the buckets are created, hash each key in a bucket using a uniform hashing method (Figure 14).
+                Step 3: Create a single hash node per bucket (Figure 15).
+                Step 4: Build the tree upwards till root by calculating hashes of children (Figure 16).
+
+              Using Merkle trees, the amount of data needed to be synchronized is proportional to the differences between the two replicas, and not the amount of data they contain. In real-world systems, the bucket size is quite big. For instance, a possible configuration is one million buckets per one billion keys, so each bucket only contains 1000 keys.
+
+              Write path
+                Please note the proposed designs for write/read paths are primary based on the architecture of Cassandra [8].
+                1. The write request is persisted on a commit log file.
+                2. Data is saved in the memory cache.
+                3. When the memory cache is full or reaches a predefined threshold, data is flushed to SSTable [9] on disk. Note: A sorted-string table (SSTable) is a sorted list of <key, value> pairs. For readers interested in learning more about SStable, refer to the reference material [9].
+
+              Read path
+                After a read request is directed to a specific node, it first checks if data is in the memory cache. If so, the data is returned to the client.
+                If the data is not in memory, it will be retrieved from the disk instead. We need an efficient way to find out which SSTable contains the key. Bloom filter [10] is commonly used to solve this problem.
+
+      TODO
+       study about merklee tree
+       SSTable - Cassandra, RocksDB (Done, added in envelope section)
+
+
+
