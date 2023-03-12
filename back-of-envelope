@@ -48,6 +48,11 @@ How to use non-functional requirements in decison making
     - can help reason for low replication
     - can help reason for MySQL if complicated with ACID
 
+Some tricks 
+  - get smallest short length for tiny url
+    The hashValue consists of characters from [0-9, a-z, A-Z], containing 10 + 26 + 26 = 62 possible characters. To figure out the length of hashValue, find the smallest n such that 62^n ≥ 365 billion. 
+
+
 
 Distributed Systems estimate
 
@@ -122,7 +127,10 @@ Distributed systems best practices
       Good read : https://rahulpradeep.medium.com/sstables-and-lsm-trees-5ba6c5529325
       This technique is used by Cassandra, RocksDB, Google BigTable, Apache HBase
       MongoDB can be tuned to use LSM treee
-
+    
+  Algo if element is the member of the set
+    Use Bloom filter
+      A bloom filter is a space-efficient probabilistic technique to test if an element is a member of a set. Refer to the reference material [2] for more details.
 
 Distributed systems today and Benchmarking on common systems
 
