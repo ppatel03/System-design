@@ -1868,7 +1868,7 @@ News Feed System
 
 
 
-
+=================================================================================
 
     
 ================================================================================================================================
@@ -1913,11 +1913,12 @@ News Feed System
      Always choose Nginx ? Why ?
        Has triats of load balancing + reverse proxy + API gateway
          - supports load balancing
+         - supports request forwarding based on different paths like api gateway
          - supports reverse proxy 
          - supports rate limiting
          - supports caching
          - supports request grouping
-         - supports secure auth
+         - supports secure auth SSL. Also does optimizations with keep alive connection and cache to avoid SSL handshake
        Nginx supports L7
 ================================================================
 
@@ -2174,6 +2175,12 @@ News Feed System
         WebSockets are widely used and valued in technological solutions such as real-time polling, chat, media players, multiplayer games, etc.
         Server-Sent Events: There are many applications where sending data from the client isn’t necessary. 
         SSEs are especially useful in status updates, social-media news feeds, push notifications, newsletters, etc.
+
+      Keep alive : 
+        https://www.imperva.com/learn/performance/http-keep-alive/
+        - improves latency to avoid 3-way handskae and SSL/TLS connections
+        - less consumption of network resources to use single connection. This can drop network conjestion
+
      
 
       
