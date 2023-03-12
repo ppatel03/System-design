@@ -477,7 +477,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
             Consitent hashing which is combination of hash and list based partitioning
           Commom problems with Sharding / Partitioning
             Joins -> Denormalization
-            Referential Integrity
+            Referential Integrity (primary key -> foreign key. look at image in https://en.wikipedia.org/wiki/Referential_integrity)
             Hot shard problem needs rebalancing
               How to rebalance ? 
               It would take downtime, check directory based partitioning as per our educative.io resource.
