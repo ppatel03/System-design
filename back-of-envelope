@@ -609,13 +609,12 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
     
     We can only build a system that has any two of these three properties. Because, to be consistent, all nodes should see the same set of updates 
     in the same order. But if the network suffers a partition, updates in one partition might not make it to the other partitions before a client 
-    reads from the out-of-date partition after having read from the up-to-date one. The only thing that can be done to cope with this possibility 
-    is to stop serving requests from the out-of-date partition, but then the service is no longer 100% available.
+    reads from the out-of-date partition after having read from the up-to-date one. The only thing that can be done to cope with this possibility is to stop serving requests from the out-of-date partition, but then the service is no longer 100% available.
 
     When to choose consistency over availability ? 
       Banking, Payment systems
     
-    When to choose consistency over availability ? 
+    When to choose availability over consistency   ? 
       Most distributed system use cases like Google Maps, Twitter, etc.
       
     Since reliability consists of both consistency and availability, ASK YOUR interviewer what it means for system to be 99.99% reliable
@@ -632,8 +631,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         https://bytebytego.com/courses/system-design-interview/design-consistent-hashing
         
       How does it work ? 
-        Hashing is done in the range where it maps the key to the integer in that range. Example 0 -> 255 are the integers placed in ring form 
-        such that values are wrapped around.
+        Hashing is done in the range where it maps the key to the integer in that range. Example 0 -> 255 are the integers placed in ring form such that values are wrapped around.
         
         1. the servers are mapped to the integers in that range
         2. to map key to a server, simply hash the key to the integer in that range and move clockwise till you find the server (could be binary search)
