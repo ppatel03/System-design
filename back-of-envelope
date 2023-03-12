@@ -351,6 +351,7 @@ Distributed systems today and Benchmarking on common systems
             5. Cassandra benchmarking ? 
             6. Study about graphdbs ? 
             7. Time taken from master to slave - MySQL, MongoDB ?
+            8. MongoDB benchmarking 
 
  Operation system
     User level threads vs Kernel level threads
@@ -436,7 +437,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
           Belpw are Cache writes invalidation policy 
 
-          Write through (data is written to cache and synced with storage)
+          d through (data is written to cache and synced with storage)
             - Pros : fast retreival and data consistent systems
             - Cons : slow writes though
           Write around (data is written to storage, not cache)
