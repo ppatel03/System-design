@@ -709,66 +709,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 ================================================================================================================================
 - Key learnings from system design
 
-  Scale for Zero to millions of users 
-      https://bytebytego.com/courses/system-design-interview/scale-from-zero-to-millions-of-users
-    
-      - If the master database goes offline, a slave database will be promoted to be the new master. All the database operations will be temporarily executed on the new master database. A new slave database will replace the old one for data replication immediately. In production systems, promoting a new master is more complicated as the data in a slave database might not be up to date. The missing data needs to be updated by running data recovery scripts. Although some other replication methods like multi-masters and circular replication could help, those setups are more complicated; and their discussions are beyond the scope of this course. Interested readers should refer to the listed reference materials [4] [5].
-        https://en.wikipedia.org/wiki/Multi-master_replication 
-
-      Cache
-
-        - Interacting with cache servers is simple because most cache servers provide APIs for common programming languages. 
-
-        - Consistency: This involves keeping the data store and the cache in sync. Inconsistency can happen because data-modifying operations on the data store and cache are not in a single transaction. When scaling across multiple regions, maintaining consistency between the data store and cache is challenging. For further details, refer to the paper titled “Scaling Memcache at Facebook” published by Facebook [7].
-
-        - Eviction Policy: Once the cache is full, any requests to add items to the cache might cause existing items to be removed. This is called cache eviction. Least-recently-used (LRU) is the most popular cache eviction policy. 
-
-      CDN (also known as PoP - point of presence)
-
-        Considerations of using a CDN 
-          CDN fallback: You should consider how your website/application copes with CDN failure. If there is a temporary CDN outage, clients should be able to detect the problem and request resources from the origin.
-
-          Invalidating files: You can remove a file from the CDN before it expires by performing one of the following operations:
-
-          Invalidate the CDN object using APIs provided by CDN vendors.
-
-          Use object versioning to serve a different version of the object. To version an object, you can add a parameter to the URL, such as a version number. For example, version number 2 is added to the query string: image.png?v=2.
-
-          Pull vs Push CDN : https://www.belugacdn.com/push-cdn/
-
-      Stateful architecture
-
-        The issue is that every request from the same client must be routed to the same server. This can be done with sticky sessions in most load balancers [10]; however, this adds the overhead. Adding or removing servers is much more difficult with this approach. It is also challenging to handle server failures.
-
-      Data centers
-        Figure 15 shows an example setup with two data centers. In normal operation, users are geoDNS-routed, also known as geo-routed, to the closest data center, with a split traffic of x% in US-East and (100 – x)% in US-West. geoDNS is a DNS service that allows domain names to be resolved to IP addresses based on the location of a user.
-        Geo-routing is done through load balancers
-
-        Several technical challenges must be resolved to achieve multi-data center setup:
-
-          Traffic redirection: Effective tools are needed to direct traffic to the correct data center. GeoDNS can be used to direct traffic to the nearest data center depending on where a user is located.
-
-          Test and deployment: With multi-data center setup, it is important to test your website/application at different locations. Automated deployment tools are vital to keep services consistent through all the data centers [11].
-
-      Message queue
-        To further scale our system, we need to decouple different components of the system so they can be scaled independently. Messaging queue is a key strategy employed by many real-world distributed systems to solve this problem.
-        A message queue is a durable component, stored in memory, that supports asynchronous communication. It serves as a buffer and distributes asynchronous requests.
-
-      Logging, metrics, automation
-        Logging: Monitoring error logs is important
-        Metrics: Collecting different types of metrics help us to gain business insights and understand the health status of the system. Some of the following metrics are useful:
-          Host level metrics: CPU, Memory, disk I/O, etc.
-          Aggregated level metrics: for example, the performance of the entire database tier, cache tier, etc.
-          Key business metrics: daily active users, retention, revenue, etc.
-        Automation: When a system gets big and complex, we need to build or leverage automation tools to improve productivity. Continuous integration is a good practice, in which each code check-in is verified through automation, allowing teams to detect problems early. Besides, automating your build, test, deploy process, etc. could improve developer productivity significantly.
-
-      Vertical scaling
-        Vertical scaling, also known as scaling up, is the scaling by adding more power (CPU, RAM, DISK, etc.) to an existing machine. There are some powerful database servers. According to Amazon Relational Database Service (RDS) [12], you can get a database server with 24 TB of RAM.
-
-      Horizontal scaling
-        Horizontal scaling, also known as sharding, is the practice of adding more servers.
-
-
+ 
   Design A Rate Limiter
     https://bytebytego.com/courses/system-design-interview/design-a-rate-limiter
 
