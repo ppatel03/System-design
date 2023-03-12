@@ -670,7 +670,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
         Long polling will have equal load distribution after its long timeout
         
      When to use Web Socker vs Server Sent Events ?
-        Websocket for bi-directional communication whole SSE for server to client communication
+        Websocket for bi-directional communication while SSE for server to client communication
         https://blog.bitsrc.io/websockets-vs-server-sent-events-968659ab0870
         
         WebSockets are widely used and valued in technological solutions such as real-time polling, chat, media players, multiplayer games, etc.
