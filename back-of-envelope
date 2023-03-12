@@ -350,6 +350,7 @@ Distributed systems today and Benchmarking on common systems
             4. How MySQL indexing works ? 
             5. Cassandra benchmarking ? 
             6. Study about graphdbs ? 
+            7. Time taken from master to slave - MySQL, MongoDB ?
 
  Operation system
     User level threads vs Kernel level threads
