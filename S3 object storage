@@ -1,0 +1,156 @@
+S3-like Object Storage
+      https://bytebytego.com/courses/system-design-interview/s3-like-object-storage
+
+      Storage System 101
+          Block storage
+            Block storage came first, in the 1960s. Common storage devices like hard disk drives (HDD) and solid-state drives (SSD) that are physically attached to servers are all considered as block storage.
+            Some applications like a database or a virtual machine engine manage these blocks directly in order to squeeze every drop of performance out of them.
+
+          File storage
+            File storage is built on top of block storage. It provides a higher-level abstraction to make it easier to handle files and directories. Data is stored as files under a hierarchical directory structure. 
+
+          Object storage
+            Object storage is new. It makes a very deliberate tradeoff to sacrifice performance for high durability, vast scale, and low cost. It targets relatively “cold” data and is mainly used for archival and backup. Object storage stores all data as objects in a flat structure. There is no hierarchical directory structure. Data access is normally provided via a RESTful API. It is relatively slow compared to other storage types. Most public cloud service providers have an object storage offering, such as AWS S3, Google object storage, and Azure blob storage.
+
+        Functional requirements
+          Bucket creation.
+          Object uploading and downloading.
+          Object versioning.
+          Listing objects in a bucket.
+        
+        Non-functional requirements
+          100 PB of data
+          Data durability is 6 nines
+          Service availability is 4 nines
+          Storage efficiency. Reduce storage costs while maintaining a high degree of reliability and performance.
+
+        Back of envelope
+            IOPS. Let’s assume one hard disk (SATA interface, 7200 rpm) is capable of doing 100~150 random seeks per second (100-150 IOPS).
+
+            With those assumptions, we can estimate the total number of objects the system can persist. To simplify the calculation, let’s use the median size for each object type (0.5MB for small objects, 32MB for medium objects, and 200MB for large objects). A 40% storage usage ratio gives us:
+
+            100 PB = 100*1000*1000*1000 MB = 10^11 MB
+
+            10^11*0.4/( 0.2*0.5MB + 0.6 *32MB + 0.2*200MB) = 0.68 billion objects.
+
+            If we assume the metadata of an object is about 1KB in size, we need 0.68 TB space to store all metadata information. 
+
+
+      Step 2 - Propose High-Level Design and Get Buy-In
+          few interesting properties of object storage
+            Object immutability
+            Key-value store.
+            Write once, read many times.
+            Support both small and large objects. 
+              Object size may vary and we need to support both.
+              The design philosophy of object storage is very similar to that of the UNIX file system. In UNIX, when we save a file in the local file system, it does not save the filename and file data together. Instead, the filename is stored in a data structure called “inode” [10], and the file data is stored in different disk locations. The inode contains a list of file block pointers that point to the disk locations of the file data. 
+              The object storage works similarly. In object storage, the metadata store uses the ID of the object to find the corresponding object data in the data store, via a network request. 
+              Separating metadata and object data simplifies the design. The data store contains immutable data while the metadata store contains mutable data. This separation enables us to implement and optimize these two components independently.
+
+        High-level design
+          Load balancer, 
+          API service
+          Identity and access management (IAM).
+          Data store
+          Metadata store
+
+      Step 3 - Design Deep Dive
+
+        Data store
+
+            Data routing service
+              This service has the following responsibilities: 
+                Query the placement service to get the best data node to store data.
+                Read data from data nodes and return it to the API service.
+                Write data to data nodes.
+
+            Placement service
+              The placement service determines which data nodes (primary and replicas) should be chosen to store an object.
+              The placement service continuously monitors all data nodes through heartbeats.
+
+            Data node
+              The data node stores the actual object data. It ensures reliability and durability by replicating data to multiple data nodes, also called a replication group.
+              Each data node has a data service daemon running on it. The data service daemon continuously sends heartbeats to the placement service. The heartbeat message includes the following essential information:
+                  How many disk drives (HDD or SSD) does the data node manage?
+                  How much data is stored on each drive?
+
+        Data persistence flow
+            given a UUID for the object as an input, the placement service returns the replication group for the object. How does the placement service do this? Keep in mind that this lookup needs to be deterministic, and it must survive the addition or removal of replication groups. Consistent hashing is a common implementation of such a lookup function. Refer to [15] for more information.
+
+        How data is organized
+          A simple solution is to store each object in a stand-alone file. This works, but the performance suffers when there are many small files. Two issues arise when having too many small files on a file system. 
+            Fragmentation : First, it wastes many data blocks. A file system stores files in discrete disk blocks. Disk blocks have the same size, and the size is fixed when the volume is initialized. The typical block size is around 4 KB.
+
+            I-Node limits in OS : Second, it could exceed the system’s inode capacity. The file system stores the location and other information about a file in a special type of block called inode. For most file systems, the number of inodes is fixed when the disk is initialized. With millions of small files, it runs the risk of consuming all inodes. 
+
+            To address these issues, we can merge many small objects into a larger file. It works conceptually like a write-ahead log (WAL). When we save an object, it is appended to an existing read-write file. When the read-write file reaches its capacity threshold – usually set to a few GBs – the read-write file is marked as read-only, and a new read-write file is created to receive new objects. Once a file is marked as read-only, it can only serve read requests. Figure 12 explains how this process works.
+
+            Note that write access to the read-write file must be serialized. As shown in Figure 12, objects are stored in order, one after the other, in the read-write file. To maintain this on-disk layout, multiple cores processing incoming write requests in parallel must take their turns to write to the read-write file. For a modern server with a large number of cores processing many incoming requests in parallel, this seriously restricts write throughput. To fix this, we could provide dedicated read-write files, one for each core processing incoming requests.
+
+        Object lookup
+           With each data file holding many small objects, how does the data node locate an object by UUID? The data node needs the following information:
+              The data file that contains the object
+              The starting offset of the object in the data file
+              The size of the object
+            We considered two options for storing this mapping: a file-based key-value store such as RocksDB [16] or a relational database. RocksDB is based on SSTable [17], and it is fast for writes but slower for reads. A relational database usually uses a B+ tree [18] based storage engine, and it is fast for reads but slower for writes. As mentioned earlier, the data access pattern is write once and read multiple times. Since a relational database provides better read performance, it is a better choice than RocksDB.
+
+            How should we deploy this relational database? At our scale, the data volume for the mapping table is massive. Deploying a single large cluster to support all data nodes could work, but is difficult to manage. Note that this mapping data is isolated within each data node. There is no need to share this across data nodes. To take advantage of this property, we could simply deploy a simple relational database on each data node. SQLite [19] is a good choice here. It is a file-based relational database with a solid reputation.
+
+          Durability
+
+            Hardware failure and failure domain
+              Let’s assume the spinning hard drive has an annual failure rate of 0.81% [20]. This number highly depends on the model and make. Making 3 copies of data gives us 1-(0.0081)^3=~0.999999 reliability.
+              For a complete durability evaluation, we also need to consider the impacts of different failure domains. A failure domain is a physical or logical section of the environment that is negatively affected when a critical service experiences problems.
+              server (node) -> rack -> datacenter which means replication have to be for every failure domain
+
+            Erasure coding (parity)
+              Making three full copies of data gives us roughly 6 nines of data durability. Are there other options to further increase durability? Yes, erasure coding is one option.
+              Erasure coding [22] deals with data durability differently. It chunks data into smaller pieces (placed on different servers) and creates parities for redundancy. In the event of failures, we can use chunk data and parities to reconstruct the data. 
+              Its cheaper, more durable, but needs more compute resources and read + write performance
+
+            How much extra space does erasure coding need? For every two chunks of data, we need one parity block, so the storage overhead is 50% (Figure 17). While in 3-copy replication, the storage overhead is 200%
+
+            Correctness verification
+              If a disk fails completely and the failure can be detected, it can be treated as a data node failure. In this case, we can reconstruct data using erasure coding. However, in-memory data corruption is a regular occurrence in large-scale systems. This problem can be addressed by verifying checksums.
+              There are many checksum algorithms, such as MD5 [26], SHA1[27], HMAC [28], etc. A good checksum algorithm usually outputs a significantly different value even for a small change made to the input. For this chapter, we choose a simple checksum algorithm such as MD5.
+              In our design, we append the checksum at the end of each object. Before a file is marked as read-only, we add a checksum of the entire file at the end.
+
+            Metadata data model
+              Schema
+                The database schema needs to support the following 3 queries:
+                Query 1: Find the object ID by object name.
+                Query 2: Insert and delete an object based on the object name.
+                Query 3: List objects in a bucket sharing the same prefix.
+
+              Scale the bucket table (bandiwdth factor reasoned out to get replicas)
+                Since there is usually a limit on the number of buckets a user can create, the size of the bucket table is small. Let’s assume we have 1 million customers, each customer owns 10 buckets and each record takes 1 KB. 
+                That means we need 10 GB (1 million * 10 * 1KB) of storage space. The whole table can easily fit in a modern database server. However, a single database server might not have enough CPU or network bandwidth to handle all read requests. If so, we can spread the read load among multiple database replicas.
+                
+              Scale the object table
+                The object table holds the object metadata. The dataset at our design scale will likely not fit in a single database instance. We can scale the object table by sharding.
+                We choose to shard by a combination of bucket_name and object_name. This is because most of the metadata operations are based on the object URI, for example, finding the object ID by URI or uploading an object via URI. To evenly distribute the data, we can use the hash of the (bucket_name, object_name) as the sharding key. Remember you can have multiple versions of same object name
+
+              Prefer denormalized table of bucket and object so that it can be sharded just by bucket id. Use Cassandra for high available, heavy reads, heavy writes and eventual consistency.
+
+            Object versioning
+
+                To support versioning, the object table for the metadata store has a column called object_version that is only used if versioning is enabled. Instead of overwriting the existing record, a new record is inserted with the same bucket_id and object_name as the old record, but with a new object_id and object_version. The object_id is the UUID for the new object returned in step 3. The object_version is a TIMEUUID [29] generated when the new row is inserted. No matter which database we choose for the metadata store, it should be efficient to look up the current version of an object. The current version has the largest TIMEUUID of all the entries with the same object_name. See Figure 23 for an illustration of how we store versioned metadata.
+
+                * When we delete an object, all versions remain in the bucket and we insert a delete marker. This avoids going back to the file and delete.
+
+            Optimizing uploads of large files
+                In the back-of-the-envelope estimation, we estimated that 20% of the objects are large. Some might be larger than a few GBs. It is possible to upload such a large object file directly, but it could take a long time. If the network connection fails in the middle of the upload, we have to start over. A better solution is to slice a large object into smaller parts and upload them independently. After all the parts are uploaded, the object store re-assembles the object from the parts. This process is called multipart upload.
+
+            Garbage collection
+                  - deleted marked objects
+                  - half uploaded data
+                  - corrupted data
+                The garbage collector does not remove objects from the data store, right away. Deleted objects will be periodically cleaned up with a compaction mechanism.
+
+                The garbage collector is also responsible for reclaiming unused space in replicas. For replication, we delete the object from both primary and backup nodes. For erasure coding, if we use (8+4) setup, we delete the object from all 12 nodes.
+
+      TODO
+        Study about iSCSI, Fibre channel protocol
+        Study about SMB and NFS protocol
+        Study about Paxos [13] or Raft [14] consensus protocol.
+        Study about write-ahead log (WAL) which is also used in queue data structure

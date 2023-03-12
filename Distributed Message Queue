@@ -1,0 +1,43 @@
+Distributed Message Queue
+    https://bytebytego.com/courses/system-design-interview/distributed-message-queue
+
+      Strictly speaking, Apache Kafka and Pulsar are not message queues as they are event streaming platforms. However, there is a convergence of features that starts to blur the distinction between message queues (RocketMQ, ActiveMQ, RabbitMQ, ZeroMQ, etc.) and event streaming platforms (Kafka, Pulsar). 
+
+      Messaging models
+        The most popular messaging models are point-to-point and publish-subscribe. Our distributed message queue supports both models. The publish-subscribe model is implemented by topics, and the point-to-point model can be simulated by the concept of the consumer group
+
+        Point-to-point
+          This model is commonly found in traditional message queues. In a point-to-point model, a message is sent to a queue and consumed by one and only one consumer.
+
+        Publish-subscribe
+          First, let’s introduce a new concept, the topic. Topics are the categories used to organize messages. Each topic has a name that is unique across the entire message queue service. Messages are sent to and read from a specific topic.
+
+          In the publish-subscribe model, a message is sent to a topic and received by the consumers subscribing to this topic.
+
+        Data storage
+        Option 1: Database
+          The first option is to use a database.
+          Relational database: create a topic table and write messages to the table as rows.
+          NoSQL database: create a collection as a topic and write messages as documents.
+
+        Option 2: Write-ahead log (WAL)
+          The second option is write-ahead log (WAL). WAL is just a plain file where new entries are appended to an append-only log. WAL is used in many systems, such as the redo log in MySQL and the WAL in ZooKeeper.
+
+        A note on disk performance
+
+          To meet the high data retention requirement, our design relies heavily on disk drives to hold a large amount of data. There is a common misconception that rotational disks are slow, but this is really only the case for random access. For our workload, as long as we design our on-disk data structure to take advantage of the sequential access pattern, the modern disk drives in a RAID configuration (i.e., with disks striped together for higher performance) could comfortably achieve several hundred MB/sec of read and write speed. This is more than enough for our needs, and the cost structure is favorable.
+
+        Batching
+          Batching is pervasive in this design. 
+          There is a tradeoff between throughput and latency. If the system is deployed as a traditional message queue where latency might be more important, the system could be tuned to use a smaller batch size.
+
+        Producer flow
+          This is very important since it will answer the question why Kafka can scale better.
+          Basically, zookeeper takes care of which broker to assign 
+
+        Consumer flow
+          most message queues choose the pull model instead of push  
+
+        TODO : 
+        Study more about Apache Zookeeper
+        Working of Apacke Kafka  

@@ -1,0 +1,89 @@
+Hotel Reservation System
+  https://bytebytego.com/courses/system-design-interview/hotel-reservation-system
+
+      High-level design
+        We use the microservice architecture for this hotel reservation system. Over the past few years, microservice architecture has gained great popularity. Companies that use microservice include Amazon, Netflix, Uber, Airbnb, Twitter, etc. If you want to learn more about the benefits of a microservice architecture, you can check out some good resources [1] [2].
+
+      Data model
+          Before we decide which database to use, let’s take a close look at the data access patterns. For the hotel reservation system, we need to support the following queries:
+          Query 1: View detailed information about a hotel.
+          Query 2: Find available types of rooms given a date range.
+          Query 3: Record a reservation.
+          Query 4: Look up a reservation or past history of reservations.
+
+          From the back-of-the-envelope estimation, we know the scale of the system is not large but we need to prepare for traffic surges during big events. With these requirements in mind, we choose a relational database because:
+
+          A relational database works well with read-heavy and write less frequently workflows. This is because the number of users who visit the hotel website/apps is a few orders of magnitude higher than those who actually make reservations. NoSQL databases are generally optimized for writes and the relational database works well enough for read-heavy workflow.
+
+          A relational database provides ACID (atomicity, consistency, isolation, durability) guarantees. ACID properties are important for a reservation system. Without those properties, it’s not easy to prevent problems such as negative balance, double charge, double reservations, etc. ACID properties make application code a lot simpler and make the whole system easier to reason about. A relational database usually provides these guarantees.
+
+          A relational database can easily model the data. The structure of the business data is very clear and the relationship between different entities (hotel, room, room_type, etc) is stable. This kind of data model is easily modeled by a relational database.
+
+      Concurrency issues
+        Another important problem to look at is double booking. We need to solve two problems: 1) the same user clicks on the “book” button multiple times. 2) multiple users try to book the same room at the same time.
+
+          Option 1: Pessimistic locking
+            Pessimistic locking [6], also called pessimistic concurrency control, prevents simultaneous updates by placing a lock on a record as soon as one user starts to update it. Other users who attempt to update the record have to wait until the first user has released the lock 
+              Pros:
+                Prevents applications from updating data that is being – or has been – changed.
+                It is easy to implement and it avoids conflict by serializing updates. Pessimistic locking is useful when data contention is heavy.
+
+              Cons:
+                Deadlocks may occur when multiple resources are locked. Writing deadlock-free application code could be challenging.
+                This approach is not scalable. If a transaction is locked for too long, other transactions cannot access the resource. This has a significant impact on database performance, especially when transactions are long-lived or involve a lot of entities.
+
+
+          Option 2: Optimistic locking
+            Optimistic locking [7], also referred to as optimistic concurrency control, allows multiple concurrent users to attempt to update the same resource.
+
+            There are two common ways to implement optimistic locking: version number and timestamp. Version number is generally considered to be a better option because the server clock can be inaccurate over time. We explain how optimistic locking works with version number.
+
+            Optimistic locking is usually faster than pessimistic locking because we do not lock the database. However, the performance of optimistic locking drops dramatically when concurrency is high.
+            To understand why, consider the case when many clients try to reserve a hotel room at the same time. Because there is no limit on how many clients can read the available room count, all of them read back the same available room count and the current version number. When different clients make reservations and write back the results to the database, only one of them will succeed, and the rest of the clients receive a version check failure message. These clients have to retry. In the subsequent round of retries, there is only one successful client again, and the rest have to retry. Although the end result is correct, repeated retries cause a very unpleasant user experience.
+
+              Pros
+                Easy to implement.
+                It works well when data contention is minimal.
+
+              Cons:
+                Performance is poor when data contention is heavy.
+
+          Option 3: Database constraints
+              This approach is very similar to optimistic locking. Let’s explore how it works. In the room_type_inventory table, add the following constraint:
+
+              CONSTRAINT `check_room_count` CHECK((`total_inventory - total_reserved` >= 0))
+
+              Cons
+                Similar to optimistic locking, when data contention is heavy, it can result in a high volume of failures. Users could see there are rooms available, but when they try to book one, they get the “no rooms available” response. This experience can be frustrating to users.
+                The database constraints cannot be version-controlled easily like the application code.
+                Not all databases support constraints. It might cause problems when we migrate from one database solution to another.
+
+      Caching
+        New challenges posed by the cache
+          Adding a cache layer significantly increases the system scalability and throughput, but it also introduces a new challenge: how to maintain data consistency between the database and the cache.
+
+          When a user books a room, two operations are executed in the happy path:
+
+          Query room inventory to find out if there are enough rooms left. The query runs on the Inventory cache.
+
+          Update inventory data. The inventory DB is updated first. The change is then propagated to the cache asynchronously. This asynchronous cache update could be invoked by the application code, which updates the inventory cache after data is saved to the database. It could also be propagated using change data capture (CDC) [8]. CDC is a mechanism that reads data changes from the database and applies the changes to another data system. One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10].
+
+          If you think carefully, you find that the inconsistency between inventory cache and database actually does not matter, as long as the database does the final inventory validation check.
+
+          Let’s take a look at an example. Let’s say the cache states there is still an empty room, but the database says there is not. In this case, when the user queries the room inventory, they find there is still room available, so they try to reserve it. When the request reaches the inventory database, the database does the validation and finds that there is no room left. In this case, the client receives an error, indicating someone else just booked the last room before them. When a user refreshes the website, they probably see there is no room left because the database has synchronized inventory data to the cache, before they click the refresh button.
+
+      Data consistency among services
+          In a traditional monolithic architecture [11], a shared relational database is used to ensure data consistency. In our microservice design, we chose a hybrid approach of different microservice with shared relational database.
+          However, if your interviewer is a microservice purist, they might challenge this hybrid approach. In their mind, for a microservice architecture, each microservice has its own databases.
+
+          To address the data inconsistency, here is a high-level summary of industry-proven techniques. If you want to read the details, please refer to the reference materials.
+
+            Two-phase commit (2PC) [12]. 2PC is a database protocol used to guarantee atomic transaction commit across multiple nodes, i.e., either all nodes succeeded or all nodes failed. Because 2PC is a blocking protocol, a single node failure blocks the progress until the node has recovered. It’s not performant.
+
+            Saga. A saga is a sequence of local transactions. Each transaction updates and publishes a message to trigger the next transaction step. If a step fails, the saga executes compensating transactions to undo the changes that were made by preceding transactions [13]. 2PC works as a single commit to perform ACID transactions while Saga consists of multiple steps and relies on eventual consistency.
+
+    TODO
+      Read about acid system design ?
+      Read about 2 phase commit ? 
+      Ensure Acid with distributed systems ? 
+      Mysql and MySQL benchmarking ?

@@ -1,0 +1,43 @@
+ NearBy Friends
+    https://bytebytego.com/courses/system-design-interview/nearby-friends
+    
+        Back of envelope
+        Req is 10% of DAU are concurrent. In that case, QPS is 10% of DAU and do not need additional calculations
+
+        High level design vs API design + data model 
+          Questions like this needs high level design first
+        
+        Update and Notify system like this 
+          Always prefer Websocket connection which also works well with load balancer. Attach the user to web socket servers.
+          Leverage impressive lightweight cache systems like Redis pub/sub which allows millions of channels https://redis.io/docs/manual/pubsub/
+          
+        How does API design for websocket works
+          For any request, server is not obligated to send the response.
+          Example, 1. for periodic location update -> initiated by client but no response.
+                    2. for receiving update from friends -> initiated by server without client request
+
+        WEBsocket servers operational complexity
+          Since websocket servers are stateful, hard to auto-scale up / down needs extra care with load balancer help.
+
+        Scaling up/down with stateful servers 
+        With stateful clusters, scaling up or down has some operational overhead and risks, so it should be done with careful planning. The cluster is normally over-provisioned to make sure it can handle daily peak traffic with some comfortable headroom to avoid unnecessary resizing of the cluster.
+
+                    
+        Cache considerations
+          only store most recent user location update. 
+          also if cache goes down, no need to pre-fill since it will be having new updates via periodic mechanism
+
+
+        Suggesting Cassandra for heavy-write horizontal scaled db ????
+
+        There are many service discovery packages available, with etcd [4] and Zookeeper [5] among the most popular ones
+
+
+        
+        TODO : 
+        Study more about Websocket connection working
+        Study about relational database sharding
+        Study about Cassandra (why columnar db is preferrable for write heavy)
+        Study about redis well
+        Data structure about pub/sub model : queue and hashmap for tracking purpose
+        Alternative to Redis pub/sub is "Earlang" - is a general programming language and runtime environment built for highly distributed and concurrent applications.

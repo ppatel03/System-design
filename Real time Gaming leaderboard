@@ -1,0 +1,110 @@
+Real-time Gaming Leaderboard
+
+      Back-of-the-envelope estimation
+        With 5 million DAU, if the game had an even distribution of players during a 24-hour period, we would have an average of 50 users per second (5,000,000 DAU / 10^5 seconds = ~50).
+        QPS for users scoring a point: if a user plays 10 games per day on average, the QPS for users scoring a point is: 50 * 10 = ~500. Peak QPS is 5x of the average: 500 * 5 = 2,500.
+
+      Step 2 - Propose High-Level Design and Get Buy-In
+      
+        API design
+            POST /v1/scores
+            GET /v1/scores
+            GET /v1/scores/{:user_id}
+
+        High-level architecture
+
+          When a player wins a game, the client sends a request to the game service.
+          The game service ensures the win is valid and calls the leaderboard service to update the score.
+          The leaderboard service updates the user’s score in the leaderboard store.
+          A player makes a call to the leaderboard service directly to fetch leaderboard data, including:
+            a. top 10 leaderboard.
+            b. the rank of the player on the leaderboard.
+
+          Should the client talk to the leaderboard service directly?
+            In the alternative design, the score is set by the client. This option is not secure because it is subject to man-in-the-middle attack [x], where players can put in a proxy and change scores at will. Therefore, we need the score to be set on the server-side.
+
+          Do we need a message queue between the game service and the leaderboard service?
+            The answer to this question highly depends on how the game scores are used. If data can be consumed by multiple consumers, such as leaderboard service, analytics service, push notification service, etc. This is especially true when the game is a turn-based or multi-player game in which we need to notify other players about the score update.
+            As this is not an explicit requirement based on the conversation with the interviewer, we do not use a message queue in our design.
+
+          Data models
+            One of the key components in the system is the leaderboard store. We will discuss three potential solutions: relational database, Redis, and NoSQL (NoSQL solution is explained in deep dive).
+
+            Relational database solution
+              This solution works when the data set is small, but the query becomes very slow when there are millions of rows. Let’s take a look at why.
+
+              To figure out the rank of a user, we need to sort every single player into their correct spot on the leaderboard so we can determine exactly what the correct rank is. Remember that there can be duplicate scores as well, so the rank isn’t just the position of the user in the list.
+
+              SQL databases are not performant when we have to process large amounts of continuously changing information. So even with indexes, your write performance could get compromised
+
+            Redis solution
+              Redis has a specific data type called sorted sets that are ideal for solving leaderboard system design problems.
+
+              What are sorted sets?
+                A sorted set is a data type similar to a set. Each member of a sorted set is associated with a score. The members of a set must be unique, but scores may repeat. The score is used to rank the sorted set in ascending order.
+
+                Our leaderboard use case maps perfectly to sorted sets. Internally, a sorted set is implemented by two data structures: a hash table and a skip list [1]. The hash table maps users to scores and the skip list maps scores to users. In sorted sets, users are sorted by scores. 
+                A skip list is a list structure that allows for fast search. It consists of a base sorted linked list and multi-level indexes.
+
+                Another related factor to consider is CPU and I/O usage. Our peak QPS from the back-of-the-envelope estimation is 2500 updates/sec. This is well within the performance envelope of a single Redis server.
+
+                One concern about the Redis cache is persistence, as a Redis node might fail. Luckily, Redis does support persistence, but restarting a large Redis instance from disk is slow. Usually, Redis is configured with a read replica, and when the main instance fails, the read replica is promoted, and a new read replica is attached.
+
+          Step 3 - Design Deep Dive
+            To use a cloud provider or not
+                Manage our own services
+                Build on the cloud
+                  AWS Lambda is one of the most popular serverless computing platforms. It allows us to run code without having to provision or manage the servers ourselves. It runs only when needed and will scale automatically based on traffic. Serverless is one of the hottest topics in cloud services and is supported by all major cloud service providers. 
+                  Advantage with AWS Lambda : autoscaling as per DAU growth and based on pay as you go model
+
+            Scaling Redis
+                Let’s imagine we have 500 million DAU, which is 100 times our original scale. Now our worst-case scenario for the size of the leaderboard goes up to 65 GB (650 MB *100), and our QPS goes up to 250,000 (2,500 * 100) queries per second. This calls for a sharding solution.
+
+                Data sharding
+                    We consider sharding in one of the following two ways: fixed or hash partitions.
+
+                    Fixed partition
+
+                    Hash partition
+                      Redis cluster provides a way to shard data automatically across multiple Redis nodes. It doesn’t use consistent hashing but a different form of sharding, where every key is part of a hash slot. There are 16384 hash slots [11] and we can compute the hash slot of a given key by doing CRC16(key) % 16384
+
+                      Retrieving the top 10 players on the leaderboard is more complicated. We need to gather the top 10 players from each shard and have the application sort the data. 
+
+                      This approach has a few limitations:
+                        When we need to return top K results (where K is a very large number) on the leaderboard, the latency is high because a lot of entries are returned from each shard and need to be sorted.
+                        Latency is high if we have lots of partitions because the query has to wait for the slowest partition.
+                        Another issue with this approach is that it doesn’t provide a straightforward solution for determining the rank of a specific user.
+
+                    Therefore, we lean towards the first proposal: fixed partition.
+
+            Sizing a Redis node
+                Redis provides a tool called Redis-benchmark that allows us to benchmark the performance of the Redis setup, by simulating multiple clients executing multiple queries and returning the number of requests per second for the given hardware.
+
+            Alternative solution: NoSQL
+                An alternative solution to consider is NoSQL databases. 
+                NoSQL databases such as Amazon’s DynamoDB [15], Cassandra, or MongoDB can be a good fit.
+
+                DynamoDB is a fully managed NoSQL database that offers reliable performance and great scalability. To allow efficient access to data with attributes other than the primary key + sort key, we can leverage global secondary indexes [16] in DynamoDB.
+                To avoid a linear scan, we need to add indexes. Our first attempt is to use “game_name#{year-month}” as the partition key and the score as the sort key. 
+                This works, but it runs into issues at a high load. DynamoDB splits data across multiple nodes using consistent hashing. Each item lives in a corresponding node based on its partition key. We want to structure the data so that data is evenly distributed across partitions. In our table design (Figure 23), all the data for the most recent month would be stored in one partition and that partition becomes a hot partition. How can we solve this problem?
+
+                    GSI : We can further split data into N partitions and append a partition number (user_id % number_of_partitions) to the partition key. 
+                    What we end up with are N partitions that are all sorted within their own partition (locally sorted). If we assume we had 3 partitions, then in order to fetch the top 10 leaderboard, we would use the approach called “scatter-gather” mentioned earlier. We would fetch the top 10 results in each of the partitions (this is the “scatter” portion), and then we would allow the application to sort the results among all the partitions (this is the “gather” portion). 
+                    --> Map- Reduce concept
+
+                However, similar to the Redis partition solution mentioned earlier, this approach doesn’t provide a straightforward solution for determining the relative rank of a user. But it is possible to get the percentile of a user’s position, which could be good enough. In real life, telling a player that they are in the top 10-20% might be better than showing the exact rank at eg.1,200,001. Therefore, if the scale is large enough that we needed to shard, we could assume that the score distributions are roughly the same across all shards. If this assumption is true, we could have a cron job that analyzes the distribution of the score for each shard, and caches that result.
+
+            Faster retrieval and breaking tie
+                To store a map of the user id to the user object that we can display on the leaderboard. This allows for faster retrieval than having to go to the database to fetch the user object.
+
+                In the case of two players having the same scores, we could rank the users based on who received that score first.
+
+            System failure recovery
+              The Redis cluster can potentially experience a large-scale failure. Given the design above, we could create a script that leverages the fact that the MySQL database records an entry with a timestamp each time a user won a game. We could iterate through all of the entries for each user, and call ZINCRBY once per entry, per user.
+
+
+      TODO : 
+       great learnings on custom partition vs uses existing sharding provided by Redis.
+       Check if Redis can use Map-Reduce (which looks like it)
+       Check scatter-gather for dynamo
+

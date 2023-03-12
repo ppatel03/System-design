@@ -1,0 +1,109 @@
+Stock Exchange
+      https://bytebytego.com/courses/system-design-interview/stock-exchange
+
+    Back-of-the-envelope estimation
+      Let’s do some simple back-of-the-envelope calculations to understand the scale of the system:
+
+      100 symbols
+      1 billion orders per day
+      NYSE Stock Exchange is open Monday through Friday from 9:30 am to 4:00 pm Eastern Time. That’s 6.5 hours in total.
+      QPS: 1 billion / 6.5 / 3600 = ~43,000 or just 10K if rounded
+      Peak QPS: 5 * QPS = 215,000. The trading volume is significantly higher when the market first opens in the morning and before it closes in the afternoon.
+
+    Step 2 - Propose High-Level Design and Get Buy-In
+      Business Knowledge 
+        Broker
+        Institutional client
+        Limit order
+        Market order
+        Market data levels
+        Candlestick chart
+        FIX
+          FIX protocol [8], which stands for Financial Information eXchange protocol, was created in 1991. It is a vendor-neutral communications protocol for exchanging securities transaction information. See below for an example of a securities transaction encoded in FIX.
+      High-level design
+        Note that the trading flow (steps 1 to 14) is on the critical path, while the market data flow and reporting flow are not. They have different latency requirements.
+        * its Important to know what components in the design are latency 
+        
+        Trading flow
+            Matching engine
+              Maintain the order book for each symbol. An order book is a list of buy and sell orders for a symbol. We explain the construction of an order book in the Data models section later.
+              Match buy and sell orders. A match results in two executions (fills), with one each for the buy and sell sides. The matching function must be fast and accurate.
+              Distribute the execution stream as market data.
+            Sequencer
+              The sequencer is the key component that makes the matching engine deterministic. It stamps every incoming order with a sequence ID before it is processed by the matching engine. It also stamps every pair of executions (fills) completed by the matching engine with sequence IDs. 
+              It is similar to having two Kafka event streams connected to the matching engine, one for incoming orders and the other for outgoing executions. In fact, we could have used Kafka if its latency was lower and more predictable. 
+            Order manager
+              It sends the order for risk checks. 
+              It checks the order against the user’s wallet and verifies that there are sufficient funds to cover the trade.
+              It sends the order to the sequencer where the order is stamped with a sequence ID. 
+              The order manager should be fast, efficient, and accurate.
+            Client gateway
+              The client gateway is on the critical path and is latency-sensitive. It should stay lightweight. 
+              May be Nginx
+            Market data flow
+              The market data publisher (MDP) receives executions (fills) from the matching engine and builds the order books and candlestick charts from the stream of executions.
+            Reporting flow
+              One essential part of the exchange is reporting. The reporter is not on the trading critical path, but it is a critical part of the system. It provides trading history, tax reporting, compliance reporting, settlements, etc. Efficiency and latency are critical for the trading flow, but the reporter is less sensitive to latency. Accuracy and compliance are key factors for the reporter.
+            API Design
+              POST /v1/order
+              GET /execution?symbol={:symbol}&orderId={:orderId}&startTime={:startTime}&endTime={:endTime}
+              GET /marketdata/orderBook/L2?symbol={:symbol}&depth={:depth}
+              GET /marketdata/candles?symbol={:symbol}&resolution={:resolution}&startTime={:startTime}&endTime={:endTime}
+            Data 
+              Product, order, execution
+                In the critical trading path, orders and executions are not stored in a database. To achieve high performance, this path executes trades in memory and leverages hard disk or shared memory to persist and share orders and executions. Specifically, orders and executions are stored in the sequencer for fast recovery, and data is archived after the market closes. We discuss an efficient implementation of the sequencer in the deep dive section.
+              Order book
+                An order book is a list of buy and sell orders for a specific security or financial instrument, organized by price level [12] [13]. It is a key data structure in the matching engine for fast order matching. An efficient data structure for an order book must satisfy these requirements:
+
+                  Constant lookup time. Operation includes: getting volume at a price level or between price levels.
+
+                  Fast add/cancel/execute operations, preferably O(1) time complexity. Operations include: placing a new order, canceling an order, and matching an order.
+            Step 3 - Design Deep Dive
+
+              Performance
+                Latency = ∑executionTimeAlongCriticalPath
+                  gateway -> order manager -> sequencer -> matching engine
+
+                  To stay ahead of the competition, exchanges over time evolve their design to reduce the end-to-end latency on the critical path to tens of microseconds, primarily by exploring options to reduce or eliminate network and disk access latency. A time-tested design eliminates the network hops by putting everything on the same server. When all components are on the same server, they can communicate via mmap [17] as an event store (more on this later)
+
+                  Next, let’s focus our attention on the long rectangle labeled “mmap” at the center of Figure 15. “mmap” refers to a POSIX-compliant UNIX system call named `mmap(2)` that maps a file into the memory of a process.
+
+                  `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. The performance advantage is compounded when the backing file is in `/dev/shm`. `/dev/shm` is a memory-backed file system. When `mmap(2)` is done over a file in `/dev/shm`, the access to the shared memory does not result in any disk access at all.
+
+                  Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.`
+
+              Event sourcing
+                  Figure 18 shows an event sourcing design using the mmap event store as a message bus. This looks very much like the Pub-Sub model in Kafka. In fact, if there is no strict latency requirement, Kafka could be used.
+
+                This design follows the high-level design closely, but there are some adjustments to make it work more efficiently in the event sourcing paradigm.
+
+                  The first difference is the order manager. The order manager becomes a reusable library that is embedded in different components.
+                  Another key difference is that the sequencer is nowhere to be seen. What happened to it?
+
+                  With the event sourcing design, we have one single event store for all messages. Note that the event store entry contains a “sequence” field. This field is injected by the sequencer.    
+
+                  Unlike the sequencer in the high-level design which also functions as a message store, the sequencer here only does one simple thing and is super fast. Figure 19 shows a design for the sequencer in a memory-map (MMap) environment.
+
+                  The sequencer pulls events from the ring buffer that is local to each component. For each event, it stamps a sequence ID on the event and sends it to the event store. We can have backup sequencers for high availability in case the primary sequencer goes down.
+
+              High availability
+                  For stateless services such as the client gateway, they could easily be horizontally scaled by adding more servers.
+                  For stateful components, such as the order manager and matching engine, we need to be able to copy state data across replicas. 
+                  We could use reliable UDP [19] to efficiently broadcast the event messages to all warm servers.  
+
+              Fault tolerance
+                  Once the decision to failover is correctly made, how do we decide which server takes over? Fortunately, this is a well-understood problem. There are many battle-tested leader-election algorithms. We use Raft [22] as an example.
+
+              Matching algorithms
+                  The pseudocode uses the FIFO (First In First Out) matching algorithm. The order that comes in first at a certain price level gets matched first, and the last one gets matched last.
+
+              Determinism
+                  With functional determinism, the actual time when the event happens does not matter most of the time. What matters is the order of the events. In Figure 23, event timestamps from discrete uneven dots in the time dimension are converted to continuous dots, and the time spent on replay/recovery can be greatly reduced.
+                  
+                  Latency determinism means having almost the same latency through the system for each trade. This is key to the business. There is a mathematical way to measure this: the 99th percentile latency, or even more strictly, the 99.99th percentile latency. We can leverage HdrHistogram [26] to calculate latency. If the 99th percentile latency is low, the exchange offers stable performance across almost all the trades.
+              Market data publisher optimizations
+                  This design utilizes ring buffers. A ring buffer, also called a circular buffer, is a fixed-size queue with the head connected to the tail. A producer continuously produces data and one or more consumers pull data off it. The space in a ring buffer is pre-allocated. There is no object creation or deallocation necessary. The data structure is also lock-free.
+              Distribution fairness of market data
+                  Multicast using reliable UDP is a good solution to broadcast updates to many participants at once. The MDP could also assign a random order when the subscriber connects to it. We look at multicast in more detail.
+              Network security
+

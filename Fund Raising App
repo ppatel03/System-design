@@ -1,0 +1,39 @@
+Design Fund raising App
+        https://excalidraw.com/#room=f014e3afcbd4ddc43b20,SKkDU1jvFs-vLQNoH7pHmg
+
+        Asymmetric encryption could be used here for payment gateway
+          https://www.youtube.com/watch?v=AQDCe585Lnc
+          also used in HTTPS, SSH, Bitcoin, Emails using PGP protocol
+
+        How HTTPS works ? How it uses SSL and TLS
+          https://www.youtube.com/watch?v=hExRDVZHhig
+          HTTPS uses public key encryption to secure data using SSL (Secure socket layer) protocol. Basically server gives SSL certicate to client and acknowledgement is established between the two. Then info can be transferred securely using encryption.
+          TLS is latest and successor of SSL
+          Today most websites supports https because of google standards
+
+          ByteByteGo : https://www.youtube.com/watch?v=j9QmMEWmcfo
+            Moderm HTTPS uses TLS
+            1. first establishes TCP handshake at transport 
+            2. then client sends hello and gets the certificate from server which has public key of server (Asymmetric) 
+            3. then client encryptes his/her session key with server's public key and then on server, it gets clients sesssion key by decrypting with server's private key. This is Asymmetric encryption
+            4. Now both has session key and uses session key as cipher to encrypt and decrypt at both sides. This is Symmetric encryption.
+
+            SSL uses public key encryption (Asymmetric encryption) only
+
+          How SSO work ? 
+            https://www.youtube.com/watch?v=O1cRJWYF-g4
+            uses public key encryption
+          
+          Oauth 2.0 work ? 
+            https://www.youtube.com/watch?v=CPbvxxslDTU
+
+            Related to above 
+            How payment gateway work ?
+              https://www.youtube.com/watch?v=GUurzvS3DlY
+
+
+        TODO : 
+          Learn about public Asymmetric encryption (key / private key) encryprion - https://www.youtube.com/watch?v=AQDCe585Lnc
+          Learn about HTTPS encryption (uses Asymmetric encryption)
+          Learn about end to end encrytion
+          Learn about how SSO work

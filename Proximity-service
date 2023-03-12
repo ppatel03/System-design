@@ -1,0 +1,19 @@
+Proximity Service 
+    https://bytebytego.com/courses/system-design-interview/proximity-service
+    
+        Different types of address look up
+        two dimensional search query, Geohash, Quadtree
+
+        High level storage based on read : write ratio
+          If Read ratio is high than writes, remember to apply master/slave architecture for storage  replica for reads and master/primary for write 
+
+        Sharding and Replicating 
+          These are two different concepts and usually you need both. Sharding is very common though.
+          However, if your DB requirements are not huge (say 10 GB), you can simply create replicas to distribute read load than sharding it
+
+        Operation complexity with in-memory data
+          - If your in-memory data is large (in GBs), then it takes time to start up and serve traffic. Needs gradual roll out of new releases or 
+          blue green deployment technique (https://martinfowler.com/bliki/BlueGreenDeployment.html)
+          - Locking mechanism is needed for updates in a multithread environment
+      
+      

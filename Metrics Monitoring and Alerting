@@ -1,0 +1,64 @@
+ Metrics Monitoring and Alerting System
+        https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system
+
+        Candidate: What is the scale of the infrastructure we are monitoring with this system?
+            Interviewer: 100 million daily active users, 1,000 server pools, and 100 machines per pool.
+        The infrastructure being monitored is large-scale.
+            100 million daily active users
+            Assume we have 1,000 server pools, 100 machines per pool, 100 metrics per machine => ~10 million metrics
+
+            Storage : 
+            1 month : ~ 10 ^ 6 (10 mil metrics) * 10 ^ 6  * 10 KB 
+                    : ~ 10 ^ 13 KB
+                    : ~10 ^ 4 TB
+            > 1 month : ~ 10 ^ 3 TB
+            1 year : 12 * 1 month ~ 10 ^ 5 TB
+
+            Burst read  : 
+            UI QPS : (100 million DAU / 10 ^ 5) * 2 (peak) 
+                   : 2K QPS
+            Bandwidth QPS : 2000 QPS * (100 metrics) * 10 ^ 6 (1 week) * 1 KB
+                          :  ~ 10 ^ 11 KB
+                          :  ~ 10 ^ 5 GB 
+                          : internal datacenter bandwith needs to be  ~ 10 ^ 5 GB -> needs high compression and request collapsing
+                          : per user data transfer 10 ^ 2 GB
+
+        Data storage system
+          a relational database is not optimized for operations you would commonly perform against time-series data. For example, computing the moving average in a rolling time window requires complicated SQL that is difficult to read. Moreover, a general-purpose relational database does not perform well under constant heavy write load. 
+
+          Again Cassandra was brought up in discussion for write heavy ??? Why ? 
+            May be its good for bulk new writes 
+          
+          OpenTSDB is a distributed time-series database, but since it is based on Hadoop and HBase, running a Hadoop/HBase cluster adds complexity. Another feature of a strong time-series database is efficient aggregation and analysis of a large amount of time-series data by labels, also known as tags in some databases. For example, InfluxDB builds indexes on labels to facilitate the fast lookup of time-series by labels
+
+        Metrics collection - Pull vs push models
+          In Pull approach, the metrics collector needs to know the complete list of service endpoints to pull data from. The good news is that we have a reliable, scalable, and maintainable solution available through Service Discovery, provided by etcd [14], Zookeeper [15], etc., wherein services register their availability and the metrics collector can be notified by the Service Discovery component whenever the list of service endpoints changes.
+
+          In a push model, a collection agent is commonly installed on every server being monitored. Aggregation is an effective way to reduce the volume of data sent to the metrics collector. If the push traffic is high and the metrics collector rejects the push with an error, the agent could keep a small buffer of data locally (possibly by storing them locally on disk), and resend them later.
+
+        Scale through Kafka
+          There are a couple of ways that we can leverage Kafka’s built-in partition mechanism to scale our system.
+            Configure the number of partitions based on throughput requirements.
+            Partition metrics data by metric names, so consumers can aggregate data by metrics names.
+            Further partition metrics data with tags/labels.
+            Categorize and prioritize metrics so that important metrics can be processed first.
+        
+        Where aggregations can happen
+          Metrics can be aggregated in different places; in the collection agent (on the client-side), the ingestion pipeline (before writing to storage), and the query side (after writing to storage). Let’s take a closer look at each of them.
+
+        Space optimization in time-series DB
+          Data encoding and compression
+            Example, rather than storing absolute values, the delta of the values can be stored along with one base value like: 1610087371, 10, 10, 9, 11
+          Downsampling
+            Since our data retention is 1 year, we can downsample old data.
+          Cold storage
+            Cold storage is the storage of inactive data that is rarely used. The financial cost for cold storage is much lower.
+
+
+        Alerting system - build vs buy 
+          There are many industrial-scale alerting systems available off-the-shelf, and most provide tight integration with the popular time-series databases. Many of these alerting systems integrate well with existing notification channels, such as email and PagerDuty. In the real world, it is a tough call to justify building your own alerting system. In interview settings, especially for a senior position, be ready to justify your decision
+
+        TODO : 
+        TCP vs UDP
+        Hot vs Cold Storage : https://www.youtube.com/watch?v=90EBp9wkoYM
+ 
