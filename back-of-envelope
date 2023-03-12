@@ -496,7 +496,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           Pros
             helps in speeding up the search 
           Cons
-            lowers write/update/delete performance
+            lowers write/update/delete performance by 4 times
           When to use indexes ?
             In the case of data sets that are many terabytes in size but with very small payloads (e.g., 1 KB), 
             indexes are a necessity for optimizing data access. Finding a small payload in such a large dataset can be a real challenge since
@@ -511,8 +511,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           https://github.com/Jeevan-kumar-Raj/Grokking-System-Design/blob/master/basics/proxies.md
           
           Usage : 
-          filter requests, log requests, cache, encryption and most important batch request. Further, it can get smarter to o collapse requests 
-          for data that is spatially close together in the storage (consecutively on disk). This strategy will result in decreasing request latency. 
+          filter requests, log requests, cache, encryption and most important batch request. Further, it can get smarter to o collapse requests for data that is spatially close together in the storage (consecutively on disk). This strategy will result in decreasing request latency. 
           For example, let’s say a bunch of servers request parts of file: part1, part2, part3, etc. We can set up our proxy in such a way 
           that it can recognize the spatial locality of the individual requests, thus collapsing them into a single request and reading complete file, 
           which will greatly minimize the reads from the data origin.
