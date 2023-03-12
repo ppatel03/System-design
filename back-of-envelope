@@ -135,7 +135,7 @@ Distributed systems today and Benchmarking on common systems
      - The number of partitions and addresses of all Redis nodes can be stored in a centralized place. We could use Zookeeper [4] as a highly-available configuration storage solution. (https://bytebytego.com/courses/system-design-interview/digital-wallet)
      - Apache Zookeeper [7] is a popular open-source solution for service discovery. It registers all the available chat servers and picks the best chat server for a client based on predefined criteria. (https://bytebytego.com/courses/system-design-interview/design-a-chat-system)
 
-    Cache benchmarking
+  Cache benchmarking
 
       Azure Redis Cache : 
         53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
@@ -151,7 +151,11 @@ Distributed systems today and Benchmarking on common systems
 
         Sorted Set - https://redis.io/docs/data-types/sorted-sets/
 
-    SQL DB benchmarking - Relational
+      CDN
+        https://cloud.google.com/cdn/pricing 
+        5 million requests with 500 GB cache ~ 40$ per month
+
+  SQL DB benchmarking - Relational
         1. MySQL benchmarking
           - Indexed Read
               a. with primary key reads which is already indexed
@@ -287,6 +291,8 @@ Distributed systems today and Benchmarking on common systems
             DynamoDB splits data across multiple nodes using consistent hashing.
 
 
+
+
   Attempt to standardized DB selection criteria 
       1. MySQL vs noSQL 
 
@@ -356,6 +362,8 @@ Distributed systems today and Benchmarking on common systems
  Operation system
     User level threads vs Kernel level threads
       https://www.youtube.com/watch?v=_5q8ZK6hwzM
+
+ 
 ================================================================
 ================================================================
 ================================================================
