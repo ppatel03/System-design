@@ -228,6 +228,13 @@ Distributed systems best practices
     https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering 
     Dynamic rendering is a workaround and not a recommended solution, because it creates additional complexities and resource requirements.
 
+  Scale through Kafka
+          There are a couple of ways that we can leverage Kafka’s built-in partition mechanism to scale our system.
+            Configure the number of partitions based on throughput requirements.
+            Partition metrics data by metric names, so consumers can aggregate data by metrics names.
+            Further partition metrics data with tags/labels.
+            Categorize and prioritize metrics so that important metrics can be processed first.
+
 
 Distributed systems today and Benchmarking on common systems
 
