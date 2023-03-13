@@ -170,13 +170,17 @@ Distributed systems best practices
   Logging (errors), Metrics Monitoring (system level, business) and automated Deployment
     Logging (errors)
       - datadog
+      - logging errors to trigger alerts, sev
     Metrics Monitoring (system level, business)
       - datadog, 
     Alerting
       - datadog
     Continuous integration
         develop -> commit -> build -> test ->  deploy
-      https://blog.inedo.com/continuous-integration-performance-testing-best-practices 
+      https://blog.inedo.com/continuous-integration-performance-testing-best-practices
+
+  Failure/Error handling
+    Common techniques are retry the processing for queue consumer or offload to another server 
 
 
   Event sourcing
