@@ -186,6 +186,7 @@ Distributed systems best practices
 
 
   Event sourcing
+      https://www.confluent.io/blog/event-sourcing-cqrs-stream-processing-apache-kafka-whats-connection/
       https://bytebytego.com/courses/system-design-interview/digital-wallet
     One design philosophy that systematically answers those questions is event sourcing, which is a technique developed in Domain-Driven Design (DDD) [9].
 
