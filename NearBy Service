@@ -1,13 +1,40 @@
  NearBy Friends
     https://bytebytego.com/courses/system-design-interview/nearby-friends
     
-        Back of envelope
-        Req is 10% of DAU are concurrent. In that case, QPS is 10% of DAU and do not need additional calculations
+    
+Back of envelope
+            Nearby friends are defined as friends whose locations are within a 5-mile radius.
+            The location refresh interval is 30 seconds. The reason for this is that human walking speed is slow (average 3-4 miles per hour). The distance traveled in 30 seconds does not make a significant difference on the “nearby friends” feature.
+            On average, 100 million users use the “nearby friends” feature every day.
+            Req is 10% of DAU are concurrent. In that case, QPS is 10% of DAU and do not need additional calculations
 
-        High level design vs API design + data model 
-          Questions like this needs high level design first
+High level design vs API design + data model 
+    Questions like this needs high level design first
+
+    At a high level, this problem calls for a design with efficient message passing. Conceptually, a user would like to receive location updates from every active friend nearby. It could in theory be done purely peer-to-peer, that is, a user could maintain a persistent connection to every other active friend in the vicinity.
+    This solution is not practical for a mobile device with sometimes flaky connections and a tight power consumption budget, but the idea sheds some light on the general design direction.
+
+    A more practical design would have a shared backend and look like this:
+
+    What are the responsibilities of the backend in Figure 3?
+
+        Receive location updates from all active users.
+
+        For each location update, find all the active friends who should receive it and forward it to those users’ devices.
+
+        If the distance between two users is over a certain threshold, do not forward it to the recipient’s device.
+
+    This sounds pretty simple. What is the issue? Well, to do this at scale is not easy. We have 10 million active users. With each user updating the location information every 30 seconds, there are 334K updates per second. If on average each user has 400 friends, and we further assume that roughly 10% of those friends are online and nearby, every second the backend forwards 334K * 400 * 10% = 14 million location updates per second. That is a lot of updates to forward.
+
+Step 3 - Design Deep Dive
+
+    WebSocket servers
+        For the WebSocket cluster, it is not difficult to auto-scale based on usage. However, the WebSocket servers are stateful, so care must be taken when removing existing nodes. Before a node can be removed, all existing connections should be allowed to drain. To achieve that, we can mark a node as “draining” at the load balancer so that no new WebSocket connections will be routed to the draining server. Once all the existing connections are closed (or after a reasonably long wait), the server is then removed.
+
+    Scaling considerations for Redis pub/sub servers
+
         
-        Update and Notify system like this 
+Update and Notify system like this 
           Always prefer Websocket connection which also works well with load balancer. Attach the user to web socket servers.
           Leverage impressive lightweight cache systems like Redis pub/sub which allows millions of channels https://redis.io/docs/manual/pubsub/
           
@@ -41,3 +68,4 @@
         Study about redis well
         Data structure about pub/sub model : queue and hashmap for tracking purpose
         Alternative to Redis pub/sub is "Earlang" - is a general programming language and runtime environment built for highly distributed and concurrent applications.
+        Study about Earland
