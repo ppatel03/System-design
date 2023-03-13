@@ -1,0 +1,85 @@
+https://bytebytego.com/courses/system-design-interview/design-a-search-autocomplete-system
+
+Step 2 - Propose high-level design and get buy-in
+    At the high-level, the system is broken down into two:
+
+        Data gathering service: It gathers user input queries and aggregates them in real-time. Real-time processing is not practical for large data sets; however, it is a good starting point. We will explore a more realistic solution in deep dive.
+
+        Query service: Given a search query or prefix, return 5 most frequently searched terms.
+
+Step 3 - Design deep dive
+
+    Trie data structure
+        Limit the max length of a prefix
+        Cache top search queries at each node
+
+    Data gathering service
+        To design a scalable data gathering service, we examine where data comes from and how data is used. Real-time applications like Twitter require up to date autocomplete suggestions. However, autocomplete suggestions for many Google keywords might not change much on a daily basis.
+
+        Trie DB. Trie DB is the persistent storage. Two options are available to store the data:
+
+            1. Document store: Since a new trie is built weekly, we can periodically take a snapshot of it, serialize it, and store the serialized data in the database. Document stores like MongoDB [4] are good fits for serialized data.
+
+            2. Key-value store: A trie can be represented in a hash table form [4] by applying the following logic:
+
+            Every prefix in the trie is mapped to a key in a hash table.
+
+            Data on each trie node is mapped to a value in a hash table.
+
+    Query service
+
+        Query service requires lightning-fast speed. We propose the following optimizations:
+            AJAX request.
+                For web applications, browsers usually send AJAX requests to fetch autocomplete results. The main benefit of AJAX is that sending/receiving a request/response does not refresh the whole web page. 
+
+            Browser caching. 
+                For many applications, autocomplete search suggestions may not change much within a short time. Thus, autocomplete suggestions can be saved in browser cache to allow subsequent requests to get results from the cache directly. Google search engine uses the same cache mechanism. Figure 12 shows the response header when you type “system design interview” on the Google search engine. As you can see, Google caches the results in the browser for 1 hour. Please note: “private” in cache-control means results are intended for a single user and must not be cached by a shared cache. “max-age=3600” means the cache is valid for 3600 seconds, aka, an hour.
+
+            Data sampling: 
+                For a large-scale system, logging every search query requires a lot of processing power and storage. Data sampling is important. For instance, only 1 out of every N requests is logged by the system.
+
+    Trie operations
+
+    Scale the storage
+        Now that we have developed a system to bring autocomplete queries to users, it is time to solve the scalability issue when the trie grows too large to fit in one server.
+
+        Since English is the only supported language, a naive way to shard is based on the first character. Here are some examples.
+
+        If we need two servers for storage, we can store queries starting with ‘a’ to ‘m’ on the first server, and ‘n’ to ‘z’ on the second server.
+
+        If we need three servers, we can split queries into ‘a’ to ‘i’, ‘j’ to ‘r’ and ‘s’ to ‘z’.
+
+        Following this logic, we can split queries up to 26 servers because there are 26 alphabetic characters in English. Let us define sharding based on the first character as first level sharding. To store data beyond 26 servers, we can shard on the second or even at the third level. For example, data queries that start with ‘a’ can be split into 4 servers: ‘aa-ag’, ‘ah-an’, ‘ao-au’, and ‘av-az’.
+
+        At the first glance this approach seems reasonable, until you realize that there are a lot more words that start with the letter ‘c’ than ‘x’. This creates uneven distribution.
+
+        To mitigate the data imbalance problem, we analyze historical data distribution pattern and apply smarter sharding logic as shown in Figure 15. The shard map manager maintains a lookup database for identifying where rows should be stored. For example, if there are a similar number of historical queries for ‘s’ and for ‘u’, ‘v’, ‘w’, ‘x’, ‘y’ and ‘z’ combined, we can maintain two shards: one for ‘s’ and one for ‘u’ to ‘z’.
+
+Step 4 - Wrap 
+    Interviewer: How do you extend your design to support multiple languages?
+
+        To support other non-English queries, we store Unicode characters in trie nodes. If you are not familiar with Unicode, here is the definition: “an encoding standard covers all the characters for all the writing systems of the world, modern and ancient” [5].
+
+    Interviewer: What if top search queries in one country are different from others?
+
+        In this case, we might build different tries for different countries. To improve the response time, we can store tries in CDNs.
+
+    Interviewer: How can we support the trending (real-time) search queries?
+
+        Assuming a news event breaks out, a search query suddenly becomes popular. Our original design will not work because:
+
+            Offline workers are not scheduled to update the trie yet because this is scheduled to run on weekly basis.
+
+            Even if it is scheduled, it takes too long to build the trie.
+
+        Building a real-time search autocomplete is complicated and is beyond the scope of this course so we will only give a few ideas:
+
+            Reduce the working data set by sharding.
+
+            Change the ranking model and assign more weight to recent search queries.
+
+            Data may come as streams, so we do not have access to all the data at once. Streaming data means data is generated continuously. Stream processing requires a different set of systems: Apache Hadoop MapReduce [6], Apache Spark Streaming [7], Apache Storm [8], Apache Kafka [9], etc. Because all those topics require specific domain knowledge, we are not going into detail here.
+
+
+
+

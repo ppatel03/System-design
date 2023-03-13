@@ -156,7 +156,10 @@ Authentication and Security
             Related to above 
             How payment gateway work ?
               https://www.youtube.com/watch?v=GUurzvS3DlY
+              
 
+Physical cores, Virtual cores and Logical cores
+  https://www.youtube.com/watch?v=O2g6381An_k 
 
 
 Distributed systems best practices
@@ -522,6 +525,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
           Read-Through Cache (application server reads from cache only)
             - Pros : logic controlled by cache, read-heavy, good consistency when combined with write through 
             - Cons : needs data model to be consistent, first time data always results in cache miss
+            Application : autocomplete suggestion to read from trie cache - https://bytebytego.com/courses/system-design-interview/design-a-search-autocomplete-system 
 
           Belpw are Cache writes invalidation policy 
 
