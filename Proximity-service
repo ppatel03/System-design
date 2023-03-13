@@ -1,9 +1,29 @@
 Proximity Service 
     https://bytebytego.com/courses/system-design-interview/proximity-service
+
+Non-functional requirements
+    From the business requirements, we can infer a list of non-functional requirements. You should also check these with the interviewer.
+
+            Low latency. Users should be able to see nearby businesses quickly.
+
+            Data privacy. Location info is sensitive data. When we design a location-based service (LBS), we should always take user privacy into consideration. We need to comply with data privacy laws like General Data Protection Regulation (GDPR) [4] and California Consumer Privacy Act (CCPA) [5], etc.
+
+            High availability and scalability requirements. We should ensure our system can handle the spike in traffic during peak hours in densely populated areas.
+
+Algorithms to fetch nearby businesses
+        In real life, companies might use existing geospatial databases such as Geohash in Redis [10] or Postgres with PostGIS extension [11]. You are not expected to know the internals of those geospatial databases during an interview. It’s better to demonstrate your problem-solving skills and technical knowledge by explaining how the geospatial index works, rather than to simply throw out database names.
     
         Different types of address look up
-        two dimensional search query, Geohash, Quadtree
+        two dimensional search query, Evenly divided grid, Geohash, Quadtree
 
+
+
+
+
+
+
+
+tODO : 
         High level storage based on read : write ratio
           If Read ratio is high than writes, remember to apply master/slave architecture for storage  replica for reads and master/primary for write 
 
