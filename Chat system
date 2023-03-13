@@ -9,4 +9,70 @@ Step 2 - Propose high-level design and get buy-in
         WebSocket connection is initiated by the client. It is bi-directional and persistent. It starts its life as a HTTP connection and could be “upgraded” via some well-defined handshake to a WebSocket connection. Through this persistent connection, a server could send updates to a client. WebSocket connections generally work even if a firewall is in place. This is because they use port 80 or 443 which are also used by HTTP/HTTPS connections.
 
     High-level design
-    Just now we mentioned that WebSocket was chosen as the main communication protocol between the client and server for its bidirectional communication, it is important to note that everything else does not have to be WebSocket. In fact, most features (sign up, login, user profile, etc) of a chat application could use the traditional request/response method over HTTP. 
+        Just now we mentioned that WebSocket was chosen as the main communication protocol between the client and server for its bidirectional communication, it is important to note that everything else does not have to be WebSocket. In fact, most features (sign up, login, user profile, etc) of a chat application could use the traditional request/response method over HTTP. 
+
+    Scalability
+        On a small scale, all services listed above could fit in one server. Even at the scale we design for, it is in theory possible to fit all user connections in one modern cloud server. The number of concurrent connections that a server can handle will most likely be the limiting factor. In our scenario, at 1M concurrent users, assuming each user connection needs 10K of memory on the server (this is a very rough figure and very dependent on the language choice), it only needs about 10GB of memory to hold all the connections on one box.
+
+        If we propose a design where everything fits in one server, this may raise a big red flag in the interviewer’s mind. No technologist would design such a scale in a single server. Single server design is a deal breaker due to many factors. The single point of failure is the biggest among them.
+
+    Storage
+        Selecting the correct storage system that supports all of our use cases is crucial. We recommend key-value stores for the following reasons:
+
+        Key-value stores allow easy horizontal scaling.
+
+        Key-value stores provide very low latency to access data.
+
+        Relational databases do not handle long tail [3] of data well. When the indexes grow large, random access is expensive.
+
+        Key-value stores are adopted by other proven reliable chat applications. For example, both Facebook messenger and Discord use key-value stores. Facebook messenger uses HBase [4], and Discord uses Cassandra [5].
+
+    Message 
+        How to generate message_id is an interesting topic worth exploring. Message_id carries the responsibility of ensuring the order of messages. To ascertain the order of messages, message_id must satisfy the following two requirements:
+
+        IDs must be unique.
+
+        IDs should be sortable by time, meaning new rows have higher IDs than old ones.
+
+        How can we achieve those two guarantees? The first idea that comes to mind is the “auto_increment” keyword in MySql. However, NoSQL databases usually do not provide such a feature.
+
+        The second approach is to use a global 64-bit sequence number generator like Snowflake [6]. This is discussed in the “Design a unique ID generator in a distributed system” chapter.
+
+        The final approach is to use local sequence number generator. Local means IDs are only unique within a group. The reason why local IDs work is that maintaining message sequence within one-on-one channel or a group channel is sufficient. This approach is easier to implement in comparison to the global ID implementation.
+
+Step 3 - Design deep dive
+
+    Service discovery
+        The primary role of service discovery is to recommend the best chat server for a client based on the criteria like geographical location, server capacity, etc. Apache Zookeeper [7] is a popular open-source solution for service discovery. It registers all the available chat servers and picks the best chat server for a client based on predefined criteria.
+
+    Message flows
+
+
+    Message synchronization across multiple devices
+        Each device maintains a variable called cur_max_message_id, which keeps track of the latest message ID on the device.
+        Then unread messages can be determined if latest Message ID in the key-value store is larger than cur_max_message_id.
+
+    Small group chat flow
+        Figure 14 explains what happens when User A sends a message in a group chat. Assume there are 3 members in the group (User A, User B and user C). First, the message from User A is copied to each group member’s message sync queue: one for User B and the second for User C. You can think of the message sync queue as an inbox for a recipient. This design choice is good for small group chat because:
+
+        it simplifies message sync flow as each client only needs to check its own inbox to get new messages.
+
+        when the group number is small, storing a copy in each recipient’s inbox is not too expensive.
+
+        WeChat uses a similar approach, and it limits a group to 500 members [8]. However, for groups with a lot of users, storing a message copy for each member is not acceptable.
+
+    Online presence
+        User 
+        User logout
+        User disconnection
+        Online status fanout
+
+
+
+
+
+
+
+
+
+

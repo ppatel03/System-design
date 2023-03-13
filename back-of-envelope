@@ -72,8 +72,9 @@ Distributed Systems estimate
     Max connections on the server : 
         https://josephmate.github.io/2022-04-14-max-connections
         Some think the limit 216=65,536 because that’s all the ports available in the TCP spec.
-        Then theoretical limit a server can support on a single port is 2^48 which is about 1 quadrillion. This is huge. 
+        Then theoretical limit a server can support on a single port is 2^48 which is about 1 quadrillion. This is huge and not possible.
         So basically, your # of connections depends on CPU, Mem, Network and other resources on the server.
+        So to estimate max connections, use request size to memory mapping. Example, At 1M concurrent users, assuming each user connection needs 10K of memory on the server (this is a very rough figure and very dependent on the language choice - 256 KB for hava), it only needs about 10GB of memory to hold all the connections on one box.
 
     So network is 3 times faster than disk
     memory is 40 times faster than network
