@@ -69,6 +69,9 @@ Distributed Systems estimate
     SSD latency = 16 us
     Memory read = 100 ns
     DNS response time ranges from 10ms to 200ms.
+    Multi-region failover time for AWS RDS : 60-100s  https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
+    Replication lag for AWS RDS : < 100 ms 
+      https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
     Max connections on the server : 
         https://josephmate.github.io/2022-04-14-max-connections
         Some think the limit 216=65,536 because that’s all the ports available in the TCP spec.
@@ -78,8 +81,6 @@ Distributed Systems estimate
 
     So network is 3 times faster than disk
     memory is 40 times faster than network
-
-    Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
 
 
 Choices with protocol
@@ -114,11 +115,16 @@ Failure handling algo
 
 Directed acyclic graph (DAG) model
         To support different video processing pipelines and maintain high parallelism, it is important to add some level of abstraction and let client programmers define what tasks to execute. For example, Facebook’s streaming video engine uses a directed acyclic graph (DAG) programming model, which defines tasks in stages so they can be executed sequentially or parallelly [8]. In our design, we adopt a similar DAG model to achieve flexibility and parallelism. Figure 8 represents a DAG for video transcoding.
+
 Symmetric vs Asymmetric 
     https://blog.mailfence.com/symmetric-vs-asymmetric-encryption/ 
     RSA is asymmetric
     Rest everything is symmetric
     SHA-1 is hash function and not encryption one
+
+Eliminate disk access
+  Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
+
 
 
 
@@ -161,8 +167,10 @@ Authentication and Security
               https://www.youtube.com/watch?v=GUurzvS3DlY
 
 
+
 Physical cores, Virtual cores and Logical cores
   https://www.youtube.com/watch?v=O2g6381An_k 
+
 
 
 Distributed systems best practices
@@ -303,6 +311,13 @@ Distributed systems today and Benchmarking on common systems
           - MySQL replica sync
               https://serverfault.com/questions/30605/how-fast-is-mysql-replication
               MySQL replication happens as close to real-time as possible, as limited by disk and network I/O. The slaves open a socket to the master, which is kept open. When a transaction occurs on the master, it gets recorded in the binlog, and is simply replayed on the slave(s). If the socket between master and slave is interrupted, the binlog is replayed for the slave upon the next successful connection.
+
+          - Multi-region failover time for AWS RDS : 60-100s 
+              https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
+
+          - Replication lag for AWS RDS : < 100 ms 
+              https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
+
 
           - Practical
               how MySQL gurantees ACID : https://www.youtube.com/watch?v=0OYFsJ1-1YA
