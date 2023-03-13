@@ -112,11 +112,14 @@ Failure handling algo
                 Step 4: Build the tree upwards till root by calculating hashes of children (Figure 16).
           https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
 
+Directed acyclic graph (DAG) model
+        To support different video processing pipelines and maintain high parallelism, it is important to add some level of abstraction and let client programmers define what tasks to execute. For example, Facebook’s streaming video engine uses a directed acyclic graph (DAG) programming model, which defines tasks in stages so they can be executed sequentially or parallelly [8]. In our design, we adopt a similar DAG model to achieve flexibility and parallelism. Figure 8 represents a DAG for video transcoding.
 Symmetric vs Asymmetric 
     https://blog.mailfence.com/symmetric-vs-asymmetric-encryption/ 
     RSA is asymmetric
     Rest everything is symmetric
     SHA-1 is hash function and not encryption one
+
 
 
 Authentication and Security 
