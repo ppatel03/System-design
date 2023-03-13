@@ -137,9 +137,12 @@ Authentication and Security
             https://www.youtube.com/watch?v=O1cRJWYF-g4
             
             Two ways 
-              using SAML 
+              using SAML
+                - uses XML 
                 - uses public key encryption 
-              Open id connect which uses token
+              Open id connect
+                - uses json doc 
+                - which uses token
           
           Oauth 2.0 work ? 
             https://www.youtube.com/watch?v=CPbvxxslDTU
