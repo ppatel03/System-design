@@ -156,7 +156,7 @@ Authentication and Security
             Related to above 
             How payment gateway work ?
               https://www.youtube.com/watch?v=GUurzvS3DlY
-              
+
 
 Physical cores, Virtual cores and Logical cores
   https://www.youtube.com/watch?v=O2g6381An_k 
@@ -230,8 +230,13 @@ Distributed systems today and Benchmarking on common systems
         Sorted Set - https://redis.io/docs/data-types/sorted-sets/
 
       CDN
-        https://cloud.google.com/cdn/pricing 
-        5 million requests with 500 GB cache ~ 40$ per month
+        Let us use Amazon’s CDN CloudFront for cost estimation (Figure 2) [3]. Assume 100% of traffic is served from the United States. The average cost per GB is $0.02. For simplicity, we only calculate the cost of video streaming.
+
+          5 million * 5 videos * 0.3GB * 0.02 = 150,000 per day.
+
+        Looks unrealistic : 
+          https://cloud.google.com/cdn/pricing 
+          5 million requests with 500 GB cache ~ 40$ per month
 
   SQL DB benchmarking - Relational
         1. MySQL benchmarking

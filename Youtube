@@ -1,0 +1,106 @@
+https://bytebytego.com/courses/system-design-interview/design-youtube
+
+Back of the envelope estimation
+    The following estimations are based on many assumptions, so it is important to communicate with the interviewer to make sure she is on the same page.
+
+    Assume the product has 5 million daily active users (DAU).
+
+    Users watch 5 videos per day.
+
+    10% of users upload 1 video per day.
+
+    Assume the average video size is 300 MB.
+
+    Total daily storage space needed: 5 million * 10% * 300 MB = 150TB
+
+    CDN cost.
+
+        When cloud CDN serves a video, you are charged for data transferred out of the CDN.
+
+        Let us use Amazon’s CDN CloudFront for cost estimation (Figure 2) [3]. Assume 100% of traffic is served from the United States. The average cost per GB is $0.02. For simplicity, we only calculate the cost of video streaming.
+
+        5 million * 5 videos * 0.3GB * 0.02=150,000 per day.
+
+
+    Video uploading flow
+
+        Original storage: A blob storage system is used to store original videos. A quotation in Wikipedia regarding blob storage shows that: “A Binary Large Object (BLOB) is a collection of binary data stored as a single entity in a database management system” [6].
+
+        Transcoding servers: Video transcoding is also called video encoding. It is the process of converting a video format to other formats (MPEG, HLS, etc), which provide the best video streams possible for different devices and bandwidth capabilities.
+
+        The flow is broken down into two processes running in parallel.
+
+            a. Upload the actual video.
+
+            b. Update video metadata. Metadata contains information about video URL, size, resolution, format, user info, etc.
+
+            Flow a: upload the actual video
+                1. Videos are uploaded to the original storage.
+
+                2. Transcoding servers fetch videos from the original storage and start transcoding.
+
+                3. Once transcoding is complete, the following two steps are executed in parallel:
+
+                3a. Transcoded videos are sent to transcoded storage.
+
+                3b. Transcoding completion events are queued in the completion queue.
+
+                3a.1. Transcoded videos are distributed to CDN.
+
+                3b.1. Completion handler contains a bunch of workers that continuously pull event data from the queue.
+
+                3b.1.a. and 3b.1.b. Completion handler updates the metadata database and cache when video transcoding is complete.
+
+                4. API servers inform the client that the video is successfully uploaded and is ready for streaming.
+
+            Flow b: update the metadata
+
+
+    Video streaming flow
+        streaming means your device continuously receives video streams from remote source videos. When you watch streaming videos, your client loads a little bit of data at a time so you can watch videos immediately and continuously.
+
+            Before we discuss video streaming flow, let us look at an important concept: streaming protocol. This is a standardized way to control data transfer for video streaming. Popular streaming protocols are:
+
+            MPEG–DASH. MPEG stands for “Moving Picture Experts Group” and DASH stands for "Dynamic Adaptive Streaming over HTTP".
+
+            Apple HLS. HLS stands for “HTTP Live Streaming”.
+
+            Microsoft Smooth Streaming.
+
+            Adobe HTTP Dynamic Streaming (HDS).
+        Videos are streamed from CDN directly. The edge server closest to you will deliver the video. Thus, there is very little latency.
+
+
+    Video transcoding
+        When you record a video, the device (usually a phone or camera) gives the video file a certain format. If you want the video to be played smoothly on other devices, the video must be encoded into compatible bitrates and formats. Bitrate is the rate at which bits are processed over time. A higher bitrate generally means higher video quality. High bitrate streams need more processing power and fast internet speed.
+
+        Video transcoding is important for the following reasons:
+
+            Raw video consumes large amounts of storage space. An hour-long high definition video recorded at 60 frames per second can take up a few hundred GB of space.
+
+            Many devices and browsers only support certain types of video formats. Thus, it is important to encode a video to different formats for compatibility reasons.
+
+            To ensure users watch high-quality videos while maintaining smooth playback, it is a good idea to deliver higher resolution video to users who have high network bandwidth and lower resolution video to users who have low bandwidth.
+
+            Network conditions can change, especially on mobile devices. To ensure a video is played continuously, switching video quality automatically or manually based on network conditions is essential for smooth user experience.
+
+        Many types of encoding formats are available; however, most of them contain two parts:
+
+            Container: This is like a basket that contains the video file, audio, and metadata. You can tell the container format by the file extension, such as .avi, .mov, or .mp4.
+
+            Codecs: These are compression and decompression algorithms aim to reduce the video size while preserving the video quality. The most used video codecs are H.264, VP9, and HEVC.
+
+
+
+Step 3 - Design deep dive
+
+
+
+
+TODO
+
+    Study about MPEG vs HLS video streaming protocol
+        https://www.linkedin.com/pulse/hls-vs-mpeg-dash-comparison-between-video-streaming-protocols-?trk=pulse-article_more-articles_related-content-card#:~:text=MPEG%2DDASH%20streams%20are%20typically,264%20or%20H. 
+        - MPEG-DASH streams are typically higher quality overall, but HLS streams can provide a better experience for viewers on slower connections by automatically adapting to their connection speed.
+        -You can use any coding standard with MPEG-DASH. On the other hand, HLS requires you to use H.264 or H.265. High-quality streaming.
+
