@@ -113,6 +113,29 @@ Step 3 - Design deep dive
             2. Some old mobile devices or browsers might not support video splitting. Preprocessor split videos by GOP alignment for old clients.
             3. DAG generation. The processor generates DAG based on configuration files client programmers write. 
             4. Cache data. The preprocessor is a cache for segmented videos.
+        
+        DAG scheduler
+
+        Resource manager
+
+        Task workers
+
+
+    System optimizations
+
+        Speed optimization: parallelize video uploading
+            Uploading a video as a whole unit is inefficient. We can split a video into smaller chunks by GOP alignment. This allows fast resumable uploads when the previous upload failed. The job of splitting a video file by GOP can be implemented by the client to improve the upload speed.
+
+        Speed optimization: place upload centers close to users
+
+        Speed optimization: parallelism everywhere
+            To make the system more loosely coupled, we introduced message queues 
+
+        Safety optimization: pre-signed upload URL
+
+
+
+
 
 
 
