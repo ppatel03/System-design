@@ -1,0 +1,40 @@
+
+https://bytebytego.com/courses/system-design-interview/design-a-notification-system
+
+
+    Reliability
+        How to prevent data loss?
+
+            One of the most important requirements in a notification system is that it cannot lose data. Notifications can usually be delayed or re-ordered, but never lost. To satisfy this requirement, the notification system persists notification data in a database and implements a retry mechanism. The notification log database is included for data persistence, 
+
+        Will recipients receive a notification exactly once?
+
+            The short answer is no. Although notification is delivered exactly once most of the time, the distributed nature could result in duplicate notifications. To reduce the duplication occurrence, we introduce a dedupe mechanism and handle each failure case carefully. Here is a simple dedupe logic:
+
+            When a notification event first arrives, we check if it is seen before by checking the event ID. If it is seen before, it is discarded. Otherwise, we will send out the notification. For interested readers to explore why we cannot have exactly once delivery, refer to the reference material [5].
+
+    Additional components and considerations
+
+        Notification template
+
+        Notification settings
+
+        Rate limiting
+
+        Retry
+
+        Security in push notifications
+            For iOS or Android apps, appKey and appSecret are used to secure push notification APIs [6]. Only authenticated or verified clients are allowed to send push notifications using our APIs. Interested users should refer to the reference material [6].
+
+        Queue monitoring
+
+        Events tracking (open, clicked)
+
+TODO
+    [5] You Cannot Have Exactly-Once Delivery:
+    https://bravenewgeek.com/you-cannot-have-exactly-once-delivery/
+
+    [6] Security in Push Notifications:
+    https://cloud.ibm.com/docs/services/mobilepush?topic=mobile-pushnotification-security-in-push-notifications
+
+    AWS SNS https://aws.amazon.com/sns/ 

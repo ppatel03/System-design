@@ -106,6 +106,13 @@ Failure handling algo
                 Step 4: Build the tree upwards till root by calculating hashes of children (Figure 16).
           https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
 
+  Symmetric vs Asymmetric 
+    https://blog.mailfence.com/symmetric-vs-asymmetric-encryption/ 
+    RSA is asymmetric
+    Rest everything is symmetric
+    SHA-1 is hash function and not encryption one
+
+
 
 Distributed systems best practices
 
@@ -137,6 +144,14 @@ Distributed systems best practices
         key value store to check in SSTable
         crawlers to check if url in malicious 
         CDN if page is in cache
+  
+  Clock synchronization amongst different servers in distributed systems
+    https://www.youtube.com/watch?v=f1hlCZB0GDA 
+    - Use network time protocol 
+
+  Dynamic rendering to allow search engines to parse content
+    https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering 
+    Dynamic rendering is a workaround and not a recommended solution, because it creates additional complexities and resource requirements.
 
 
 Distributed systems today and Benchmarking on common systems

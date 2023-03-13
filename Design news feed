@@ -1,0 +1,37 @@
+https://bytebytego.com/courses/system-design-interview/design-a-news-feed-system
+
+
+Step 3 - Design deep dive
+
+
+    Feed publishing deep dive
+        Fanout service
+            Fanout is the process of delivering a post to all friends. Two types of fanout models are: fanout on write (also called push model) and fanout on read (also called pull model). Both models have pros and cons.
+            We adopt a hybrid approach to get benefits of both approaches and avoid pitfalls in them. Since fetching the news feed fast is crucial, we use a push model for the majority of users. For celebrities or users who have many friends/followers, we let followers pull news content on-demand to avoid system overload. Consistent hashing is a useful technique to mitigate the hotkey problem as it helps to distribute requests/data more evenly.
+
+
+            1. Fetch friend IDs from the graph database. Graph databases are suited for managing friend relationship and friend recommendations. Interested readers wishing to learn more about this concept should refer to the reference material [2].
+
+            2. Get friends info from the user cache. The system then filters out friends based on user settings. For example, if you mute someone, her posts will not show up on your news feed even though you are still friends. Another reason why posts may not show is that a user could selectively share information with specific friends or hide it from other people.
+
+            3. Send friends list and new post ID to the message queue.
+
+            4. Fanout workers fetch data from the message queue and store news feed data in the news feed cache. You can think of the news feed cache as a <post_id, user_id> mapping table. Whenever a new post is made, it will be appended to the news feed table as shown in Figure 6. The memory consumption can become very large if we store the entire user and post objects in the cache. Thus, only IDs are stored. To keep the memory size small, we set a configurable limit. The chance of a user scrolling through thousands of posts in news feed is slim. Most users are only interested in the latest content, so the cache miss rate is low.
+
+            5. Store <post_id, user_id > in news feed cache. Figure 6 shows an example of what the news feed looks like in cache.
+
+    Newsfeed retrieval deep dive
+
+        1. A user sends a request to retrieve her news feed. The request looks like this: /v1/me/feed
+
+        2. The load balancer redistributes requests to web servers.
+
+        3. Web servers call the news feed service to fetch news feeds.
+
+        4. News feed service gets a list post IDs from the news feed cache.
+
+        5. A user’s news feed is more than just a list of feed IDs. It contains username, profile picture, post content, post image, etc. Thus, the news feed service fetches the complete user and post objects from caches (user cache and post cache) to construct the fully hydrated news feed.
+
+        6. The fully hydrated news feed is returned in JSON format back to the client for rendering.
+
+
