@@ -1,0 +1,46 @@
+https://bytebytego.com/courses/system-design-interview/design-google-drive
+
+Step 2 - Propose high-level design and get buy-in
+
+    Move away from single server - Sharding
+
+    S3
+
+
+    Sync conflicts
+        user 1 and user 2 tries to update the same file at the same time, but user 1’s file is processed by our system first. User 1’s update operation goes through, but, user 2 gets a sync conflict. How can we resolve the conflict for user 2? Our system presents both copies of the same file: user 2’s local copy and the latest version from the server (Figure 9). User 2 has the option to merge both files or override one version with the other.
+
+    High-level design
+
+        Block servers: Block servers upload blocks to cloud storage. Block storage, referred to as block-level storage, is a technology to store data files on cloud-based environments. A file can be split into several blocks, each with a unique hash value, stored in our metadata database. Each block is treated as an independent object and stored in our storage system (S3). To reconstruct a file, blocks are joined in a particular order. As for the block size, we use Dropbox as a reference: it sets the maximal size of a block to 4MB [6].
+
+Step 3 - Design deep 
+
+    Block servers
+
+        Two optimizations are proposed to minimize the amount of network traffic being transmitted:
+            Delta sync. When a file is modified, only modified blocks are synced instead of the whole file using a sync algorithm [7] [8].
+            Compression. Applying compression on blocks can significantly reduce the data size. Thus, blocks are compressed using compression algorithms depending on file types. For example, gzip and bzip2 are used to compress text files. Different compression algorithms are needed to compress images and videos.
+
+        In our system, block servers do the heavy lifting work for uploading files. Block servers process files passed from clients by splitting a file into blocks, compressing each block, and encrypting them. Instead of uploading the whole file to the storage system, only modified blocks are transferred.
+
+    High consistency requirement
+
+    Upload flow
+
+    Download flow
+
+    Notification service
+        Even though both options work well, we opt for long polling for the following two reasons:
+
+            Communication for notification service is not bi-directional. The server sends information about file changes to the client, but not vice versa.
+
+            WebSocket is suited for real-time bi-directional communication such as a chat app. For Google Drive, notifications are sent infrequently with no burst of data.
+
+    Save storage 
+        De-duplicate data blocks. Eliminating redundant blocks at the account level is an easy way to save space. Two blocks are identical if they have the same hash value.
+
+        Moving infrequently used data to cold storage. Cold data is the data that has not been active for months or years. Cold storage like Amazon S3 glacier [11] is much cheaper than S3.
+
+
+
