@@ -135,8 +135,11 @@ Authentication and Security
 
           How SSO work ? 
             https://www.youtube.com/watch?v=O1cRJWYF-g4
-            - uses public key encryption
-            - two ways using SAML and Open id connect which uses token
+            
+            Two ways 
+              using SAML 
+                - uses public key encryption 
+              Open id connect which uses token
           
           Oauth 2.0 work ? 
             https://www.youtube.com/watch?v=CPbvxxslDTU
