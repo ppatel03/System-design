@@ -181,6 +181,8 @@ Distributed systems best practices
 
   Failure/Error handling
     Common techniques are retry the processing for queue consumer or offload to another server 
+    try maintaining the commit log
+    explore event sourcing technique
 
 
   Event sourcing
