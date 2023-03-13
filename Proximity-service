@@ -16,6 +16,47 @@ Algorithms to fetch nearby businesses
         Different types of address look up
         two dimensional search query, Evenly divided grid, Geohash, Quadtree
 
+            Option 4: Quadtree
+                Now that we know the data structure for each node, let’s take a look at the memory usage.
+
+                Each grid can store a maximal of 100 businesses
+
+                Number of leaf nodes = ~200 million / 100 = ~2 million
+
+                Number of internal nodes = 2 million * 1/3 = ~0.67 million. If you do not know why the number of internal nodes is one-third of the leaf nodes, please read the reference material [19].
+
+                Total memory requirement = 2 million * 832 bytes + 0.67 million * 64 bytes = ~1.71 GB. Even if we add some overhead to build the tree, the memory requirement to build the tree is quite small.
+
+                In a real interview, we shouldn’t need such detailed calculations. The key takeaway here is that the quadtree index doesn’t take too much memory and can easily fit in one server. Does it mean we should use only one server to store the quadtree index? The answer is no. Depending on the read volume, a single quadtree server might not have enough CPU or network bandwidth to serve all read requests. If that is the case, it will be necessary to spread the read load among multiple quadtree servers.
+
+                As mentioned above, it may take a few minutes to build a quadtree with 200 million businesses at the server start-up time. It is important to consider the operational implications of such a long server start-up time. While the quadtree is being built, the server cannot serve traffic. Therefore, we should roll out a new release of the server incrementally to a small subset of servers at a time. This avoids taking a large swath of the server cluster offline and causes service brownout. Blue/green deployment [20] can also be used, but an entire cluster of new servers fetching 200 million businesses at the same time from the database service can put a lot of strain on the system. This can be done, but it may complicate the design and you should mention that in the interview.
+
+                Real-world quadtree example
+
+                    Yext provided an image (Figure 15) that shows a constructed quadtree near Denver [21]. We want smaller, more granular grids for dense areas and larger grids for sparse areas.
+
+        Geohash vs quadtree
+
+            Geohash
+                Easy to use and implement. No need to build a tree.
+
+                Supports returning businesses within a specified radius.
+
+                When the precision (level) of geohash is fixed, the size of the grid is fixed as well. It cannot dynamically adjust the grid size, based on population density. More complex logic is needed to support this.
+
+                Updating the index is easy.
+
+            Quadtree
+
+                Slightly harder to implement because it needs to build the tree.
+
+                Supports fetching k-nearest businesses. 
+
+                It can dynamically adjust the grid size based on population density (see the Denver example in Figure 15).
+
+                Updating the index is more complicated than geohash. A quadtree is a tree structure. If a business is removed, we need to traverse from the root to the leaf node, to remove the business. For example, if we want to remove the business with ID = 2, we have to travel from the root all the way down to the leaf node, as shown in Figure 19. Updating the index takes O(logn), but the implementation is complicated if the data structure is accessed by a multi-threaded program, as locking is required. Also, rebalancing the tree can be complicated. Rebalancing is necessary if, for example, a leaf node has no room for a new addition. A possible fix is to over-allocate the ranges.
+
+
 
 
 
