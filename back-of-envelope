@@ -60,7 +60,7 @@ Back of envelope questions :
         - helps in estimating storage requirements
   2. if latency requirement is present, calculate api payload rough estimate say 1 KB for 100K QPS ~ 100 MBps
       Why ? 
-        - 
+        - helps in estimating # of servers needed 
   3. calculate storage estimate 
       Why ? 
      - to help decide if sharding is need or master-replica model. Example 100 PB of storage needs sharding
