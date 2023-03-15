@@ -269,7 +269,7 @@ Distributed systems today and Benchmarking on common systems
     Kafka
       https://www.youtube.com/watch?v=UNUz1-msbOM
       latency : 1 ms
-      Optimized due to append-only log and zero copy
+      Optimized on consumer side due to append-only log and zero copy (avoids copying into socket buffer)
 
   Cache benchmarking
 
