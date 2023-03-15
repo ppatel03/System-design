@@ -218,6 +218,9 @@ Distributed systems best practices
     try maintaining the commit log
     explore event sourcing technique
 
+  Verify integrity through blockchain
+    https://www.youtube.com/watch?v=SSo_EIwHSd4 
+
 
   Event sourcing
       https://www.confluent.io/blog/event-sourcing-cqrs-stream-processing-apache-kafka-whats-connection/
