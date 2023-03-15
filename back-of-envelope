@@ -270,6 +270,32 @@ Distributed systems best practices
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
     One way to mitigate this problem is to use “watermark” (the extended rectangles in Figure 14), which is regarded as an extension of an aggregation window. This improves the accuracy of the aggregation result. By extending an extra 15-second (adjustable) aggregation window, window 1 is able to include event 2, and window 3 is able to include event 5.
 
+  Aggregation window
+    https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
+    According to the “Designing data-intensive applications” book by Martin Kleppmann [16], there are four types of window functions: tumbling (also called fixed) window, hopping window, sliding window, and session window. We will discuss the tumbling window and sliding window as they are most relevant to our system.
+
+  Fault tolerance systems
+    - retry logic by storing last online state in S3 / KV store
+    - snapshots storage for low latency (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
+
+  Monitoring metrics
+    total Latency and also at each stage
+    Queue size if used
+    system resources : CPU, disk, JVM, etc.
+
+  Reconcilliation for data consistency
+    https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
+    Reconciliation means comparing different sets of data in order to ensure data integrity. Unlike reconciliation in the banking industry, where you can compare your records with the bank’s records, the result of ad click aggregation has no third-party result to reconcile with.
+
+  Alternative designs for aggregation
+    https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
+    In a generalist system design interview, you are not expected to know the internals of different pieces of specialized software used in a big data pipeline. Explaining your thought process and discussing trade-offs is very important, which is why we propose a generic solution. Another option is to store ad click data in Hive, with an ElasticSearch layer built for faster queries. Aggregation is usually done in OLAP databases such as ClickHouse [24] or Druid [25]. Figure 29 shows the architecture.
+
+
+
+
+
+
 
 Distributed systems today and Benchmarking on common systems
 
@@ -277,6 +303,8 @@ Distributed systems today and Benchmarking on common systems
       https://www.youtube.com/watch?v=MAJ0aW5g17c (awesome)
         Example of GFS performing map function on worker servers and reduce using worker servers co-ordinated by master
       The MapReduce framework is a good option to aggregate ad click events. The directed acyclic graph (DAG) is a good model for it [9]. The key to the DAG model is to break down the system into small computing units, like the Map/Aggregate/Reduce nodes (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
+      Hotspot issue in map reduce
+        supported by resource manager (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
 
     Zookeeper 
      - centralized configuration
@@ -289,6 +317,13 @@ Distributed systems today and Benchmarking on common systems
       https://www.youtube.com/watch?v=UNUz1-msbOM
       latency : 1 ms
       Optimized on consumer side due to append-only log and zero copy (avoids copying into socket buffer)
+      Excatly once delivery is hard but Yelp implements it. Check it out https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
+        To achieve “exactly-once” processing, we need to put operations between step 4 to step 6 in one distributed transaction. A distributed transaction is a transaction that works across several nodes. If any of the operations fails, the whole transaction is rolled back.
+
+    Streaming vs Batching systems 
+     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
+     Batch : MapReduce
+     Stream : Flink
 
   Cache benchmarking
 
@@ -428,8 +463,10 @@ Distributed systems today and Benchmarking on common systems
                 - LSM tree + SS tables
                 Great video : https://www.youtube.com/watch?v=I6jB0nM9SKU 
                 Good read : https://rahulpradeep.medium.com/sstables-and-lsm-trees-5ba6c5529325 
-                
 
+              Consistent hashing
+                If we add a new node to the cluster, it automatically rebalances the virtual nodes among all nodes. No manual resharding is required. See Cassandra’s official documentation for more details [22]. - https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
+                
               Benchmarking
                 - On Cheap heardware https://benchant.com/blog/cassandra-4-performance
                   m5.large ( 2 core, 8 GB) 
