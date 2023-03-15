@@ -257,10 +257,18 @@ Distributed systems best practices
       Further partition metrics data with tags/labels.
       Categorize and prioritize metrics so that important metrics can be processed first.
 
+  Scale map reduce operations 
+    https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
+    If you are interested in the details, please refer to reference material [20]. Aggregation service is horizontally scalable by adding or removing nodes.
+    Question is how you increase the throughput ? 
+        1. assign each thread in the server
+        2. deploy aggregation service nodes on resource providers like Apache Hadoop YARN [21]
+      Option 1 is easier to implement and doesn’t depend on resource providers. In reality, however, option 2 is more widely used because we can scale the system by adding more computing resources.
   Using star schema as pre-filtered form 
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
     To support data filtering like “show me the aggregated click count for ad001 within the USA only”, we can pre-define filtering criteria and aggregate based on them. This technique is called the star schema [11], which is widely used in data warehouses. The filtering fields are called dimensions. 
     A limitation with this approach is that it creates many more buckets and records, especially when we have a lot of filtering criteria.
+
 
   Combine batch processing and streaming with one service 
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
@@ -307,11 +315,14 @@ Distributed systems today and Benchmarking on common systems
         supported by resource manager (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
 
     Zookeeper 
-     - centralized configuration
+     - centralized configuration, key value store for state and also co-ordination service like selecting leader/master
+     - can perform as a shard manager to find out the shard based on key ( https://kousiknath.medium.com/all-things-sharding-techniques-and-real-life-examples-in-nosql-data-storage-systems-3e8beb98830a#:~:text=You%20can%20use%20some%20configuration,directly%20talk%20to%20the%20shard. )
      - The number of partitions and addresses of all Redis nodes can be stored in a centralized place. We could use Zookeeper [4] as a highly-available configuration storage solution. (https://bytebytego.com/courses/system-design-interview/digital-wallet)
      - Apache Zookeeper [7] is a popular open-source solution for service discovery. It registers all the available chat servers and picks the best chat server for a client based on predefined criteria. (https://bytebytego.com/courses/system-design-interview/design-a-chat-system)
      - There are many service discovery packages available, with etcd [4] and Zookeeper [5] among the most popular ones. Our need for the service discovery component is very basic. https://bytebytego.com/courses/system-design-interview/nearby-friends 
         - Under the “Key” mentioned in point 1, we store a hash ring of all the active Redis pub/sub servers in the service discovery component (See the consistent hashing chapter in Volume 1 of the System Design Interview book or [6] on details of a hash ring). The hash ring is used by the publishers and subscribers of the Redis pub/sub servers to determine the pub/sub server to talk to for each channel. 
+      https://ramcloud.atlassian.net/wiki/spaces/RAM/pages/6848719/ZooKeeper+Performance 
+      
 
     Kafka
       https://www.youtube.com/watch?v=UNUz1-msbOM
@@ -319,6 +330,7 @@ Distributed systems today and Benchmarking on common systems
       Optimized on consumer side due to append-only log and zero copy (avoids copying into socket buffer)
       Excatly once delivery is hard but Yelp implements it. Check it out https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
         To achieve “exactly-once” processing, we need to put operations between step 4 to step 6 in one distributed transaction. A distributed transaction is a transaction that works across several nodes. If any of the operations fails, the whole transaction is rolled back.
+
 
     Streaming vs Batching systems 
      https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
