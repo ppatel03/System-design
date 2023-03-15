@@ -98,18 +98,21 @@ Distributed Systems estimate
     memory is 40 times faster than network
 
 
-Choices with protocol
+Distributed systems best practices
+
+
+  Choices with protocol
     - TCP vs UDP
         https://www.spiceworks.com/tech/networking/articles/tcp-vs-udp/#:~:text=UDP%20is%20faster%20and%20more,connection%20to%20start%20sending%20packets.
         1. TCP is connection-oriented while UDP is connectionless
         The UDP protocol is not suitable for sending electronic mail, viewing a web page, or downloading a file. However, it is preferred mainly for real-time applications like broadcasting or multitasking network traffic.
 
-Failure detection algo 
+  Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems
     - Raft (description below) using used for master-replica model
 
 
-Failure handling algo
+  Failure handling algo
   - for temporary failures
       1. Sloppy quorum
         
@@ -128,31 +131,31 @@ Failure handling algo
                 Step 4: Build the tree upwards till root by calculating hashes of children (Figure 16).
           https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
 
-Directed acyclic graph (DAG) model
+  Directed acyclic graph (DAG) model
         To support different video processing pipelines and maintain high parallelism, it is important to add some level of abstraction and let client programmers define what tasks to execute. For example, Facebook’s streaming video engine uses a directed acyclic graph (DAG) programming model, which defines tasks in stages so they can be executed sequentially or parallelly [8]. In our design, we adopt a similar DAG model to achieve flexibility and parallelism. Figure 8 represents a DAG for video transcoding.
 
-Symmetric vs Asymmetric 
+  Symmetric vs Asymmetric 
     https://blog.mailfence.com/symmetric-vs-asymmetric-encryption/ 
     RSA is asymmetric
     Rest everything is symmetric
     SHA-1 is hash function and not encryption one
 
-Eliminate disk access
-  Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
+  Eliminate disk access
+    Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
 
-Change Data Capture
-CDC is a mechanism that reads data changes from the database and applies the changes to another data system. One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10].
+  Change Data Capture
+  CDC is a mechanism that reads data changes from the database and applies the changes to another data system. One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10].
 
-In-sync replicas
-  https://bytebytego.com/courses/system-design-interview/distributed-message-queue
-  We mentioned that messages are persisted in multiple partitions to avoid single node failure, and each partition has multiple replicas. Messages are only written to the leader, and followers synchronize data from the leader. One problem we need to solve is keeping them in sync.
-  In-sync replicas (ISR) refer to replicas that are “in-sync” with the leader. The definition of “in-sync” depends on the topic configuration. For example, if the value of replica.lag.max.messages is 4, it means that as long as the follower is behind the leader by no more than 3 messages, it will not be removed from ISR [10]. The leader is an ISR by default.
+  In-sync replicas
+    https://bytebytego.com/courses/system-design-interview/distributed-message-queue
+    We mentioned that messages are persisted in multiple partitions to avoid single node failure, and each partition has multiple replicas. Messages are only written to the leader, and followers synchronize data from the leader. One problem we need to solve is keeping them in sync.
+    In-sync replicas (ISR) refer to replicas that are “in-sync” with the leader. The definition of “in-sync” depends on the topic configuration. For example, if the value of replica.lag.max.messages is 4, it means that as long as the follower is behind the leader by no more than 3 messages, it will not be removed from ISR [10]. The leader is an ISR by default.
 
-Data mirroring with replicas
-  https://bytebytego.com/courses/system-design-interview/distributed-message-queue 
-  If all the replicas of a partition crash, the data for that partition is lost forever. When choosing the number of replicas and replica locations, there’s a trade-off between data safety, resource cost, and latency. It is safer to distribute replicas across data centers, but this will incur much more latency and cost, to synchronize data between replicas. As a workaround, data mirroring can help to copy data across data centers, but this is out of scope. The reference material [14] covers this topic.
+  Data mirroring with replicas
+    https://bytebytego.com/courses/system-design-interview/distributed-message-queue 
+    If all the replicas of a partition crash, the data for that partition is lost forever. When choosing the number of replicas and replica locations, there’s a trade-off between data safety, resource cost, and latency. It is safer to distribute replicas across data centers, but this will incur much more latency and cost, to synchronize data between replicas. As a workaround, data mirroring can help to copy data across data centers, but this is out of scope. The reference material [14] covers this topic.
 
-Authentication and Security 
+  Authentication and Security 
         Asymmetric encryption could be used here for payment gateway
           https://www.youtube.com/watch?v=AQDCe585Lnc
           also used in HTTPS, SSH, Bitcoin, Emails using PGP protocol
@@ -192,12 +195,11 @@ Authentication and Security
 
 
 
-Physical cores, Virtual cores and Logical cores
-  https://www.youtube.com/watch?v=O2g6381An_k 
+  Physical cores, Virtual cores and Logical cores
+    https://www.youtube.com/watch?v=O2g6381An_k 
 
 
 
-Distributed systems best practices
 
   Logging (errors), Metrics Monitoring (system level, business) and automated Deployment
     Logging (errors)
@@ -252,12 +254,26 @@ Distributed systems best practices
       Further partition metrics data with tags/labels.
       Categorize and prioritize metrics so that important metrics can be processed first.
 
+  Using star schema as pre-filtered form 
+    https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
+    To support data filtering like “show me the aggregated click count for ad001 within the USA only”, we can pre-define filtering criteria and aggregate based on them. This technique is called the star schema [11], which is widely used in data warehouses. The filtering fields are called dimensions. 
+    A limitation with this approach is that it creates many more buckets and records, especially when we have a lot of filtering criteria.
+
+  Combine batch processing and streaming with one service 
+    https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
+    For a system that contains two processing paths (batch and streaming) simultaneously, this architecture is called lambda [14]. A disadvantage of lambda architecture is that you have two processing paths, meaning there are two codebases to maintain. Kappa architecture [15], which combines the batch and streaming in one processing path, solves the problem. The key idea is to handle both real-time data processing and continuous data reprocessing using a single stream processing engine. 
+
+  Process delayed events 
+    https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
+    One way to mitigate this problem is to use “watermark” (the extended rectangles in Figure 14), which is regarded as an extension of an aggregation window. This improves the accuracy of the aggregation result. By extending an extra 15-second (adjustable) aggregation window, window 1 is able to include event 2, and window 3 is able to include event 5.
+
 
 Distributed systems today and Benchmarking on common systems
 
     Map Reduce
       https://www.youtube.com/watch?v=MAJ0aW5g17c (awesome)
         Example of GFS performing map function on worker servers and reduce using worker servers co-ordinated by master
+      The MapReduce framework is a good option to aggregate ad click events. The directed acyclic graph (DAG) is a good model for it [9]. The key to the DAG model is to break down the system into small computing units, like the Map/Aggregate/Reduce nodes (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
 
     Zookeeper 
      - centralized configuration
@@ -376,6 +392,8 @@ Distributed systems today and Benchmarking on common systems
 
         2. Object storage / cold storage benchmarking
             S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3)
+            Another option is to store the data in Amazon S3 using one of the columnar data formats like ORC [5], Parquet [6], or AVRO [7]. We could put a cap on the size of each file (say, 10GB) and the stream processor responsible for writing the raw data could handle the file rotation when the size cap is reached. (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
+
 
         3. Cassandra
 
