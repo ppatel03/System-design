@@ -15,8 +15,7 @@ Tips :
            Remember today mosts have 1 Gbps network which has 10 us to transfer 1 KB
     -- Availability 
           this would help decide the redundancy and reliability - example mostly 99.99% a day means you can compromise 10s (10 ^ 5 * 10 ^ -4)
-          of unavailability or being unrelible. With this you can even decide that, your system could be out of sync from third part servers for 10s in a
-          day 
+          of unavailability or being unrelible. With this you can even decide that, your system could be out of sync from third part servers for 10s in a day but that's reliability or consistency measurement though
     
 
 
@@ -29,6 +28,11 @@ QPS estimate
 ----- For time constraints, do not hesitate to round off large amounts
 
 How to use non-functional requirements in decison making
+
+  Availability vs Reliablity 
+    https://www.pagerduty.com/resources/learn/reliability/ 
+    Availability is a measure of the percentage of time that an IT service or component is in an operable state.
+    Reliability, on the other hand, is a measure of the probability that the system will meet defined performance standards in performing its intended function during a specified interval.  
 
   Bandwidth (assume to be 1 GBps ~ 100 MBps which means 1 KB = 10us) 
     - can help reason your latency
@@ -49,9 +53,6 @@ How to use non-functional requirements in decison making
     - can help reason for low replication
     - can help reason for MySQL if complicated with ACID
 
-Some tricks 
-  - get smallest short length for tiny url
-    The hashValue consists of characters from [0-9, a-z, A-Z], containing 10 + 26 + 26 = 62 possible characters. To figure out the length of hashValue, find the smallest n such that 62^n ≥ 365 billion. 
 
 Back of envelope questions : 
   1. calculate qps (round this number).  
@@ -87,6 +88,7 @@ Distributed Systems estimate
     Multi-region failover time for AWS RDS : 60-100s  https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
     Replication lag for AWS RDS : < 100 ms 
       https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
+    TLS handshake time : 250 - 500 ms https://zoompf.com/blog/2014/12/optimizing-tls-handshake/#:~:text=This%20handshake%20will%20typically%20take,is%20when%20the%20handshake%20happens. 
     Max connections on the server : 
         https://josephmate.github.io/2022-04-14-max-connections
         Some think the limit 216=65,536 because that’s all the ports available in the TCP spec.
@@ -100,6 +102,9 @@ Distributed Systems estimate
 
 Distributed systems best practices
 
+
+  Smallest short length required ( say for tiny url )
+    The hashValue consists of characters from [0-9, a-z, A-Z], containing 10 + 26 + 26 = 62 possible characters. To figure out the length of hashValue, find the smallest n such that 62^n ≥ 365 billion. 
 
   Choices with protocol
     - TCP vs UDP
