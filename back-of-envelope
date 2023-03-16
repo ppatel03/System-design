@@ -656,7 +656,8 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
          - supports rate limiting
          - supports caching
          - supports request grouping
-         - supports secure auth SSL. Also does optimizations with keep alive connection and cache to avoid SSL handshake
+         - supports secure auth SSL. Also does optimizations with keep alive connection and cache to avoid SSL handshake - https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/ 
+         Also a good read https://www.nginx.com/blog/http-keepalives-and-web-performance/
        Nginx supports L7
 ================================================================
 
