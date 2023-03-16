@@ -179,6 +179,11 @@ Distributed systems best practices
             4. Now both has session key and uses session key as cipher to encrypt and decrypt at both sides. This is Symmetric encryption.
 
             SSL uses public key encryption (Asymmetric encryption) only. However, this website claims it supports both Asymmetric and symmetric - https://www.trentonsystems.com/blog/symmetric-vs-asymmetric-encryption
+          
+
+        TLS handshake latency 
+          TLS handshake time : 250 - 500 ms https://zoompf.com/blog/2014/12/optimizing-tls-handshake/#:~:text=This%20handshake%20will%20typically%20take,is%20when%20the%20handshake%20happens.  
+          Suggestion is to use nginx which uses keep-alive and stores encrypted session key 
 
           How SSO work ? 
             https://www.youtube.com/watch?v=O1cRJWYF-g4
@@ -198,12 +203,13 @@ Distributed systems best practices
             How payment gateway work ?
               https://www.youtube.com/watch?v=GUurzvS3DlY
 
-
+  Networks 
+    HTTP over TCP/IP 
+      https://www.goanywhere.com/blog/http-vs-tcp-whats-the-difference
+      In the case of HTTP which applies at layer 7, before a client and server can exchange an HTTP request/response, they must establish a TCP connection first. Therefore, HTTP relies on the TCP standard in order to successfully do its job.
 
   Physical cores, Virtual cores and Logical cores
     https://www.youtube.com/watch?v=O2g6381An_k 
-
-
 
 
   Logging (errors), Metrics Monitoring (system level, business) and automated Deployment
