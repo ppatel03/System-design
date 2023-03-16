@@ -173,7 +173,7 @@ Distributed systems best practices
             3. then client encryptes his/her session key with server's public key and then on server, it gets clients sesssion key by decrypting with server's private key. This is Asymmetric encryption
             4. Now both has session key and uses session key as cipher to encrypt and decrypt at both sides. This is Symmetric encryption.
 
-            SSL uses public key encryption (Asymmetric encryption) only
+            SSL uses public key encryption (Asymmetric encryption) only. However, this website claims it supports both Asymmetric and symmetric - https://www.trentonsystems.com/blog/symmetric-vs-asymmetric-encryption
 
           How SSO work ? 
             https://www.youtube.com/watch?v=O1cRJWYF-g4
