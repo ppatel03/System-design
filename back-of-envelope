@@ -212,6 +212,11 @@ Distributed systems best practices
   Physical cores, Virtual cores and Logical cores
     https://www.youtube.com/watch?v=O2g6381An_k 
 
+  Processes vs Thread
+    https://www.youtube.com/watch?v=4rLW7zg21gI 
+      Process is responsible for executing set of instructions from an application
+      Process will contain multiple threads
+
 
   Logging (errors), Metrics Monitoring (system level, business) and automated Deployment
     Logging (errors)
