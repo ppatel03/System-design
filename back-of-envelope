@@ -37,11 +37,11 @@ How to use non-functional requirements in decison making
   Bandwidth (assume to be 1 GBps ~ 100 MBps which means 1 KB = 10us) 
     - can help reason your latency
     - can help reason your replication or multiple servers
-    - can help reason your sharding for database (remember internal data center max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) 
+    - can help reason your sharding for database (remember internal data center max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html 
 
   Durability  (I even refer as availability + data correctness with techniques like checksum, parity)
     - can help reason how much to replicate. 
-        Example, say 99.999999% (six 9's) durability can be achieved assuming failure rate of one server is 0.01% (say 99.99% guarantee for ec2 on aws). This means you need 2 servers atleast which means 1 replica (0.0001 ^ 2 = 0.00000001. So 1 - 0.00000001 ~ 0.99999999 * 100 ~ 99.999999% ) 
+        Example, say 99.999999% (six 9's) durability can be achieved assuming failure rate of one server is 0.01% (say 99.99% guarantee for ec2 on aws). This means you need 2 servers atleast which means 1 replica (0.0001 ^ 2 = 0.0000001. So 1 - 0.0000001 ~ 0.99999999 * 100 ~ 99.999999% ) 
     - can help to reason out if you need checksum for data integrity
 
   Availability
@@ -51,7 +51,7 @@ How to use non-functional requirements in decison making
   Consistency
     - can help reason for high latency 
     - can help reason for low replication
-    - can help reason for MySQL if complicated with ACID
+    - can help reason for MySQL if combined with ACID
 
 
 Back of envelope questions : 
@@ -89,6 +89,7 @@ Distributed Systems estimate
     Replication lag for AWS RDS : < 100 ms 
       https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
     TLS handshake time : 250 - 500 ms https://zoompf.com/blog/2014/12/optimizing-tls-handshake/#:~:text=This%20handshake%20will%20typically%20take,is%20when%20the%20handshake%20happens. 
+      So suggest to use nginx for keep alive and caching session key 
     Max connections on the server : 
         https://josephmate.github.io/2022-04-14-max-connections
         Some think the limit 216=65,536 because that’s all the ports available in the TCP spec.
@@ -96,8 +97,10 @@ Distributed Systems estimate
         So basically, your # of connections depends on CPU, Mem, Network and other resources on the server.
         So to estimate max connections, use request size to memory mapping. Example, At 1M concurrent users, assuming each user connection needs 10K of memory on the server (this is a very rough figure and very dependent on the language choice - 256 KB for hava), it only needs about 10GB of memory to hold all the connections on one box.
 
-    So network is 3 times faster than disk
-    memory is 40 times faster than network
+
+    Modern fiber optic cable vs ethernet (copper) cable
+      - 10 Gbps vs 1 Gbps
+      - https://www.cablewholesale.com/blog/index.php/2020/09/16/fiber-optic-vs-copper-ethernet-cables-the-difference/#:~:text=A%20more%20modern%20take%20on,much%20faster%20than%20copper%20cables.
 
 
 Distributed systems best practices
@@ -115,19 +118,17 @@ Distributed systems best practices
   Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems
     - Raft (description below) using used for master-replica model
+      Ensure all replicas are always in-sync and master->slave is elected correctly when master goes down. We could use consensus algorithms such as Paxos [21] and Raft [22], or use consensus-based distributed databases such as YugabyteDB [23] or CockroachDB [24].
+          https://bytebytego.com/courses/system-design-interview/stock-exchange 
+          The leader sends heartbeat messages (AppendEnties with no content as shown in Figure 21) to its followers. If a follower has not received heartbeat messages for a period of time, it triggers an election timeout that initiates a new election. The first follower that reaches election timeout becomes a candidate, and it asks the rest of the followers to vote (RequestVote). If the first follower receives a majority of votes, it becomes the new leader.
 
 
   Failure handling algo
   - for temporary failures
       1. Sloppy quorum
         
-  - for permenant failures
-      1. Raft (also detects failures)
-          helps to keep replicas in sync
-          Ensure all replicas are always in-sync and master->slave is elected correctly when master goes down. We could use consensus algorithms such as Paxos [21] and Raft [22], or use consensus-based distributed databases such as YugabyteDB [23] or CockroachDB [24].
-          https://bytebytego.com/courses/system-design-interview/stock-exchange 
-          The leader sends heartbeat messages (AppendEnties with no content as shown in Figure 21) to its followers. If a follower has not received heartbeat messages for a period of time, it triggers an election timeout that initiates a new election. The first follower that reaches election timeout becomes a candidate, and it asks the rest of the followers to vote (RequestVote). If the first follower receives a majority of votes, it becomes the new leader.
-      2. Merklee tree (can detect and handle failures by syncing remaining replicas)
+  - for permenant failures          
+      1. Merklee tree (can detect and handle failures by syncing remaining replicas)
           What if a replica is permanently unavailable? To handle such a situation, we implement an anti-entropy protocol to keep replicas in sync. Anti-entropy involves comparing each piece of data on replicas and updating each replica to the newest version. A Merkle tree is used for inconsistency detection and minimizing the amount of data transferred.
           Quoted from Wikipedia [7]: “A hash tree or Merkle tree is a tree in which every non-leaf node is labeled with the hash of the labels or values (in case of leaves) of its child nodes. Hash trees allow efficient and secure verification of the contents of large data structures”.
                 Step 1: Divide key space into buckets (4 in our example) as shown in Figure 13. A bucket is used as the root level node to maintain a limited depth of the tree.
@@ -139,7 +140,7 @@ Distributed systems best practices
   Directed acyclic graph (DAG) model
         To support different video processing pipelines and maintain high parallelism, it is important to add some level of abstraction and let client programmers define what tasks to execute. For example, Facebook’s streaming video engine uses a directed acyclic graph (DAG) programming model, which defines tasks in stages so they can be executed sequentially or parallelly [8]. In our design, we adopt a similar DAG model to achieve flexibility and parallelism. Figure 8 represents a DAG for video transcoding.
 
-  Symmetric vs Asymmetric 
+  Symmetric vs Asymmetric encryption
     https://blog.mailfence.com/symmetric-vs-asymmetric-encryption/ 
     RSA is asymmetric
     Rest everything is symmetric
