@@ -296,7 +296,7 @@ Distributed systems best practices
 
   Fault tolerance systems
     - retry logic by storing last online state in S3 / KV store
-    - snapshots storage for low latency (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
+    - save computational work in snapshots storage for low latency (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
 
   Monitoring metrics
     total Latency and also at each stage
@@ -398,7 +398,7 @@ Distributed systems today and Benchmarking on common systems
             According to Amazon Relational Database Service (RDS) [12], you can get a database server with 24 TB of RAM.
 
           Some facts
-          - MySQL client <-> server is socket based connection
+          - MySQL client <-> server is socket based connection. Check why ?
           - Max connection limit for MySQL = 100 K
           - per connection -> one user thread
           - size of user thread depends on THD connection data structure which is per connection ~ 10 MB 
@@ -426,7 +426,8 @@ Distributed systems today and Benchmarking on common systems
 
           - MySQL replica sync
               https://serverfault.com/questions/30605/how-fast-is-mysql-replication
-              MySQL replication happens as close to real-time as possible, as limited by disk and network I/O. The slaves open a socket to the master, which is kept open. When a transaction occurs on the master, it gets recorded in the binlog, and is simply replayed on the slave(s). If the socket between master and slave is interrupted, the binlog is replayed for the slave upon the next successful connection.
+              MySQL replication happens as close to real-time as possible (AWS has <200 ms SLA), as limited by disk and network I/O. The slaves open a socket to the master, which is kept open. When a transaction occurs on the master, it gets recorded in the binlog, and is simply replayed on the slave(s). If the socket between master and slave is interrupted, the binlog is replayed for the slave upon the next successful connection.
+
 
           - Multi-region failover time for AWS RDS : 60-100s 
               https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
@@ -440,7 +441,7 @@ Distributed systems today and Benchmarking on common systems
               Nice theoretical : https://www.youtube.com/watch?v=clPPKgYJC10 
                 Atomicity : begin trans --> comitt statement
                 Consistency : integrity constraints (guessing)
-                Isolation : locks
+                Isolation : concurency control subsytem. done through locks
                 Durability : ? 
 
             
@@ -537,7 +538,7 @@ Distributed systems today and Benchmarking on common systems
               if heavy reads (reading from read replicas is faster) 
                 if low writes 
                   then MySQL (high confidence)
-                if heavy writes (else have to keep synchronizing)
+                if heavy writes (else have to keep synchronizing and index making)
                   then MySQL (low confidence)
             If db needs rapid scale (size keeps growing)
               if manual sharding is needed ( say by user id )
@@ -583,16 +584,16 @@ Distributed systems today and Benchmarking on common systems
 
       Open questions
             1. Why is MySQL better for read heavy low write workload ? answered above
-            2. MySQL is better for ACID systems and structured ? How ? 
-            2. How MySQL syncs with its replicas
-            2. Why is Cassandra (noSQL) better for read less write heavy workload ?
+            2. MySQL is better for ACID systems and structured ? How ? answered above
+            2. How MySQL syncs with its replicas ? answered above
+            2. Why is Cassandra (noSQL) better for read heavy write heavy workload ? answered above
             3. Aggregation on sharded MySQL needs Application level handling vs Cassandra or HBase(Column) can handle this since they are built on top of distributed systems . Fact and derived above
-            4. How MySQL indexing works ? 
-            5. Cassandra benchmarking ? 
+            4. How MySQL indexing works ? answered above
+            5. Cassandra benchmarking ? answered above
+            7. Time taken from master to slave - MySQL, MongoDB ? MySQL ( 200 ms aws)
+            9. Refer NTP ? answered above
+            8. MongoDB benchmarking ?
             6. Study about graphdbs ? 
-            7. Time taken from master to slave - MySQL, MongoDB ?
-            8. MongoDB benchmarking
-            9. Refer NTP ? 
 
  Operation system
     User level threads vs Kernel level threads
