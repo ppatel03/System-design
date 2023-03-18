@@ -216,6 +216,11 @@ Distributed systems best practices
         2.0 -> multiple streams can go through 1 tcp connection
         https://www.linkedin.com/posts/gkcs_http3-systemdesign-networkprotocols-activity-7041095963335139329-uV44/?utm_source=share&utm_medium=member_desktop 
 
+    DNS
+      https://www.youtube.com/watch?v=27r4Bzuj5NQ
+      queries from browser go to DNS resolver (ISP, Cloudfare, Google) which fetches authoritative name server in hierarchial fashion.
+      DNS lookups are cached at client machine, resolver 
+
   Physical cores, Virtual cores and Logical cores
     https://www.youtube.com/watch?v=O2g6381An_k 
 
