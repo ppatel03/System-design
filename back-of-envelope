@@ -209,6 +209,13 @@ Distributed systems best practices
       https://www.goanywhere.com/blog/http-vs-tcp-whats-the-difference
       In the case of HTTP which applies at layer 7, before a client and server can exchange an HTTP request/response, they must establish a TCP connection first. Therefore, HTTP relies on the TCP standard in order to successfully do its job.
 
+      HTTP 1.0, 1.1 and 2.0
+        https://www.youtube.com/watch?v=a-sBfyiXysI
+        1.0 -> tcp handshake all the time
+        1.1 -> keep alive, persistent conenection avoids handshake
+        2.0 -> multiple streams can go through 1 tcp connection
+        https://www.linkedin.com/posts/gkcs_http3-systemdesign-networkprotocols-activity-7041095963335139329-uV44/?utm_source=share&utm_medium=member_desktop 
+
   Physical cores, Virtual cores and Logical cores
     https://www.youtube.com/watch?v=O2g6381An_k 
 
