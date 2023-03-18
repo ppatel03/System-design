@@ -214,6 +214,7 @@ Distributed systems best practices
         1.0 -> tcp handshake all the time
         1.1 -> keep alive, persistent conenection avoids handshake
         2.0 -> multiple streams can go through 1 tcp connection
+        3.0 -> Quic which uses UDP
         https://www.linkedin.com/posts/gkcs_http3-systemdesign-networkprotocols-activity-7041095963335139329-uV44/?utm_source=share&utm_medium=member_desktop 
 
     DNS
