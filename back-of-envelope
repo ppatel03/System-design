@@ -281,11 +281,12 @@ Distributed systems best practices
     Dynamic rendering is a workaround and not a recommended solution, because it creates additional complexities and resource requirements.
 
   Scale through Kafka
+    https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system
     There are a couple of ways that we can leverage Kafka’s built-in partition mechanism to scale our system.
       Configure the number of partitions based on throughput requirements.
       Partition metrics data by metric names, so consumers can aggregate data by metrics names.
       Further partition metrics data with tags/labels.
-      Categorize and prioritize metrics so that important metrics can be processed first.
+      Categorize and prioritize metrics so that important metrics can be processed first - possible with kafa
 
   Scale map reduce operations 
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
@@ -392,7 +393,7 @@ Distributed systems today and Benchmarking on common systems
     Streaming vs Batching systems 
      https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
      Batch : MapReduce
-     Stream : Flink
+     Stream : Flink (also mentioned in https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system )
 
   Cache benchmarking
 
@@ -498,6 +499,13 @@ Distributed systems today and Benchmarking on common systems
               8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series
               (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
 
+              Performance optimization
+                https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system
+                  According to a research paper published by Facebook [24], at least 85% of all queries to the operational data store were for data collected in the past 26 hours. If we use a time-series database that harnesses this property, it could have a significant impact on overall system performance. If you are interested in the design of the storage engine, please refer to the design document of the Influx DB storage engine [26].
+                  - Storage : Store only delta for timestamps
+                  - Storage and querying : Downsampling
+                  - use cold storage for old data
+
         2. Object storage / cold storage benchmarking
             S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3)
             Another option is to store the data in Amazon S3 using one of the columnar data formats like ORC [5], Parquet [6], or AVRO [7]. We could put a cap on the size of each file (say, 10GB) and the stream processor responsible for writing the raw data could handle the file rotation when the size cap is reached. (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
@@ -571,7 +579,11 @@ Distributed systems today and Benchmarking on common systems
             DynamoDB splits data across multiple nodes using consistent hashing.
 
 
+        7. S3
 
+        8. Neo4j
+
+        
 
   Attempt to standardized DB selection criteria 
       1. MySQL vs noSQL 
@@ -623,9 +635,7 @@ Distributed systems today and Benchmarking on common systems
                 write-heavy, read-heavy workload
                 eventual consistency (as per bytebytego - https://bytebytego.com/courses/system-design-interview/design-a-key-value-store )
 
-      4. When S3
-
-      5. When Neo4j
+     
 
       Open questions
             1. Why is MySQL better for read heavy low write workload ? answered above
