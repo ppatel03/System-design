@@ -341,6 +341,24 @@ Distributed systems best practices
           A set of tags/labels	List of <key:value> pairs
           An array of values and their timestamps	An array of <value, timestamp> pairs
 
+    Push vs Pull model
+      https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system 
+      Metrics monitoring : 
+        Examples of pull architectures include Prometheus.
+        Examples of push architectures include Amazon CloudWatch [16] and Graphite [17].
+
+      Easy debugging: pull
+      Health check : pull
+      Short lived jobs : push
+          Some of the batch jobs might be short-lived and don’t last long enough to be pulled. Push wins. But This can be fixed by introducing push gateways for the pull model [22].
+      Firewall or complicated network setups : push
+      Performance : Push
+        since push uses UDP, it wins vs pull which relies on TCP
+      Data authenticity	: Pull
+        zookeeper can provide valid servers to pull from
+      Fault tolerant and reliability : Pull
+        since failed messages can be queried again
+
 
 
 
