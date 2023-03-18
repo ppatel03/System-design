@@ -324,7 +324,16 @@ Distributed systems best practices
     In a generalist system design interview, you are not expected to know the internals of different pieces of specialized software used in a big data pipeline. Explaining your thought process and discussing trade-offs is very important, which is why we propose a generic solution. Another option is to store ad click data in Hive, with an ElasticSearch layer built for faster queries. Aggregation is usually done in OLAP databases such as ClickHouse [24] or Druid [25]. Figure 29 shows the architecture.
 
 
+  Line protocol
+    https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system
+      CPU.load host=webserver01,region=us-west 1613707265 76
+      CPU.load host=webserver01,region=us-west 1613707265 83
 
+      The average CPU load could be computed by averaging the values at the end of each line. The format of the lines in the above example is called the line protocol. It is a common input format for many monitoring software in the market. Prometheus [6] and OpenTSDB [7] are two examples.
+
+          A metric name	String
+          A set of tags/labels	List of <key:value> pairs
+          An array of values and their timestamps	An array of <value, timestamp> pairs
 
 
 
