@@ -363,12 +363,25 @@ Distributed systems best practices
   gRPC
     For production systems, inter-service communication often employs a modern and high-performance remote procedure call (RPC) framework like gPRC. There are many benefits to using such frameworks. To learn more about gPRC in particular, check out [3].
 
-  risk of double booking in transaction systems like hotel rooms, payment systems
+  Avoid Risk of double booking in transaction systems like hotel rooms, payment systems
     There are two common approaches to solve this problem:
 
       Client-side implementation. A client can gray out, hide or disable the “submit” button once a request is sent. This should prevent the double-clicking issue most of the time. However, this approach is not very reliable. For example, users can disable JavaScript, thereby bypassing the client check.
 
       Idempotent APIs. Add an idempotency key in the reservation API request. An API call is idempotent if it produces the same result no matter how many times it is called. Figure 8 shows how to use the idempotency key (reservation_id) to avoid the double-reservation issue. The detailed steps are explained below.
+
+  Different types to avoid race conditions during concurrency
+    1. Pessimistic locking 
+        - as name suggests, it locks the record while read + update
+        - good when data contention is high
+        - slows down performance
+    2. Optimistic locking
+        - has validation check based on version number. So no locking is needed. 
+        - good when data contention is low and improves performances
+        - bad when data contention is high 
+    3. database constraint
+        - add constraint at table level
+        - same as Optimistic and its easier to implement
 
 
 Distributed systems today and Benchmarking on common systems
