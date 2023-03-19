@@ -389,6 +389,22 @@ Distributed best practices
         - add constraint at table level
         - same as Optimistic and its easier to implement
 
+  CI/CD practices
+    https://www.youtube.com/watch?v=42UP1fxi2SY
+    - CI stands for continuous integration and is more common. Its the practice of using automation to enable teams to merge code changes in shared repository. Each commit triggers an automated workflow on the CI server that builds and runs series of tests to make sure commit is safe to merge into main branch.
+      - CI process : code -> build -> test -> release
+      - tools for CI - github
+      - tools to manage CI process: code (github), build (gradle, webpack, github actions), test (jest), release (jenkins, buildkite)
+
+    - CD stands for continuous deployment but it is hard and many companies only apply to stateless systems. Needs good production monitoring for CD like datadog. Blue green deployments is common. Canary deployment is also possible for products with 100 million users.
+    - CD is hard for database backend clusters or websocket cluster. So deployment process is manual here and needs dedicated platform team
+      - CD process : code -> build -> test -> acceptance -> deploy in production
+      - CD tools : github actions, jenkins, argoCD for kubernetes 
+
+  How to provison resources in the could
+    https://www.youtube.com/watch?v=tomUWcQ0P3k
+    Use terraform as Infrastructure as code
+
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
