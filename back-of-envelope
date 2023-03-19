@@ -72,19 +72,32 @@ Back of envelope questions :
 
 Distributed Systems estimate
 
+    Latency video
+      https://www.youtube.com/watch?v=FqR5vESuKe0
+      https://bytebytego.com/courses/system-design-interview/back-of-the-envelope-estimation
+      https://matthewdbill.medium.com/back-of-envelope-calculations-cheat-sheet-d6758d276b05 
+
     Estimates in KB
 
     Send 1 KB sequential from 1 Gbps network = 10 us  
     Send 1 KB sequential from memory  = 0.25 us   (4 GB/s = 0.25 *  10 ^ -6 s) 
     Send 1 KB sequential from disk    = 30 us     (30 MB/s = 0.03 * 10 ^ -3 s ) 
-    Send 1 KB sequential from cache   = 1 us    (1 GB/s = 1 * 10 ^ -6 s )
+    Send 1 KB sequential from SSD   = 1 us    (1 GB/s = 1 * 10 ^ -6 s )
+
+    L1/L2 cache = 1 ns
+    L3 shared cache = 10 ns
+    Memory call = 100 ns
+    System call = 1 us
+    Context switching between linux threads : 10 us
+    Ngnix to process http request : 100 us
+    SSD write latency : 500 us
     Round trip within the same datacenter	 = 500 us 
+    Redis cache latency including network : 1 ms (usually 500 us by internal redis)
     Send packet CA (California) ->Netherlands->CA	= 150 ms 
     Mutex lock/unlock =	100 ns
     Disk seek	= 10 ms
     SSD latency = 16 us
-    Memory read = 100 ns
-    DNS response time ranges from 10ms to 200ms.
+    DNS response time ranges : 10ms to 200ms.
     Multi-region failover time for AWS RDS : 60-100s  https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
     Replication lag for AWS RDS : < 100 ms 
       https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
