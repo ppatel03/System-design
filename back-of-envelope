@@ -423,6 +423,11 @@ Distributed best practices
     https://www.youtube.com/watch?v=zt8Cocdy15c
     use hashing + salt
 
+  Bare metal, VMs and containers
+    https://www.youtube.com/watch?v=Jz8Gs4UHTO8
+    VMs have hypervisor to run the guest OSes
+    Containers have container agent (eg., docker) to run the application in its own environment but uses instance/host OS to operate and have faster operations and more flexibility but suffers from security sharing common instance/host OS. To achieve security, you can have a container inside the VM but it looses flexibility now. 
+
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
