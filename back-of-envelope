@@ -439,6 +439,12 @@ Distributed best practices
     - Dev ops (ci/cd)
     - Cloud native open standards (distributed tracing, service mesh)
 
+  Kubernetes
+    https://www.youtube.com/watch?v=TlHvYWVUZyc
+    - container orchestration system
+    - use it when you need self-healing (downtime), horizontal scaling and automated rollbacks (deployment)
+    - due to its complexity, do not use it if your org is small enough
+
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
@@ -449,6 +455,19 @@ Distributed best practices
 
 Distributed systems today and Benchmarking on common systems
 
+    Live streaming
+      https://www.youtube.com/watch?v=7AMRfNKwuYo
+      - streamer device(encoder) --> PoPs --> transcoding(different resolutions and bitrate) --> packaging (hls, dash format) --> PoPs --> streamer device (decoder)
+            1. streamer starts his stream wired up to an encoder (software in browser, webcam, mobile ) which packages the video stream and send it in a transport protocol that the live streaming platform can recieve for further processing.
+            2. transcoding is divided into smaller video called segmentations which is then processed in parallel which needs lots of CPU.
+            3. then packaged to support most common live streaming format - HLS, DASH (.mp4)
+
+      - Protocols
+        - the most popular transport protocol is RTMP which is TCP based but moving towards SRT which is UDP based
+        - remember hls, dash formats are different from streaming protocol - hls, dash.
+        - RTMP is a TCP-based protocol that is widely used because it offers persistent connections and low-latency streaming. On the other hand, HLS is an HTTP-based protocol for adaptive bitrate streaming of live and on-demand content. It is often better than RTMP because it has a lower latency. https://castr.com/blog/rtmp-vs-hls/ 
+     
+    
     Map Reduce
       https://www.youtube.com/watch?v=MAJ0aW5g17c (awesome)
         Example of GFS performing map function on worker servers and reduce using worker servers co-ordinated by master
