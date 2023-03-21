@@ -446,10 +446,12 @@ Distributed best practices
     - due to its complexity, do not use it if your org is small enough
 
   WebSocket - use for bi-directional communication
-    websocket can be supported with load balancing through websocket tunned but suggest not to do it https://www.haproxy.com/documentation/hapee/latest/load-balancing/protocols/websocket/ 
-    comparison of websocket vs long polling during scaling up / down  
-      - https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o 
-      -     https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o 
+    Websocket with load balancer or not - debatable 
+      websocket can be supported with load balancing through websocket tunned but suggest not to do it https://www.haproxy.com/documentation/hapee/latest/load-balancing/protocols/websocket/ 
+      comparison of websocket vs long polling during scaling up / down  
+        - https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o 
+        - https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o 
+      Some systems does support websocket and load balancer https://bytebytego.com/courses/system-design-interview/nearby-friends 
 
  
 
