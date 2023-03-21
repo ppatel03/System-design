@@ -432,6 +432,13 @@ Distributed best practices
     VMs have hypervisor to run the guest OSes
     Containers have container agent (eg., docker) to run the application in its own environment but uses instance/host OS to operate and have faster operations and more flexibility but suffers from security sharing common instance/host OS. To achieve security, you can have a container inside the VM but it looses flexibility now. 
 
+  Cloud Native practices
+    https://www.youtube.com/watch?v=p-88GN1WVs8
+    - microservice architecture
+    - containers
+    - Dev ops (ci/cd)
+    - Cloud native open standards (distributed tracing, service mesh)
+
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
@@ -489,7 +496,7 @@ Distributed systems today and Benchmarking on common systems
         How redis works 
           https://www.youtube.com/watch?v=5TRFpFBccQM
 
-      CDN
+    CDN
         https://www.youtube.com/watch?v=RI9np1LWzqw
         - brings content closer to the user to increase the performance
         - CDN server locations called point of presence PoPs. Server inside POPs are called edge server
@@ -502,7 +509,6 @@ Distributed systems today and Benchmarking on common systems
 
 
         https://bytebytego.com/courses/system-design-interview/design-youtube 
-    CDN
         Let us use Amazon’s CDN CloudFront for cost estimation (Figure 2) [3]. Assume 100% of traffic is served from the United States. The average cost per GB is $0.02. For simplicity, we only calculate the cost of video streaming.
 
           5 million * 5 videos * 0.3GB * 0.02 = 150,000 per day.
