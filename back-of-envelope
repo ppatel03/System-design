@@ -479,6 +479,9 @@ Distributed systems today and Benchmarking on common systems
         - the most popular transport protocol is RTMP which is TCP based but moving towards SRT which is UDP based
         - remember hls, dash formats are different from streaming protocol - hls, dash.
         - RTMP is a TCP-based protocol that is widely used because it offers persistent connections and low-latency streaming. On the other hand, HLS is an HTTP-based protocol for adaptive bitrate streaming of live and on-demand content. It is often better than RTMP because it has a lower latency. https://castr.com/blog/rtmp-vs-hls/ 
+
+    Design video calling aoo like Zoom
+      https://medium.com/@himanishaik48/zoom-system-design-most-frequently-asked-question-in-interview-f60f6fe8d198 
      
     
     Map Reduce
