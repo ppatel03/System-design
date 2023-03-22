@@ -493,6 +493,14 @@ Distributed best practices
           - http 2.0
     - supports many programming languages
 
+  Multipart upload when upload file or video
+  https://bytebytego.com/courses/system-design-interview/s3-like-object-storage 
+
+    It is possible to upload such a large object file directly, but it could take a long time. If the network connection fails in the middle of the upload, we have to start over. A better solution is to slice a large object into smaller parts and upload them independently. After all the parts are uploaded, the object store re-assembles the object from the parts. This process is called multipart upload.
+
+    - S3 client supports multipart upload (https://www.baeldung.com/aws-s3-multipart-upload)
+    - HTML support "multipart/form-data" encoding type which is used for forms that include binary data, such as an image or audio files. When a user submits a form with “multipart/form-data” encoding, the data is split into multiple parts and sent to the server in a way that preserves the binary data. The data is then reassembled by the server and processed accordingly.
+
 
 =========================================================================================================================
 =========================================================================================================================
