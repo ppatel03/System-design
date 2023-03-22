@@ -493,6 +493,7 @@ Distributed best practices
           - http 2.0
     - supports many programming languages
 
+
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
@@ -526,8 +527,7 @@ Distributed systems today and Benchmarking on common systems
 
     Video conferencing app like Zoom
       https://medium.com/@himanishaik48/zoom-system-design-most-frequently-asked-question-in-interview-f60f6fe8d198 
-
-    Using 
+ 
      
     
     Map Reduce
@@ -559,6 +559,30 @@ Distributed systems today and Benchmarking on common systems
      https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
      Batch : MapReduce
      Stream : Flink (also mentioned in https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system )
+
+
+    Block storage vs File Storage vs Object storage
+      https://bytebytego.com/courses/system-design-interview/s3-like-object-storage 
+      Block storage
+        Common storage devices like hard disk drives (HDD) and solid-state drives (SSD) that are physically attached to servers are all considered as block storage. Files are split into evenly size blocks of data with each block having its own address. Block storage presents the raw blocks to the server as a volume. This is the most flexible and versatile form of storage. The server can format the raw blocks and use them as a file system, or it can hand control of those blocks to an application.
+        - can mount VM to this using iSCSI protocol
+        - used in operational systems and databases
+        - As per geeksforgeeks, this storage is not accessible via the internet and only for attaching to VMs (https://www.geeksforgeeks.org/difference-between-aws-s3-and-aws-ebs/)
+
+      File storage
+        - built on top of block storage. It provides a higher-level abstraction to make it easier to handle files and directories. Data is stored as files under a hierarchical directory structure. 
+        - File storage could be made accessible by a large number of servers using common file-level network protocols like SMB/CIFS [3] and NFS [4].
+        - high performant as block storage
+        - used in big data applications, which demand significant node throughput, low-latency file access, and read-after-write operations.
+
+      Object storage 
+        - low cost, vast scalability and supports binary+unstructured data as compared to block and file. It is low performant though.
+        - Object storage stores all data as objects in a flat structure. There is no hierarchical directory structure. Data access is normally provided via a RESTful API.
+        - Data lake and big data analytics, Backup and restoration, Reliable disaster recovery and Methodical archiving using S# Glacier
+
+      AWS EBS vs EFS vs S3 : https://www.missioncloud.com/blog/resource-amazon-ebs-vs-efs-vs-s3-picking-the-best-aws-storage-option-for-your-business
+      EBS vs S3 video - https://www.youtube.com/watch?v=r8bVw0iVvGk 
+      
 
   Cache benchmarking
 
