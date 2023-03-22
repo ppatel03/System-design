@@ -238,7 +238,7 @@ Distributed best practices
       HTTP 1.0, 1.1 and 2.0
         https://www.youtube.com/watch?v=a-sBfyiXysI
         1.0 -> tcp handshake all the time
-        1.1 -> keep alive, persistent conenection avoids handshake
+        1.1 -> keep alive, persistent conenection avoids tcp handshake
         2.0 -> multiple streams can go through 1 tcp connection
         3.0 -> Quic which uses UDP
         https://www.linkedin.com/posts/gkcs_http3-systemdesign-networkprotocols-activity-7041095963335139329-uV44/?utm_source=share&utm_medium=member_desktop 
@@ -447,7 +447,7 @@ Distributed best practices
   Bare metal, VMs and containers
     https://www.youtube.com/watch?v=Jz8Gs4UHTO8
     VMs have hypervisor to run the guest OSes
-    Containers have container agent (eg., docker) to run the application in its own environment but uses instance/host OS to operate and have faster operations and more flexibility but suffers from security sharing common instance/host OS. To achieve security, you can have a container inside the VM but it looses flexibility now. 
+    Containers have container agent (eg., docker) instead of hypervisor to run the application in its own environment but uses instance/host OS to operate and have faster operations and more flexibility but suffers from security sharing common instance/host OS. To achieve security, you can have a container inside the VM but it looses flexibility now. 
 
   Cloud Native practices
     https://www.youtube.com/watch?v=p-88GN1WVs8
