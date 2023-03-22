@@ -486,6 +486,10 @@ Distributed best practices
         - second layer : API gateway / load balancer
         However, many of them combine both as one ingress service
 
+  Use gRPC as interservice communication between microservices in your cloud
+    - its high performant since it uses http 2.0
+    - supports many programming languages
+
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
