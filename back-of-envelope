@@ -161,6 +161,7 @@ Distributed best practices
   Directed acyclic graph (DAG) model
         To support different video processing pipelines and maintain high parallelism, it is important to add some level of abstraction and let client programmers define what tasks to execute. For example, Facebook’s streaming video engine uses a directed acyclic graph (DAG) programming model, which defines tasks in stages so they can be executed sequentially or parallelly [8]. In our design, we adopt a similar DAG model to achieve flexibility and parallelism. Figure 8 represents a DAG for video transcoding.
 
+
   Symmetric vs Asymmetric encryption
     https://blog.mailfence.com/symmetric-vs-asymmetric-encryption/ 
     RSA is asymmetric
@@ -225,7 +226,7 @@ Distributed best practices
             How payment gateway work ?
               https://www.youtube.com/watch?v=GUurzvS3DlY
 
-  Networks 
+  Networks / Networking
     OSI model
       https://www.youtube.com/watch?v=0y6FtKsg6J4
 
@@ -241,6 +242,20 @@ Distributed best practices
         2.0 -> multiple streams can go through 1 tcp connection
         3.0 -> Quic which uses UDP
         https://www.linkedin.com/posts/gkcs_http3-systemdesign-networkprotocols-activity-7041095963335139329-uV44/?utm_source=share&utm_medium=member_desktop 
+
+    Video streaming protocol
+      https://linuxhit.com/rtmp-vs-hls-vs-dash-streaming-protocols/#0-rtmp-vs-hls-vs-dash-streaming-protocols 
+      RTMP
+        RTMP stands for Real Time Messaging Protocol. Sounds more generic than streaming doesn’t it? RTMP is a creation of Macromedia and through Adobe’s acquisition of Macromedia it now belongs to Adobe. Remember all those flash videos and the flash player?
+        RTMP is a TCP based protocol designed for low latency.
+        Low latency vs HLS and DASH.
+        Used heavily in production or broadcasting of video streams from streamer's device
+      HLS
+        HLS is Apple’s streaming protocol. HLS stands for HTTP Live Streaming. Leveraging HTTP has many benefits. Internet infrastructure like firewalls and content delivery networks already handle HTTP.
+        - key benefit of HLS is adaptive streaming. Adaptive streaming enables changing the quality of the video mid-stream. For example, if your internet connection starts slowing down the bit rate can adapt to ensure the stream stays viewable. Despite the degradation in bandwidth.
+        - HLS only supports the H264 codec for video and AAC for audio.
+      DASH
+        DASH stands for Dynamic Adaptive Streaming is an open standard and similar to HLS. It uses HTTP, small chunks and also supports adaptive streaming. A key difference between HLS and DASH is that DASH is codec agnostic. Hence you can use any codec you want.
 
     DNS
       https://www.youtube.com/watch?v=27r4Bzuj5NQ
@@ -455,7 +470,21 @@ Distributed best practices
       Some systems does support websocket and load balancer https://bytebytego.com/courses/system-design-interview/nearby-friends 
 
  
-
+  Use Nginx 
+    - Has triats of load balancing + reverse proxy + API gateway
+         - supports load balancing
+         - supports request forwarding based on different paths like api gateway
+         - supports reverse proxy 
+         - supports rate limiting
+         - supports caching
+         - supports request grouping
+         - supports secure auth SSL. Also does optimizations with keep alive connection and cache to avoid SSL handshake - https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/ 
+         Also a good read https://www.nginx.com/blog/http-keepalives-and-web-performance/
+    - Nginx supports L7 (application level load balancer)
+    - For modern websites, Nginx in form of reverse proxy is set up at multiple layers 
+        - first layer : edge server 
+        - second layer : API gateway / load balancer
+        However, many of them combine both as one ingress service
 
 =========================================================================================================================
 =========================================================================================================================
@@ -473,24 +502,31 @@ Distributed systems today and Benchmarking on common systems
 
     Live streaming
       https://www.youtube.com/watch?v=7AMRfNKwuYo
-      - streamer device(encoder) --> PoPs --> transcoding(different resolutions and bitrate) --> packaging (hls, dash format) --> PoPs --> streamer device (decoder)
+      - streamer device(encoder) --> PoPs --> transcoding(different resolutions and bitrate) --> packaging (hls, dash format) --> PoPs --> receiving device (decoder)
             1. streamer starts his stream wired up to an encoder (software in browser, webcam, mobile ) which packages the video stream and send it in a transport protocol that the live streaming platform can recieve for further processing.
             2. transcoding is divided into smaller video called segmentations which is then processed in parallel which needs lots of CPU.
             3. then packaged to support most common live streaming format - HLS, DASH (.mp4)
+
+      Why RTMP for live streamer and HLS/DASH for receiver/consumer
+        https://linuxhit.com/rtmp-vs-hls-vs-dash-streaming-protocols/#0-rtmp-vs-hls-vs-dash-streaming-protocols 
+        RTMP vs HLS vs DASH – Which one should I use?
+          If you are producing live video content then you probably want to publish your stream to a streaming server via RTMP. It is possible to allow consumption of the stream via RTMP. But you probably don’t want to do that. HLS has widespread support on client devices that consume your video. Additionally you can leverage CDNs and not need to worry about firewalls. So you will want to broadcast with HLS.
 
       - Protocols
         - the most popular transport protocol is RTMP which is TCP based but moving towards SRT which is UDP based
         - remember hls, dash formats are different from streaming protocol - hls, dash.
         - RTMP is a TCP-based protocol that is widely used because it offers persistent connections and low-latency streaming. On the other hand, HLS is an HTTP-based protocol for adaptive bitrate streaming of live and on-demand content. It is often better than RTMP because it has a lower latency. https://castr.com/blog/rtmp-vs-hls/ 
 
-    Design video calling aoo like Zoom
+    Video conferencing app like Zoom
       https://medium.com/@himanishaik48/zoom-system-design-most-frequently-asked-question-in-interview-f60f6fe8d198 
+
+    Using 
      
     
     Map Reduce
       https://www.youtube.com/watch?v=MAJ0aW5g17c (awesome)
         Example of GFS performing map function on worker servers and reduce using worker servers co-ordinated by master
-      The MapReduce framework is a good option to aggregate ad click events. The directed acyclic graph (DAG) is a good model for it [9]. The key to the DAG model is to break down the system into small computing units, like the Map/Aggregate/Reduce nodes (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
+      The MapReduce framework is a good option to aggregate ad click events. The directed acyclic graph (DAG) is a good model for it [9]. The key to the DAG model is to break down the system into small computing units, like the Map/Aggregate/Reduce nodes (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation). Facebook uses DAG model for its video streaming
       Hotspot issue in map reduce
         supported by resource manager (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
 
