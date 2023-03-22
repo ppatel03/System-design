@@ -499,6 +499,7 @@ Distributed best practices
 
     - S3 client supports multipart upload (https://www.baeldung.com/aws-s3-multipart-upload)
     - HTML support "multipart/form-data" encoding type which is used for forms that include binary data, such as an image or audio files. When a user submits a form with “multipart/form-data” encoding, the data is split into multiple parts and sent to the server in a way that preserves the binary data. The data is then reassembled by the server and processed accordingly.
+    - you can parallelize video upload with GOP alignment (https://bytebytego.com/courses/system-design-interview/design-youtube)
     - For email attachment
       An email attachment is sent along with an email message, commonly with Base64 encoding [6]. There is usually a size limit for an email attachment. For example, Outlook and Gmail limit the size of attachments to 20MB and 25MB respectively as of June 2021. This number is highly configurable and varies from individual to corporate accounts. 
       Multipurpose Internet Mail Extension (MIME) [7] is a specification that allows the attachment to be sent over the internet. https://bytebytego.com/courses/system-design-interview/distributed-email-service
