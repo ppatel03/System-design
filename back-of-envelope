@@ -102,7 +102,8 @@ Distributed Systems estimate
     Replication lag for AWS RDS : < 100 ms 
       https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
     TLS handshake time : 250 - 500 ms https://zoompf.com/blog/2014/12/optimizing-tls-handshake/#:~:text=This%20handshake%20will%20typically%20take,is%20when%20the%20handshake%20happens. 
-      So suggest to use nginx for keep alive and caching session key 
+      So suggest to use nginx for keep alive and caching session key to avoid SSL/TLS handshake
+    AWS availability ~ 99.9% https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html
     Max connections on the server : 
         https://josephmate.github.io/2022-04-14-max-connections
         Some think the limit 216=65,536 because that’s all the ports available in the TCP spec.
