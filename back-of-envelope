@@ -506,6 +506,8 @@ Distributed best practices
       An email attachment is sent along with an email message, commonly with Base64 encoding [6]. There is usually a size limit for an email attachment. For example, Outlook and Gmail limit the size of attachments to 20MB and 25MB respectively as of June 2021. This number is highly configurable and varies from individual to corporate accounts. 
       Multipurpose Internet Mail Extension (MIME) [7] is a specification that allows the attachment to be sent over the internet. https://bytebytego.com/courses/system-design-interview/distributed-email-service
 
+  Use GPU for video transcoding 
+    Meta uses GPU as ASICs for AI Inference or video transcoding
 
 =========================================================================================================================
 =========================================================================================================================
