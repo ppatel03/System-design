@@ -552,6 +552,27 @@ Distributed systems today and Benchmarking on common systems
  
     Multiplayer Gaming distributed app
       https://theredrad.medium.com/designing-a-distributed-system-for-an-online-multiplayer-game-requirements-part-2-de1d1ae9ae9b
+      - use of kubernetes
+      - use of TCP tunnels
+      How unity company multiplayer game architecture - https://www.youtube.com/watch?v=77vYKsXC4IE 
+        - Amazon GameLift has dedicated server for hosting games
+        - GCP also has game server built on top of kubernetes 
+        - use auth provider like playfab
+        - use matching server like playfab matching or flexmatch from amazon gamelift
+        - leaderboard, 
+        - persistent data like sql
+        - use GameAnalytics
+
+    Layer 4 Load balancer
+      https://www.nginx.com/resources/glossary/layer-4-load-balancing/
+      When the Layer 4 load balancer receives a request and makes the load balancing decision, it also performs Network Address Translation (NAT) on the request packet, changing the recorded destination IP address from its own to that of the content server it has chosen on the internal network. Similarly, before forwarding server responses to clients, the load balancer changes the source address recorded in the packet header from the server’s IP address to its own. 
+      Layer 4 load balancers make their routing decisions based on address information extracted from the first few packets in the TCP stream, and do not inspect packet content.
+
+    Layer 7 Load balancer
+      https://www.nginx.com/resources/glossary/layer-4-load-balancing/ 
+      Layer 7 load balancers base their routing decisions on various characteristics of the HTTP header and on the actual contents of the message, such as the URL, the type of data (text, video, graphics), or information in a cookie.
+      Taking into consideration so many more aspects of the information being transferred can make Layer 7 load balancing more expensive than Layer 4 in terms of time and required computing power, but it can nevertheless lead to greater overall efficiency. For instance, because a Layer 7 load balancer can determine what type of data (video, text, and so on) a client is requesting, you don’t have to duplicate the same data on all of the load-balanced servers.
+
     
     Map Reduce
       https://www.youtube.com/watch?v=MAJ0aW5g17c (awesome)
