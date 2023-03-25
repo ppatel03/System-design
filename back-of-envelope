@@ -135,12 +135,14 @@ Distributed best practices
   Choices with protocol
     - TCP vs UDP
         https://www.spiceworks.com/tech/networking/articles/tcp-vs-udp/#:~:text=UDP%20is%20faster%20and%20more,connection%20to%20start%20sending%20packets.
-        1. TCP is connection-oriented while UDP is connectionless
-        The UDP protocol is not suitable for sending electronic mail, viewing a web page, or downloading a file. However, it is preferred mainly for real-time applications like broadcasting or multitasking network traffic.
+        1. TCP is connection-oriented so you can get an ack (like success 200 OK in HTTP over TCP) while UDP is connectionless
+        So UDP protocol is NOT suitable for sending electronic mail, viewing a web page, or downloading a file. However, it is preferred mainly for real-time applications like broadcasting or multitasking network traffic.
 
   Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems
     - Raft (description below) using used for master-replica model
+
+  Master election concensus algo
       Ensure all replicas are always in-sync and master->slave is elected correctly when master goes down. We could use consensus algorithms such as Paxos [21] and Raft [22], or use consensus-based distributed databases such as YugabyteDB [23] or CockroachDB [24].
           https://bytebytego.com/courses/system-design-interview/stock-exchange 
           The leader sends heartbeat messages (AppendEnties with no content as shown in Figure 21) to its followers. If a follower has not received heartbeat messages for a period of time, it triggers an election timeout that initiates a new election. The first follower that reaches election timeout becomes a candidate, and it asks the rest of the followers to vote (RequestVote). If the first follower receives a majority of votes, it becomes the new leader.
@@ -721,8 +723,8 @@ Distributed systems today and Benchmarking on common systems
           https://cloud.google.com/cdn/pricing 
           5 million requests with 500 GB cache ~ 40$ per month
 
-  SQL DB benchmarking - Relational
-        1. MySQL benchmarking
+  SQL DB and benchmarking - Relational
+    1. MySQL benchmarking
           - Indexed Read
               a. with primary key reads which is already indexed
                 (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
@@ -791,11 +793,13 @@ Distributed systems today and Benchmarking on common systems
                 Isolation : concurency control subsytem. done through locks
                 Durability : ? 
 
-            
+    2. CockroachDB
+      https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
+        CockroachDB is a distributed SQL database. The primary design goals are scalability, strong consistency and survivability (hence the name). CockroachDB aims to tolerate disk, machine, rack, and even datacenter failures with minimal latency disruption and no manual intervention. CockroachDB nodes are symmetric; a design goal is homogeneous deployment (one binary) with minimal configuration and no required external dependencies.        
 
 
 
-    NoSQL value DB benchmarking
+    NoSQL value DB and benchmarking
         1. Timeseries : OpenTSDB / InfluxDB
               8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series
               (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
@@ -884,6 +888,16 @@ Distributed systems today and Benchmarking on common systems
         7. S3
 
         8. Neo4j
+
+        9. RocksDB
+           https://rocksdb.org/
+          embeddable persistent key-value store for fast storage
+          - high performance due to LSM implementations
+          - RocksDB is optimized for fast, low latency storage such as flash drives and high-speed disk drives. RocksDB exploits the full potential of high read/write rates offered by flash or RAM.
+          RocksDB                                 vs                    Redis 
+          optimized for SSDs(flash), disks                              in-memory db
+          more storage larger than RAM                                  storage size restricted due to RAM (in-memory)
+          performance close to its SSD/Disk (~1-10ms)                   best performance (200 us with 50K transaction on 53 G)
 
   Bigdata systems today
     https://ahana.io/learn/comparisons/hive-vs-presto-vs-spark/ 
