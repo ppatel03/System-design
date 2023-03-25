@@ -637,6 +637,22 @@ Distributed systems today and Benchmarking on common systems
       Excatly once delivery is hard but Yelp implements it. Check it out https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
         To achieve “exactly-once” processing, we need to put operations between step 4 to step 6 in one distributed transaction. A distributed transaction is a transaction that works across several nodes. If any of the operations fails, the whole transaction is rolled back.
 
+    RabbitMQ
+      https://www.upsolver.com/blog/kafka-versus-rabbitmq-architecture-performance-use-case
+      - supports both point to point and pub-sub model.
+      - once messages are consumed, the are removed from queue and acknowledgement is provide
+      - It can be both synchronous and asynchronous. supports acknowledge too
+      - smart broker -> dumb consumer since it manages the offset consumed
+      - uses push model from queue to consumer
+      - has control over consistency 
+      - does not have message ordering 
+      - does not guarantee atomicity
+      Use case - low latency requests where acknowledgement is needed
+        - Applications that need to support legacy protocols, such as STOMP, MQTT, AMQP, 0-9-1.
+        - Granular control over consistency/set of guarantees on a per-message basis
+        - (Smart broker) - Complex routing to consumers
+        - Applications that need a variety of publish/subscribe, point-to-point request/reply messaging capabilities.
+
 
     Streaming vs Batching systems 
      https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
