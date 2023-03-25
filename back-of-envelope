@@ -470,6 +470,42 @@ Distributed best practices
       comparison of websocket vs long polling during scaling up / down  
         - https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o 
       Some systems does support websocket and load balancer https://bytebytego.com/courses/system-design-interview/nearby-friends 
+    Types of socket connections
+      https://www.ibm.com/docs/en/zos/2.1.0?topic=sockets-socket-types
+      Stream - data transmitted in continuous stream with length so that the receiver can read that length and process the data. Its reliable means data is sent without error or duplication
+      Datagram -  socket interface defines a connectionless service. Datagrams are sent as independent packets. The service provides no guarantees; data can be lost or duplicated, and datagrams can arrive out of order
+      raw socket -  interface allows direct access to lower layer protocols, such as IP and Internet Control Message Protocol (ICMP). This interface is often used for testing new protocol implementations.
+    Websocket API
+      https://www.geeksforgeeks.org/difference-between-rest-api-and-web-socket-api/ 
+      - Unlike REST, Websocket API does not require a new connection to be set up for each message to be sent between clients and servers. Once the connection is set up the messages can be sent and received continuously without any interruption.
+      - WebSocket APIs are suitable for IoT Applications with low latency or high throughput requirements. 
+      - Websockets could be scaled on single server ~ 65K ports
+      - Challenges with websocket are security, browser compactibility and complex to handle
+    Difference between socket and a port
+      https://www.geeksforgeeks.org/difference-between-socket-and-port/?ref=rp
+      Both Socket and Port are the terms used in Transport Layer. A port is a logical construct assigned to network processes so that they can be identified within the system. A socket is a combination of port and IP address. An incoming packet has a port number which is used to identify the process that needs to consume the packet.
+
+    IOT devices
+      https://www.youtube.com/watch?v=6mBO2vqLv38
+      - all devices are connected to IOT gateway through MQTT or HTTP
+      IOT device architecture
+        https://www.youtube.com/watch?v=KeaeuUcw02Q&t=630s
+        - IoT devices (sensors)
+        - IoT Gateway (collect data from sensors)
+        - Cloud (Processing engine or event processing layer)
+        - Application layer or API management layer 
+        entire layers above is secured by device manager and IAM
+      IoT Reference architecture
+        https://www.youtube.com/watch?v=KeaeuUcw02Q&t=630s
+        - Device layer
+          like sensors which are interconnected eg., bluetooth (via mobile phone -> Wifi gateway), raspberry pi (via Wifi -> direct connect to ethernet), zigbee (via zigbee gateway)
+        - Communication layer or Gateway layer
+          rest protocol, HTTP or MQTT
+        - Bus layer or Aggregation layer
+          acts as a message broker supports http server or MQTT broker or Gateway
+        - Even processing and Analysics layer (cloud)
+
+
 
  
   Use Nginx 
