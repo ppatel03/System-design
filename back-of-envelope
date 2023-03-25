@@ -504,6 +504,9 @@ Distributed best practices
         - Bus layer or Aggregation layer
           acts as a message broker supports http server or MQTT broker or Gateway
         - Even processing and Analysics layer (cloud)
+      Practical 
+        https://www.youtube.com/watch?v=QyIeFy2-MvU
+        light bulb having an IP address connected via a computer application using node.js
 
 
 
