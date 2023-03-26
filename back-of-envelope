@@ -333,6 +333,7 @@ Distributed best practices
     Dynamic rendering is a workaround and not a recommended solution, because it creates additional complexities and resource requirements.
 
   Scale through Kafka
+    Kafka is known for high throughput, low latency streaming, message persistence, high availability, fault tolerant system
     https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system
     There are a couple of ways that we can leverage Kafka’s built-in partition mechanism to scale our system.
       Configure the number of partitions based on throughput requirements.
@@ -423,6 +424,7 @@ Distributed best practices
       Idempotent APIs. Add an idempotency key in the reservation API request. An API call is idempotent if it produces the same result no matter how many times it is called. Figure 8 shows how to use the idempotency key (reservation_id) to avoid the double-reservation issue. The detailed steps are explained below.
 
   Different types to avoid race conditions during concurrency
+  applications : hotel booking for last room, uber drivers all responding to request
     1. Pessimistic locking 
         - as name suggests, it locks the record while read + update
         - good when data contention is high
@@ -531,7 +533,7 @@ Distributed best practices
          - supports request grouping
          - supports secure auth SSL. Also does optimizations with keep alive connection and cache to avoid SSL handshake - https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/ 
          Also a good read https://www.nginx.com/blog/http-keepalives-and-web-performance/
-    - Nginx supports L7 (application level load balancer)
+    - Nginx supports L7 (application level load balancer) and also L4 ? 
     - For modern websites, Nginx in form of reverse proxy is set up at multiple layers 
         - first layer : edge server 
         - second layer : API gateway / load balancer
@@ -634,7 +636,7 @@ Distributed systems today and Benchmarking on common systems
      - centralized configuration, key value store for state and also co-ordination service like selecting leader/master
      - can perform as a shard manager to find out the shard based on key ( https://kousiknath.medium.com/all-things-sharding-techniques-and-real-life-examples-in-nosql-data-storage-systems-3e8beb98830a#:~:text=You%20can%20use%20some%20configuration,directly%20talk%20to%20the%20shard. )
      - The number of partitions and addresses of all Redis nodes can be stored in a centralized place. We could use Zookeeper [4] as a highly-available configuration storage solution. (https://bytebytego.com/courses/system-design-interview/digital-wallet)
-     - Apache Zookeeper [7] is a popular open-source solution for service discovery. It registers all the available chat servers and picks the best chat server for a client based on predefined criteria. (https://bytebytego.com/courses/system-design-interview/design-a-chat-system)
+     - Apache Zookeeper [7] is a popular open-source solution for service discovery. It registers all the available chat servers and picks the best chat server for a client based on predefined criteria. (https://bytebytego.com/courses/system-design-interview/design-a-chat-system). You can also use this strategy for game server. 
      - There are many service discovery packages available, with etcd [4] and Zookeeper [5] among the most popular ones. Our need for the service discovery component is very basic. https://bytebytego.com/courses/system-design-interview/nearby-friends 
         - Under the “Key” mentioned in point 1, we store a hash ring of all the active Redis pub/sub servers in the service discovery component (See the consistent hashing chapter in Volume 1 of the System Design Interview book or [6] on details of a hash ring). The hash ring is used by the publishers and subscribers of the Redis pub/sub servers to determine the pub/sub server to talk to for each channel. 
       https://ramcloud.atlassian.net/wiki/spaces/RAM/pages/6848719/ZooKeeper+Performance 
@@ -650,7 +652,7 @@ Distributed systems today and Benchmarking on common systems
     RabbitMQ
       https://www.upsolver.com/blog/kafka-versus-rabbitmq-architecture-performance-use-case
       - supports both point to point and pub-sub model.
-      - once messages are consumed, the are removed from queue and acknowledgement is provide
+      - once messages are consumed, the are removed from queue and acknowledgement is provided
       - It can be both synchronous and asynchronous. supports acknowledge too
       - smart broker -> dumb consumer since it manages the offset consumed
       - uses push model from queue to consumer
