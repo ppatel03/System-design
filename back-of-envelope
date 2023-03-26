@@ -648,6 +648,11 @@ Distributed systems today and Benchmarking on common systems
       Optimized on consumer side due to append-only log and zero copy (avoids copying into socket buffer)
       Excatly once delivery is hard but Yelp implements it. Check it out https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
         To achieve “exactly-once” processing, we need to put operations between step 4 to step 6 in one distributed transaction. A distributed transaction is a transaction that works across several nodes. If any of the operations fails, the whole transaction is rolled back.
+      Benchmarking
+        https://developer.confluent.io/learn/kafka-performance/
+        5 ms
+        600 MB/s on 25 Gbps network on AWS 
+        i3en.2xlarge instance type (with 8 vCores, 64 GB RAM, 2 x 2,500 GB NVMe SSDs)
 
     RabbitMQ
       https://www.upsolver.com/blog/kafka-versus-rabbitmq-architecture-performance-use-case
