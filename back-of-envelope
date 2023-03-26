@@ -265,7 +265,14 @@ Distributed best practices
     DNS
       https://www.youtube.com/watch?v=27r4Bzuj5NQ
       queries from browser go to DNS resolver (ISP, Cloudfare, Google) which fetches authoritative name server in hierarchial fashion.
-      DNS lookups are cached at client machine, resolver 
+      DNS lookups are cached at client machine, resolver
+
+  API design for websocket connection
+    https://bytebytego.com/courses/system-design-interview/nearby-friends
+    - do not add paths else it will look like REST which is HTTP
+    format
+      1. Initiated by Client : Request and Response
+      2. Initiated by Server : Data sent 
 
   Physical cores, Virtual cores and Logical cores
     https://www.youtube.com/watch?v=O2g6381An_k 
