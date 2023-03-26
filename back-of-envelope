@@ -267,6 +267,15 @@ Distributed best practices
       queries from browser go to DNS resolver (ISP, Cloudfare, Google) which fetches authoritative name server in hierarchial fashion.
       DNS lookups are cached at client machine, resolver
 
+    How Wifi works
+      https://computer.howstuffworks.com/wireless-network.htm
+      A wireless network uses radio waves, just like cell phones, televisions and radios do.
+        1. A computer's wireless adapter translates data into a radio signal and transmits it using an antenna.
+        2. A wireless router receives the signal and decodes it. The router sends the information to the internet using a physical, wired ethernet connection.
+      The radios used for WiFi communication are very similar to the radios used for walkie-talkies, cell phones and other devices. They can transmit and receive radio waves, and they can convert 1s and 0s into radio waves and convert the radio waves back into 1s and 0s.
+      2.4 GHz connections are now considered somewhat obsolete because they carry lower data speeds than 5 GHz.
+      Remember 2.4 GHz vs 5 GHz this is different from 4G vs modern 5G (upto 1Gbps) which is based on bandwidth to tranfer data
+
   API design for websocket connection
     https://bytebytego.com/courses/system-design-interview/nearby-friends
     - do not add paths else it will look like REST which is HTTP
@@ -510,12 +519,18 @@ Distributed best practices
       IoT Reference architecture
         https://www.youtube.com/watch?v=KeaeuUcw02Q&t=630s
         - Device layer
-          like sensors which are interconnected eg., bluetooth (via mobile phone -> Wifi gateway), raspberry pi (via Wifi -> direct connect to ethernet), zigbee (via zigbee gateway)
+          like sensors which are interconnected 
+          eg., bluetooth (via mobile phone -> Wifi gateway), raspberry pi (via Wifi -> direct connect to ethernet), zigbee (via zigbee gateway)
         - Communication layer or Gateway layer
-          rest protocol, HTTP or MQTT
+          Rest protocol - HTTP or MQTT
         - Bus layer or Aggregation layer
           acts as a message broker supports http server or MQTT broker or Gateway
         - Even processing and Analysics layer (cloud)
+      How IoT devices connect to the internet
+        https://theiotpad.com/different-ways-to-connect-iot-device-over-internet/
+        Communication devices include Wi-Fi, Bluetooth, and Ethernet cables.
+        Although Wi-Fis use more power than your average Bluetooth system, they are more reliable and scalable. You can receive signals to your mobile devices and relay signals that penetrate barriers like walls and objects.
+
       Practical 
         https://www.youtube.com/watch?v=QyIeFy2-MvU
         light bulb having an IP address connected via a computer application using node.js
