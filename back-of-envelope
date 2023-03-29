@@ -240,7 +240,7 @@ Distributed best practices
             How payment gateway work ?
               https://www.youtube.com/watch?v=GUurzvS3DlY
 
-  Networks / Networking
+  Network/s / Networking
     OSI model
       https://www.youtube.com/watch?v=0y6FtKsg6J4
 
@@ -284,6 +284,10 @@ Distributed best practices
       The radios used for WiFi communication are very similar to the radios used for walkie-talkies, cell phones and other devices. They can transmit and receive radio waves, and they can convert 1s and 0s into radio waves and convert the radio waves back into 1s and 0s.
       2.4 GHz connections are now considered somewhat obsolete because they carry lower data speeds than 5 GHz.
       Remember 2.4 GHz vs 5 GHz this is different from 4G vs modern 5G (upto 1Gbps) which is based on bandwidth to tranfer data
+
+    Anycast 
+      https://www.youtube.com/watch?v=vOYjcOs1dUU
+      multiple servers with same IP address so that nearest one can serve. Example, CDN
 
   API design for websocket connection
     https://bytebytego.com/courses/system-design-interview/nearby-friends
@@ -670,7 +674,9 @@ Distributed systems today and Benchmarking on common systems
     Kafka
       https://www.youtube.com/watch?v=UNUz1-msbOM
       latency : 1 ms
-      Optimized on consumer side due to append-only log and zero copy (avoids copying into socket buffer)
+      Why fast :
+      - sequential access from the disk with append-omly log 
+      - zero copy principle ( copy path from disk -> os buffer -> application buffer -> socket buffer -> nic buffer TO  disk -> os buffer  -> socket buffer )
       Excatly once delivery is hard but Yelp implements it. Check it out https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
         To achieve “exactly-once” processing, we need to put operations between step 4 to step 6 in one distributed transaction. A distributed transaction is a transaction that works across several nodes. If any of the operations fails, the whole transaction is rolled back.
       Benchmarking
