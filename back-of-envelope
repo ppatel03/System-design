@@ -119,6 +119,14 @@ Distributed Systems estimate
       - 10 Gbps vs 1 Gbps
       - https://www.cablewholesale.com/blog/index.php/2020/09/16/fiber-optic-vs-copper-ethernet-cables-the-difference/#:~:text=A%20more%20modern%20take%20on,much%20faster%20than%20copper%20cables.
 
+  Types of Memory
+  https://www.youtube.com/watch?v=lX4CrbXMsNQ
+  RAM
+  ROM 
+  Hard drive
+  SSD
+  NVMe
+
 
 =========================================================================================================================
 =========================================================================================================================
@@ -575,6 +583,7 @@ Distributed best practices
 
   Use GPU for video transcoding 
     Meta uses GPU as ASICs for AI Inference or video transcoding
+
 
 =========================================================================================================================
 =========================================================================================================================
