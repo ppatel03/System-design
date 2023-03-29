@@ -17,7 +17,8 @@ Tips :
           this would help decide the redundancy and reliability - example mostly 99.99% a day means you can compromise 10s (10 ^ 5 * 10 ^ -4)
           of unavailability or being unrelible. With this you can even decide that, your system could be out of sync from third part servers for 10s in a day but that's reliability or consistency measurement though
     
-
+System design interview framework
+  https://www.youtube.com/watch?v=i7twT3x5yv8 
 
 QPS estimate
 - Read : Write ratio
