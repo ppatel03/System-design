@@ -593,12 +593,14 @@ Distributed best practices
     Meta uses GPU as ASICs for AI Inference or video transcoding
 
   Use Snapshot Isolation to handle dirty read, phantom read and is high performant as compared to serializable (pessimistic locking)
+    How snapshot actually works : https://www.youtube.com/watch?v=Tgpa9TrxsfU 
+      it just stores all versions of modified rows in WAL and reads from a committed transaction in WAL. So you do not have to worry about someone modify/add the data when you are read (dirty or phantom read) because at transaction x, all rows were in consistent state.
     https://www.geeksforgeeks.org/what-is-snapshot-isolation/
     Dirty read, phantom read
     https://jennyttt.medium.com/dirty-read-non-repeatable-read-and-phantom-read-bd75dd69d03a
     With nice demo - https://techcommunity.microsoft.com/t5/sql-server-blog/serializable-vs-snapshot-isolation-level/ba-p/383281  
     Cockraoch DB uses snapshot isolation - https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
-
+    
     Issue with Snapshot Isolation : 
      "write skew anamoly" with this approach https://www.youtube.com/watch?v=eym48yrObhY 
       it is possible for an SI-based concurrency control to interleave some transactions, where each transaction preserves an integrity constraint when run alone, but where the final state after the interleaved execution does not satisfy the constraint. This occurs when concurrent transactions modify different items that are related by a constraint, and it is called the “Write Skew” anomaly
