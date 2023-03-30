@@ -858,7 +858,15 @@ Distributed systems today and Benchmarking on common systems
 
     2. CockroachDB
       https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
-        CockroachDB is a distributed SQL database. The primary design goals are scalability, strong consistency and survivability (hence the name). CockroachDB aims to tolerate disk, machine, rack, and even datacenter failures with minimal latency disruption and no manual intervention. CockroachDB nodes are symmetric; a design goal is homogeneous deployment (one binary) with minimal configuration and no required external dependencies.        
+        CockroachDB is a distributed SQL database. The primary design goals are scalability, strong consistency and survivability (hence the name). CockroachDB aims to tolerate disk, machine, rack, and even datacenter failures with minimal latency disruption and no manual intervention. CockroachDB nodes are symmetric; a design goal is homogeneous deployment (one binary) with minimal configuration and no required external dependencies. 
+        Distributed transaction : https://www.youtube.com/watch?v=OJySfiMKXLs&t=1271s 
+        Benchmarking : 
+        AWS
+          https://aws.amazon.com/marketplace/pp/prodview-3zbkzekdohwly  
+          4 vCPU, 1500 IOPS
+        Benchmark
+          https://www.cockroachlabs.com/docs/v22.2/performance.html
+              
 
 
 
