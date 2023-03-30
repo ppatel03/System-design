@@ -150,11 +150,14 @@ Distributed best practices
   Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems
     - Raft (description below) using used for master-replica model
+      
 
   Master election concensus algo
       Ensure all replicas are always in-sync and master->slave is elected correctly when master goes down. We could use consensus algorithms such as Paxos [21] and Raft [22], or use consensus-based distributed databases such as YugabyteDB [23] or CockroachDB [24].
           https://bytebytego.com/courses/system-design-interview/stock-exchange 
           The leader sends heartbeat messages (AppendEnties with no content as shown in Figure 21) to its followers. If a follower has not received heartbeat messages for a period of time, it triggers an election timeout that initiates a new election. The first follower that reaches election timeout becomes a candidate, and it asks the rest of the followers to vote (RequestVote). If the first follower receives a majority of votes, it becomes the new leader.
+      Nice visual - https://raft.github.io/
+      Raft is one of the best concensus algo since it also helps in ensuring strong consistency for distributed transaction in cockroachDB https://github.com/cockroachdb/cockroach/blob/master/docs/design.md
 
 
   Failure handling algo
@@ -588,6 +591,18 @@ Distributed best practices
 
   Use GPU for video transcoding 
     Meta uses GPU as ASICs for AI Inference or video transcoding
+
+  Use Snapshot Isolation to handle dirty read, phantom read and is high performant as compared to serializable (pessimistic locking)
+    https://www.geeksforgeeks.org/what-is-snapshot-isolation/
+    Dirty read, phantom read
+    https://jennyttt.medium.com/dirty-read-non-repeatable-read-and-phantom-read-bd75dd69d03a
+    With nice demo - https://techcommunity.microsoft.com/t5/sql-server-blog/serializable-vs-snapshot-isolation-level/ba-p/383281  
+    Cockraoch DB uses snapshot isolation - https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
+
+    Issue with Snapshot Isolation : 
+     "write skew anamoly" with this approach https://www.youtube.com/watch?v=eym48yrObhY 
+      it is possible for an SI-based concurrency control to interleave some transactions, where each transaction preserves an integrity constraint when run alone, but where the final state after the interleaved execution does not satisfy the constraint. This occurs when concurrent transactions modify different items that are related by a constraint, and it is called the “Write Skew” anomaly
+
 
 
 =========================================================================================================================
