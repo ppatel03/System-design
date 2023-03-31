@@ -971,8 +971,17 @@ Distributed systems today and Benchmarking on common systems
           performance close to its SSD/Disk (~1-10ms)                   best performance (200 us with 50K transaction on 53 G)
 
   Bigdata systems today
+    Understand Hadoop ecosystem
+      https://www.youtube.com/watch?v=YzAAhbmSt_k
+      MapReduce - allows parallel processing and merging
+      HDFS - Highly distributed file system based on Google file system (GFS)
+      YARN - Job scheduling and resource management
+      Common utilitieis
     https://ahana.io/learn/comparisons/hive-vs-presto-vs-spark/ 
     Hive
+      https://www.youtube.com/watch?v=taTfW2kXSoE 
+      Hive creates SQL query layer which in turen uses map reduce to query big tables stored in HDFS. This helps SQL experts query big data in HDFS directly in SQL and does not need complicated logic  
+      map reduce 
     Presto
     Spark
         
