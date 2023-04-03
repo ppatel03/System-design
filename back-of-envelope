@@ -979,6 +979,9 @@ Distributed systems today and Benchmarking on common systems
       Common utilitieis
     https://ahana.io/learn/comparisons/hive-vs-presto-vs-spark/ 
 
+    HBase
+      It is nothing but a hadoop database and its no SQL. Great layered diagram in https://www.educba.com/hadoop-vs-hbase/ 
+
     Hive
       https://www.youtube.com/watch?v=taTfW2kXSoE 
       - Hive creates SQL query layer which in turen uses map reduce to query big tables stored in HDFS. This helps SQL experts query big data in HDFS directly in SQL and does not need complicated logic of map reduce.
