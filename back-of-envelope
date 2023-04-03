@@ -987,7 +987,7 @@ Distributed systems today and Benchmarking on common systems
         Hive is optimized for query throughput and thus supports large data aggregations 
     Presto
       https://www.youtube.com/watch?v=hEFsHQ_kJR8 
-      similar to Hive, but has amazing capability of query multiple databases - noSQL + SQL ones including Hive. It is optimized for latency and thus used for interactive queries or quick data exploration. Facebook uses Hive.
+      similar to Hive, but has amazing capability of query multiple databases - noSQL + SQL ones including Hive. It is optimized for latency and thus used for interactive queries or quick data exploration. Facebook uses Presto.
 
       How twitter uses presto
         https://www.youtube.com/watch?v=WaooVcS75xA
