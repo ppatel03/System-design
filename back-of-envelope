@@ -1008,6 +1008,9 @@ Distributed systems today and Benchmarking on common systems
 
         Furthermore, as opposed to the two-stage execution process in MapReduce, Spark creates a Directed Acyclic Graph (DAG) to schedule tasks and the orchestration of nodes across the Hadoop cluster. This task-tracking process enables fault tolerance, which reapplies recorded operations to data from a previous state.
 
+        Then why DAG is better than MapReduce ? 
+          BEST - explanation 
+
         
 
   Attempt to standardized DB selection criteria 
