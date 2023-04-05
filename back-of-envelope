@@ -128,6 +128,26 @@ Distributed Systems estimate
   SSD
   NVMe
 
+  Types of Cache
+  https://www.youtube.com/watch?v=dGAgxozNWFE
+
+    HW cache : 
+      L1 > L2 > L3
+      TLB - virtual to physical memory address
+      OS level 
+        Page cache  - recently used disks blocks in memory
+        File cache  - 
+        iNode cache - speed up file system operations by reducing disk access
+
+    Front-end :
+      Browser 
+        cache http responses with cache expiration policy
+      CDN
+        improve delivery of static content by caching it from the origin server
+        https://cloud.google.com/cdn/pricing 
+        remember CDN charges for egress (0.02$ per GiB), cache fill (same charge - 0.01$ per GiB) and 0.0075 per 10K req
+
+
 
 =========================================================================================================================
 =========================================================================================================================
