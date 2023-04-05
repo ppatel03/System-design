@@ -236,7 +236,7 @@ Distributed best practices
     https://bytebytego.com/courses/system-design-interview/distributed-message-queue 
     If all the replicas of a partition crash, the data for that partition is lost forever. When choosing the number of replicas and replica locations, there’s a trade-off between data safety, resource cost, and latency. It is safer to distribute replicas across data centers, but this will incur much more latency and cost, to synchronize data between replicas. As a workaround, data mirroring can help to copy data across data centers, but this is out of scope. The reference material [14] covers this topic.
 
-  Authentication and Security 
+  HTTP Encrpytion, Authentication, Authorization and Security 
         Asymmetric encryption could be used here for payment gateway
           https://www.youtube.com/watch?v=AQDCe585Lnc
           also used in HTTPS, SSH, Bitcoin, Emails using PGP protocol
@@ -271,6 +271,10 @@ Distributed best practices
               Open id connect
                 - uses json doc 
                 - which uses token
+
+        Authentication and Authorization
+          https://blog.bytebytego.com/p/password-session-cookie-token-jwt 
+          modern websites uses session id
           
           Oauth 2.0 work ? 
             https://www.youtube.com/watch?v=CPbvxxslDTU
@@ -283,7 +287,6 @@ Distributed best practices
     OSI model
       https://www.youtube.com/watch?v=0y6FtKsg6J4
 
-      
     HTTP over TCP/IP 
       https://www.goanywhere.com/blog/http-vs-tcp-whats-the-difference
       In the case of HTTP which applies at layer 7, before a client and server can exchange an HTTP request/response, they must establish a TCP connection first. Therefore, HTTP relies on the TCP standard in order to successfully do its job.
