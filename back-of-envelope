@@ -957,7 +957,8 @@ Distributed systems today and Benchmarking on common systems
               Cassandra as Columnar databse :
                 https://stackoverflow.com/questions/13010225/why-many-refer-to-cassandra-as-a-column-oriented-database
                 http://dbmsmusings.blogspot.com/2010/03/distinguishing-two-major-types-of_29.html
-                  - Its not a direct column based store but its based on column-family which stores data row wise
+                https://www.baeldung.com/cassandra-column-family-data-model 
+                  - Its not a direct column based store but its based on column family which stores data row wise
 
               Use of parition key + clustering key storages in Cassandra
                 http://distributeddatastore.blogspot.com/2020/03/cassandra-new-sstable-storage-format.html
