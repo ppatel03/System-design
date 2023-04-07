@@ -959,6 +959,13 @@ Distributed systems today and Benchmarking on common systems
                 http://dbmsmusings.blogspot.com/2010/03/distinguishing-two-major-types-of_29.html
                 https://www.baeldung.com/cassandra-column-family-data-model 
                   - Its not a direct column based store but its based on column family which stores data row wise
+                
+                Cassandra column family : 
+                  https://www.scylladb.com/glossary/cassandra-column-family/ 
+                  Basically you can create multiple column families with different columns and each will have its own LSM tree + SS Table
+                  Practical : 
+                  Create multiple column families in Cassandra within a key space
+                  https://www.dbrnd.com/2016/05/nosql-create-your-first-cassandra-column-family-table/  
 
               Use of parition key + clustering key storages in Cassandra
                 http://distributeddatastore.blogspot.com/2020/03/cassandra-new-sstable-storage-format.html
