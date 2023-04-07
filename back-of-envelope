@@ -933,9 +933,24 @@ Distributed systems today and Benchmarking on common systems
               100s video : https://www.youtube.com/watch?v=ziq7FUKpCS8
               Slower version of 100s : https://www.youtube.com/watch?v=YjYWsN1vek8 
               
-              Not super helpful though : 
-                Cassandra data model : https://www.youtube.com/watch?v=X-_vS8q4nu4&list=PLGkHHA2RcrgeV35CBtIlUjiXJzVXLxMbL&index=3
-                How Cassandra data is  stored :  https://www.youtube.com/watch?v=69dLARZxIVw&list=PLGkHHA2RcrgeV35CBtIlUjiXJzVXLxMbL&index=4 
+             
+              How Cassandra data is  stored in disk :  
+                https://www.baeldung.com/cassandra-storage-engine (LSM Tree + SS Table + Spare Index)
+               
+                
+              Cassandra as Columnar databse :
+                https://stackoverflow.com/questions/13010225/why-many-refer-to-cassandra-as-a-column-oriented-database
+                http://dbmsmusings.blogspot.com/2010/03/distinguishing-two-major-types-of_29.html
+                  - Its not a direct column based store but its based on column-family which stores data row wise
+
+              Use of parition key + clustering key storages in Cassandra
+                http://distributeddatastore.blogspot.com/2020/03/cassandra-new-sstable-storage-format.html
+                -  parition key to assign the nodes and clustering key as sort key within the nodes
+
+
+              Cassandra data model and store deep dive: (not super helpful)
+               https://www.youtube.com/watch?v=X-_vS8q4nu4&list=PLGkHHA2RcrgeV35CBtIlUjiXJzVXLxMbL&index=3
+               https://www.youtube.com/watch?v=69dLARZxIVw&list=PLGkHHA2RcrgeV35CBtIlUjiXJzVXLxMbL&index=4 
                 How Cassandra read / write data : https://www.youtube.com/watch?v=t276nhhkkI8&t=523s
               
               Cassandra indexing
