@@ -699,6 +699,19 @@ Distributed systems today and Benchmarking on common systems
         - persistent data like sql
         - use GameAnalytics
 
+    Design search engine
+      https://medium.com/double-pointer/system-design-interview-search-engine-edb66b64fd5e 
+        Web -> Crawler -> Indexer -> Retiever <-> Web Browser or Mobile
+
+        Crawler : crawls from robots.txt, uses some seed URLs, uses priority Q, adds links in priority Q to crawl next
+        Indexer : pre-process (remove stop words), indexes usually inverted index as word -> doc ids
+        Retreiver : 
+          Since search query have multiple words, two types : 
+            Conjunctive Search which is AND based 
+            Disjunctive Search which is OR based
+
+
+
     Layer 4 Load balancer
       https://www.nginx.com/resources/glossary/layer-4-load-balancing/
       When the Layer 4 load balancer receives a request and makes the load balancing decision, it also performs Network Address Translation (NAT) on the request packet, changing the recorded destination IP address from its own to that of the content server it has chosen on the internal network. Similarly, before forwarding server responses to clients, the load balancer changes the source address recorded in the packet header from the server’s IP address to its own. 
