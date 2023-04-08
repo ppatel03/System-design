@@ -540,6 +540,17 @@ Distributed best practices
     - container orchestration system
     - use it when you need self-healing (downtime), horizontal scaling and automated rollbacks (deployment)
     - due to its complexity, do not use it if your org is small enough
+    https://www.youtube.com/watch?v=VnvRFRk_51k&t=78s
+      use master-worker architecture. 
+        Master - 
+          - contains API server which can accept configuration about your application, 
+          - controller managers to keep track of what's happening in the cluster
+          - scheduler ensures pod placement on workers
+          - etcd which has info about workers and also a backing store 
+          - has another master as secondary to avoid SPOF 
+        Workers 
+          - deploys your application into pods which is a wrapper for containers. So one pod can have many containers.
+          - usually its one pod per application. You only have multiple applications in one pod when its helper to another - example, docker agent.
 
   WebSocket - use for bi-directional communication
     Websocket with load balancer or not - debatable 
