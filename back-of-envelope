@@ -551,6 +551,9 @@ Distributed best practices
         Workers 
           - deploys your application into pods which is a wrapper for containers. So one pod can have many containers.
           - usually its one pod per application. You only have multiple applications in one pod when its helper to another - example, docker agent.
+          - If pod dies, new ones gets easily created.
+          - Since each pod gets IP address, then won't it creates disruption if a pod dies. Example MySQL pod dies ? 
+            - So pod is supported by "service" sitting in each pod concept which is similar to load balancer and IP address is assigned to a service instead of a pod. It also serves as a load balancer
 
   WebSocket - use for bi-directional communication
     Websocket with load balancer or not - debatable 
