@@ -553,7 +553,8 @@ Distributed best practices
           - usually its one pod per application. You only have multiple applications in one pod when its helper to another - example, docker agent.
           - If pod dies, new ones gets easily created.
           - Since each pod gets IP address, then won't it creates disruption if a pod dies. Example MySQL pod dies ? 
-            - So pod is supported by "service" (kube-proxy) sitting in each pod concept which is similar to load balancer and IP address is assigned to a service instead of a pod. It also serves as a load balancer
+            - So pod is supported by "service" (may be kube-proxy) sitting in each pod concept which is similar to load balancer and IP address is assigned to a service instead of a pod. It also serves as a load balancer
+          Similar video : https://www.youtube.com/watch?v=2vMEQ5zs1ko 
 
   WebSocket - use for bi-directional communication
     Websocket with load balancer or not - debatable 
@@ -1109,6 +1110,9 @@ Distributed systems today and Benchmarking on common systems
         Then why DAG is better than MapReduce ? 
           BEST - explanation  
           https://www.quora.com/What-are-the-advantages-of-DAG-directed-acyclic-graph-execution-of-big-data-algorithms-over-MapReduce-I-know-that-Apache-Spark-Storm-and-Tez-use-the-DAG-execution-model-over-MapReduce-Why-Are-there-any-disadvantages 
+
+          DAG resource manager example - Apache Airflow
+            https://www.youtube.com/watch?v=mtJHMdoi_Gg 
 
         
 
