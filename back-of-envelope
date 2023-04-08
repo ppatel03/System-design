@@ -543,7 +543,7 @@ Distributed best practices
     https://www.youtube.com/watch?v=VnvRFRk_51k&t=78s
       use master-worker architecture. 
         Master - 
-          - contains API server which can accept configuration about your application, 
+          - contains API server which can accept configuration about your application through YAML file
           - controller managers to keep track of what's happening in the cluster
           - scheduler ensures pod placement on workers
           - etcd which has info about workers and also a backing store 
