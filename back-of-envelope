@@ -4,6 +4,10 @@ https://bytebytego.com/courses/system-design-interview/back-of-the-envelope-esti
 
 https://matthewdbill.medium.com/back-of-envelope-calculations-cheat-sheet-d6758d276b05
 
+
+https://docs.google.com/document/d/1wUCqhVHydWiDk6FJdFLSMpgigNrGcs4OFZg0Wa7JGEw/edit
+
+
 Tips :
 - Ask functional requirements first (example, ability to post tweet, view tweet)
 - Ask DAU. If MAU is provided, atleast ask % of concurrent users. 
