@@ -180,9 +180,16 @@ Distributed best practices
 
   Choices with protocol
     - TCP vs UDP
-        https://www.spiceworks.com/tech/networking/articles/tcp-vs-udp/#:~:text=UDP%20is%20faster%20and%20more,connection%20to%20start%20sending%20packets.
+        https://www.spiceworks.com/tech/networking/articles/tcp-vs-udp/
         1. TCP is connection-oriented so you can get an ack (like success 200 OK in HTTP over TCP) while UDP is connectionless
         So UDP protocol is NOT suitable for sending electronic mail, viewing a web page, or downloading a file. However, it is preferred mainly for real-time applications like broadcasting or multitasking network traffic.
+
+        Then TCP is a still good choice on reciever of live streaming protocols like HLS, DASH ? 
+          - because TCP has flow control mechanism to calibrate the pace of data transmission. Depending on the recipient host, transmission control protocol can adjust the speed at which data packets travel and avoid overwhelming the recipient. 
+
+        Then what are the scenarios where UDP is recommended ? 
+          Video calling (app like Zoom): UDP can support video 30 frames per second or more refresh rates. The data transmission is so fast that a few dropped packets do not affect the user experience. 
+          Online gaming: TCP’s many checklists and balances will significantly impact gaming experiences. Without perfect network conditions, frames will frequently freeze, and connections will restart if using TCP. That is why UDP is recommended. 
 
   Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems
