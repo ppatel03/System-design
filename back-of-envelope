@@ -301,10 +301,20 @@ Distributed best practices
 
       HTTP 1.0, 1.1 and 2.0
         https://www.youtube.com/watch?v=a-sBfyiXysI
-        1.0 -> tcp handshake all the time
-        1.1 -> keep alive, persistent conenection avoids tcp handshake
-        2.0 -> multiple streams can go through 1 tcp connection
+        1.0 -> 
+          tcp handshake all the time. Very low performat
+        1.1 -> 
+          keep alive, persistent conenection avoids tcp handshake. But suffers from head of line blocking - if a request is blocked for any reason them all subsequent requests are blocked. So applications like browserssend muliple requests by opening many TCP connections in parallel.
+        2.0 -> 
+          brought concept of multiple independent streams on same tcp connection which resolves head of line blocking at application layer. But the issue still in transport layer in TCP.
+          it brought push capabiliy (SSE) to send update to the client from  the server
         3.0 -> Quic which uses UDP
+          recent and used Quic protocol which uses UDP instead of TCP
+          multiple streams share the same Quic connection. Due to use of UDP, it resolves head of line blocking even at transport layer
+          Application : 
+            designed for mobile heavy internet usage where user keeps connecting between different networks.
+            How ? uses the concept of connection id between client and server which always remains same even if different network is selected. 
+
         https://www.linkedin.com/posts/gkcs_http3-systemdesign-networkprotocols-activity-7041095963335139329-uV44/?utm_source=share&utm_medium=member_desktop 
 
     Video streaming protocol
