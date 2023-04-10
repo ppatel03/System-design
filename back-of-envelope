@@ -227,6 +227,7 @@ Distributed best practices
     RSA is asymmetric
     Rest everything is symmetric
     SHA-1 is hash function and not encryption one
+    SHA-256 is more secure https://www.keycdn.com/support/sha1-vs-sha256 
 
   Eliminate disk access
     Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. 
@@ -286,10 +287,16 @@ Distributed best practices
           
           Oauth 2.0 work ? 
             https://www.youtube.com/watch?v=CPbvxxslDTU
+            JWT is data format for user information in the OpenID Connect standard, which is the standard identity layer on top of the OAuth 2.0 protocol. Nginx plus supports this - https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-jwt-authentication
 
             Related to above 
             How payment gateway work ?
               https://www.youtube.com/watch?v=GUurzvS3DlY
+
+        Session id based authenitication vs JWT
+          https://stytch.com/blog/jwts-vs-sessions-which-is-right-for-you/ 
+          - session id needs db look up after authentication although nginx can cache it
+          - jwt does not need db look up since all necessary info is contained in the client request. Invalidating JWT token is complex so token is valid even after log out.
 
   Network/s / Networking
     OSI model
