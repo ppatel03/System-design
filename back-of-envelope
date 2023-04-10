@@ -682,7 +682,16 @@ Distributed best practices
     
     Issue with Snapshot Isolation : 
      "write skew anamoly" with this approach https://www.youtube.com/watch?v=eym48yrObhY 
-      it is possible for an SI-based concurrency control to interleave some transactions, where each transaction preserves an integrity constraint when run alone, but where the final state after the interleaved execution does not satisfy the constraint. This occurs when concurrent transactions modify different items that are related by a constraint, and it is called the “Write Skew” anomaly
+      it is possible for an SI-based concurrency control to interleave some transactions, where each transaction preserves an integrity constraint when run alone, but where the final state after the interleaved execution does not satisfy the constraint. This occurs when concurrent transactions modify different items that are related by a constraint, and it is called the “Write Skew” anomaly.
+
+
+  Use CQRS pattern to improve performance
+    https://medium.com/design-microservices-architecture-with-patterns/cqrs-design-pattern-in-microservices-architectures-5d41e359768c# 
+    CQRS stands for Command and Query Responsibility Segregation, a pattern that separates read and update operations for a data store. Implementing CQRS in your application can maximize its performance, scalability, and security.
+
+    CQRS will need event sourcing since it will generate sync events from write DBs to read DBs.
+
+    Example CQRS application is digital wallet system design where you need to separate our read and write part - https://bytebytego.com/courses/system-design-interview/digital-wallet
 
 
 
