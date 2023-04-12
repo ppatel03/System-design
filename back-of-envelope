@@ -14,9 +14,7 @@ High level Tips :
 - Ask user activity : example read vs write ratio, or number of writes (example, 2 tweets per day)
 - Ask non-functional requirements 
   These are very important and can convert entire inteview in your favor. Example if latency is 1s, then you do not need complex caching architecture if your data transfer is less than 100 MB (100 MBps max bandwidth today)
-    -- Latency 
-           this would help decide whether you really need low latency optimizations like cache, or not. 
-           Remember today mosts have 1 Gbps network which has 10 us to transfer 1 KB
+
    
     - Reliability
           means you need to meet certain standards. 
@@ -24,10 +22,17 @@ High level Tips :
 
             Ask specific questions here rather than - ":((sad) how reliable you need the system to be :((sad)" 
               - availability over consistency ? 
+              - if high availability, then ask availability nos example, 99.999 or 3 9s
+              - if consistency over availability, it means high consitency.
+              - if low - medium consistency, you can ask specific questions
               - then, data freshness (example, building search engine or yelp)
                   With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
-              - durability or error rate 
-              
+              - then, durability or error rate 
+              - with this in mind, it provides as good reasoning about latency 
+
+     -- Latency 
+           this would help decide whether you really need low latency optimizations like cache, or not. 
+           Remember today mosts have 1 Gbps network which has 10 us to transfer 1 KB
 
      -- Availability 
           this would help decide the redundancy and reliability - example mostly 99.99% a day means you can compromise 10s (10 ^ 5 * 10 ^ -4).
@@ -36,7 +41,8 @@ High level Tips :
 
     - Scalability
           means ability to scale the system with traffic/data increase. 
-            Needs understand of these factors -  # of users, latency (covers consistency compromises), data size,  and last resort called "cost".
+            Needs understand of these factors in order of importance : 
+                # of users, latency (covers consistency compromises), data size, error rate  and last resort called "cost".
             Tips : 
             - try to add stateless servers if possible
             - stateful server only for few use cases like socket connections. Make sure you know how to deal with scalability for socket connections.
