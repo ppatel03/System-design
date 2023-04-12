@@ -145,14 +145,15 @@ Distributed Systems estimate
     Context switching between linux threads : 10 us
     Ngnix to process http request : 100 us
     SSD write latency : 500 us
-    Round trip within the same datacenter	 = 500 us 
+    SSD read latency = 16 us
+    Round trip within the same datacenter 	 = 500 us 
     Redis cache latency including network : 1 ms (usually 500 us by internal redis)
+    Between two availability zones : 5 ms
     Send packet CA (California) ->Netherlands->CA	= 150 ms 
     Disk seek	= 10 ms
-    SSD latency = 16 us
     DNS response time ranges : 10ms to 200ms.
     Multi-region failover time for AWS RDS : 60-100s  https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
-    Replication lag for AWS RDS : < 100 ms 
+    Replication lag guarantee for AWS RDS : < 100 ms 
       https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
     TLS handshake time : 250 - 500 ms https://zoompf.com/blog/2014/12/optimizing-tls-handshake/#:~:text=This%20handshake%20will%20typically%20take,is%20when%20the%20handshake%20happens. 
       So suggest to use nginx for keep alive and caching session key to avoid SSL/TLS handshake
@@ -165,7 +166,7 @@ Distributed Systems estimate
         Some think the limit 216=65,536 because that’s all the ports available in the TCP spec.
         Then theoretical limit a server can support on a single port is 2^48 which is about 1 quadrillion. This is huge and not possible.
         So basically, your # of connections depends on CPU, Mem, Network and other resources on the server.
-        So to estimate max connections, use request size to memory mapping. Example, At 1M concurrent users, assuming each user connection needs 10K of memory on the server (this is a very rough figure and very dependent on the language choice - 256 KB for hava), it only needs about 10GB of memory to hold all the connections on one box.
+        So to estimate max connections, use request size to memory mapping. Example, At 1M concurrent users, assuming each user connection needs 10KB of memory on the server (this is a very rough figure and very dependent on the language choice - 256 KB for java), it only needs about 10GB of memory to hold all the connections on one box.
 
 
     Modern fiber optic cable vs ethernet (copper) cable
