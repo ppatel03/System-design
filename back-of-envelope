@@ -36,7 +36,10 @@ High level Tips :
 
     - Scalability
           means ability to scale the system with traffic/data increase. 
-            Needs understand of these factors -  
+            Needs understand of these factors -  # of users, latency (covers consistency compromises), data size,  and last resort called "cost".
+            Tips : 
+            - try to add stateless servers if possible
+            - stateful server only for few use cases like socket connections. Make sure you know how to deal with scalability for socket connections.
     
 System design interview framework
   https://www.youtube.com/watch?v=i7twT3x5yv8 
