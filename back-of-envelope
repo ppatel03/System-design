@@ -8,7 +8,7 @@ https://matthewdbill.medium.com/back-of-envelope-calculations-cheat-sheet-d6758d
 https://docs.google.com/document/d/1wUCqhVHydWiDk6FJdFLSMpgigNrGcs4OFZg0Wa7JGEw/edit
 
 
-Tips :
+High level Tips :
 - Ask functional requirements first (example, ability to post tweet, view tweet)
 - Ask DAU. If MAU is provided, atleast ask % of concurrent users. 
 - Ask user activity : example read vs write ratio, or number of writes (example, 2 tweets per day)
@@ -35,7 +35,8 @@ Tips :
           With this you can even decide that, your system/part of the sytem could be offline for 10s in a day for reasons like roll out, stateful servers scaling, upgrading the database or even doing DB sync etc. 
 
     - Scalability
-          means ability to scale the system with traffic increase understand of load and a  
+          means ability to scale the system with traffic/data increase. 
+            Needs understand of these factors -  
     
 System design interview framework
   https://www.youtube.com/watch?v=i7twT3x5yv8 
