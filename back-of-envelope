@@ -62,8 +62,8 @@ How to use non-functional requirements in decison making
 
   Availability vs Reliablity 
     https://www.pagerduty.com/resources/learn/reliability/ 
-    Availability is a measure of the percentage of time that an IT service or component is in an operable state.
-    Reliability, on the other hand, is a measure of the probability that the system will meet defined performance standards in performing its intended function during a specified interval.  
+    Availability is a measure of the percentage of time that an IT service or component is in an operable state. Example of not meeting availability is Facebook was down in 2021 for about 3-5 hrs
+    Reliability, on the other hand, is a measure of the probability that the system will meet defined performance standards in performing its intended function during a specified interval.  Example of not meeting reliability stands is Twitter was hacked in 2019
 
   Bandwidth (assume to be 1 GBps ~ 100 MBps which means 1 KB = 10us) 
     - can help reason your latency
