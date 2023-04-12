@@ -381,7 +381,7 @@ Distributed best practices
         1.0 -> 
           tcp handshake all the time. Very low performat
         1.1 -> 
-          keep alive, persistent conenection avoids tcp handshake. But suffers from head of line blocking - if a request is blocked for any reason them all subsequent requests are blocked. So applications like browserssend muliple requests by opening many TCP connections in parallel.
+          keep alive, persistent conenection avoids tcp handshake. But suffers from head of line blocking - if a request is blocked for any reason them all subsequent requests are blocked. So applications like browsers send muliple requests by opening many TCP connections in parallel.
         2.0 -> 
           brought concept of multiple independent streams on same tcp connection which resolves head of line blocking at application layer. But the issue still in transport layer in TCP.
           it brought push capabiliy (SSE) to send update to the client from  the server
