@@ -226,6 +226,8 @@ Distributed Systems estimate
         Buffer pool : cache query results
         Materialized views : precompute query results
         replication log : tracks replication state
+          What is replication log
+          https://help.serena.com/doc_center/cm/ver14_2_0_1/admin_console/adminhelp/ddevg_replication_logs/what_is_a_replication_log.htm
 
 
 
@@ -265,6 +267,9 @@ Distributed best practices
           The leader sends heartbeat messages (AppendEnties with no content as shown in Figure 21) to its followers. If a follower has not received heartbeat messages for a period of time, it triggers an election timeout that initiates a new election. The first follower that reaches election timeout becomes a candidate, and it asks the rest of the followers to vote (RequestVote). If the first follower receives a majority of votes, it becomes the new leader.
       Nice visual - https://raft.github.io/
       Raft is one of the best concensus algo since it also helps in ensuring strong consistency for distributed transaction in cockroachDB https://github.com/cockroachdb/cockroach/blob/master/docs/design.md
+      Even when new node is lagging behind or came live, leader in raft sends replication log along with the heartbeat to keep it consistent http://thesecretlivesofdata.com/raft/#replication 
+        What is replication log
+          https://help.serena.com/doc_center/cm/ver14_2_0_1/admin_console/adminhelp/ddevg_replication_logs/what_is_a_replication_log.htm
 
 
   Failure handling algo
@@ -307,6 +312,8 @@ Distributed best practices
   Data mirroring with replicas
     https://bytebytego.com/courses/system-design-interview/distributed-message-queue 
     If all the replicas of a partition crash, the data for that partition is lost forever. When choosing the number of replicas and replica locations, there’s a trade-off between data safety, resource cost, and latency. It is safer to distribute replicas across data centers, but this will incur much more latency and cost, to synchronize data between replicas. As a workaround, data mirroring can help to copy data across data centers, but this is out of scope. The reference material [14] covers this topic.
+    Mirroring refers to keeping a backup database server for a master database server. It is not meant for distributed systems like (master(write)->replica(read)) and serves as a DR result. So this is reason why there is always mirroring on replicas
+    https://www.tutorialspoint.com/difference-between-mirroring-and-replication 
 
   HTTP Encrpytion, Authentication, Authorization and Security 
         Asymmetric encryption could be used here for payment gateway
@@ -341,7 +348,7 @@ Distributed best practices
                 - uses XML 
                 - uses public key encryption 
               Open id connect
-                - uses json doc 
+                - uses json web token (JWT) 
                 - which uses token
 
         Authentication and Authorization
