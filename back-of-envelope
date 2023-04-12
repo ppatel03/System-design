@@ -403,7 +403,7 @@ Distributed best practices
         Used heavily in production or broadcasting of video streams from streamer's device
       HLS
         HLS is Apple’s streaming protocol. HLS stands for HTTP Live Streaming. Leveraging HTTP has many benefits. Internet infrastructure like firewalls and content delivery networks already handle HTTP.
-        - key benefit of HLS is adaptive streaming. Adaptive streaming enables changing the quality of the video mid-stream. For example, if your internet connection starts slowing down the bit rate can adapt to ensure the stream stays viewable. Despite the degradation in bandwidth.
+        - key benefit of HLS is adaptive streaming. Adaptive streaming enables changing the quality of the video mid-stream. For example, if your internet connection starts slowing down, the bit rate can adapt to ensure the stream stays viewable. Despite the degradation in bandwidth.
         - HLS only supports the H264 codec for video and AAC for audio.
       DASH
         DASH stands for Dynamic Adaptive Streaming is an open standard and similar to HLS. It uses HTTP, small chunks and also supports adaptive streaming. A key difference between HLS and DASH is that DASH is codec agnostic. Hence you can use any codec you want.
