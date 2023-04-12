@@ -134,8 +134,9 @@ Distributed Systems estimate
 
     Send 1 KB sequential from 1 Gbps network = 10 us  
     Send 1 KB sequential from memory  = 0.25 us   (4 GB/s = 0.25 *  10 ^ -6 s) 
-    Send 1 KB sequential from disk    = 30 us     (30 MB/s = 0.03 * 10 ^ -3 s ) 
     Send 1 KB sequential from SSD   = 1 us    (1 GB/s = 1 * 10 ^ -6 s )
+    Send 1 KB sequential from disk    = 30 us     (30 MB/s = 0.03 * 10 ^ -3 s ) 
+
 
     L1/L2 cache = 1 ns
     L3 shared cache = 10 ns
@@ -152,12 +153,14 @@ Distributed Systems estimate
     Send packet CA (California) ->Netherlands->CA	= 150 ms 
     Disk seek	= 10 ms
     DNS response time ranges : 10ms to 200ms.
-    Multi-region failover time for AWS RDS : 60-100s  https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
     Replication lag guarantee for AWS RDS : < 100 ms 
       https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
-    TLS handshake time : 250 - 500 ms https://zoompf.com/blog/2014/12/optimizing-tls-handshake/#:~:text=This%20handshake%20will%20typically%20take,is%20when%20the%20handshake%20happens. 
-      So suggest to use nginx for keep alive and caching session key to avoid SSL/TLS handshake
-    Nginx to process http request : 100us (bytebytego videos)
+    TLS handshake time : 250 - 500 ms 
+        https://zoompf.com/blog/2014/12/optimizing-tls-handshake/#:~:text=This%20handshake%20will%20typically%20take,is%20when%20the%20handshake%20happens. 
+        So suggest to use nginx for keep alive and caching session key to avoid SSL/TLS handshake
+    Multi-region failover time for AWS RDS : 60-100s  
+      https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
+
     AWS availability ~ 99.9% https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html
     AWS A100 GPU Lambda ~ 1$ per hour https://lambdalabs.com/service/gpu-cloud 
     Max socket connections : 65,536 https://www.ibm.com/docs/en/zos/2.1.0?topic=domain-maximum-number-sockets 
