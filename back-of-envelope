@@ -424,7 +424,7 @@ Distributed best practices
 
     Anycast 
       https://www.youtube.com/watch?v=vOYjcOs1dUU
-      multiple servers with same IP address so that nearest one can serve. Example, CDN
+      multiple servers with same IP address so that nearest one can serve. Example, CDN or multiple load balancers
 
   API design for websocket connection
     https://bytebytego.com/courses/system-design-interview/nearby-friends
@@ -435,6 +435,7 @@ Distributed best practices
 
   Physical cores, Virtual cores and Logical cores
     https://www.youtube.com/watch?v=O2g6381An_k 
+    Example, i7 has 4 physical cores and Each core can have ability to run 2 threads simultaneously. So 4 virtual cores. So 8 logical cores
 
   Processes vs Thread
     https://www.youtube.com/watch?v=4rLW7zg21gI 
