@@ -24,7 +24,7 @@ High level Tips :
   These are very important and can convert entire inteview in your favor. Example if latency is 1s, then you do not need complex caching architecture if your data transfer is less than 100 MB (100 MBps max bandwidth today)
 
    
-    - Reliability (Superset of latency -> availability -> consistency -> durability) 
+    1. Reliability (Superset of latency -> availability -> consistency -> durability) 
           means you need to meet certain standards. 
           Example - latency, consistency, accuracy, durability - error rate, faults
 
@@ -51,7 +51,7 @@ High level Tips :
               6 9s -> 1 ms or very high (no downtime)
               > 6 ps -> in us or super high (no downtime else SLA violated)
 
-    - Scalability
+    2. Scalability
           means ability to scale the system with traffic/data increase. 
             Needs understand of these factors in order of importance : 
                 # of users, latency (covers consistency compromises), data size, error rate  and last resort called "cost".
@@ -92,8 +92,14 @@ How to use non-functional requirements in decison making
     - can help to reason out if you need commit log (WAL) like Cassandra
 
   Availability
-    - can help reason how much to replicate. See above
-    - can help reason for latency 
+    - can help reason how much to replicate. See above since minimum availability aws server can offer is 99.9% (https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html). This means you need extra servers if more than one 9.
+    with 1 aws server : 99.9%
+    with 2 aws server : 99.9999%
+          0.001 ^ 2    = 0.000001         or  10 ^ -6
+          1 - 0.000001 = 0.999999         or  6 9s  
+          % * 100       = 99.999999%        or  4 9s 
+    - can help reason for latency
+        more availability -> more bandwidth split -> less latency 
 
   Consistency
     - can help reason for high latency 
@@ -111,7 +117,7 @@ Back of envelope questions :
         - helps in estimating # of servers needed 
   3. calculate storage estimate 
       Why ? 
-     - to help decide if sharding is need or master-replica model. Example 100 PB of storage needs sharding
+     - to help decide if sharding is need or master-replica model. Example more than 64 TB of storage definitely needs sharding (most AWS DBs or even cache like Redis has max 64 - 128 TB of storage https://aws.amazon.com/about-aws/whats-new/2020/09/amazon-aurora-increases-maximum-storage-size-128tb/ )
 
 
 
