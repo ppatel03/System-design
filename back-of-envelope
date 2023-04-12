@@ -27,7 +27,7 @@ High level Tips :
               - if low - medium consistency, you can ask specific questions
               - then, data freshness (example, building search engine or yelp)
                   With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
-              - then, durability or error rate 
+              - then, durability - error rate or data loss
               - with this in mind, it provides as good reasoning about latency 
 
      -- Latency 
