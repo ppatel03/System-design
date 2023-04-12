@@ -170,6 +170,11 @@ Distributed Systems estimate
         Then theoretical limit a server can support on a single port is 2^48 which is about 1 quadrillion. This is huge and not possible.
         So basically, your # of connections depends on CPU, Mem, Network and other resources on the server.
         So to estimate max connections, use request size to memory mapping. Example, At 1M concurrent users, assuming each user connection needs 10KB of memory on the server (this is a very rough figure and very dependent on the language choice - 256 KB for java), it only needs about 10GB of memory to hold all the connections on one box.
+        Best idea is to load test your services 
+          AWS distributed load tests - https://aws.amazon.com/solutions/implementations/distributed-load-testing-on-aws/ 
+            uses containers
+            runs on fargate
+            supports jmeter scripts
 
 
     Modern fiber optic cable vs ethernet (copper) cable
