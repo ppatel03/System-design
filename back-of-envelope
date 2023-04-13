@@ -1054,7 +1054,7 @@ Distributed systems today and Benchmarking on common systems
         Benchmarking : 
         AWS
           https://aws.amazon.com/marketplace/pp/prodview-3zbkzekdohwly  
-          4 vCPU, 1500 IOPS
+          4 vCPU, 150 GB, 1500 IOPS
         Benchmark
           https://www.cockroachlabs.com/docs/v22.2/performance.html
               
@@ -1085,7 +1085,7 @@ Distributed systems today and Benchmarking on common systems
               
              
               How Cassandra data is  stored in disk :  
-                https://www.baeldung.com/cassandra-storage-engine (LSM Tree + SS Table + Spare Index)
+                https://www.baeldung.com/cassandra-storage-engine (LSM Tree + SS Table + Sparse Index)
                
                 
               Cassandra as Columnar databse :
