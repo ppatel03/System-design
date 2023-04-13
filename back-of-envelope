@@ -459,7 +459,7 @@ Distributed best practices
     Common techniques are retry the processing for queue consumer or offload to another server 
     try maintaining the commit log
     explore event sourcing technique
-    Advantages :
+      Advantages :
       - complete rebuild to get state of system
       - temporal queries (what happened at day x)
       - event replay for debugging
