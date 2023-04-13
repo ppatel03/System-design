@@ -764,6 +764,11 @@ Distributed best practices
 
     Example CQRS application is digital wallet system design where you need to separate our read and write part - https://bytebytego.com/courses/system-design-interview/digital-wallet
 
+    Example, nice examples of event sourcing design 
+      - https://www.youtube.com/watch?v=lg6aF5PP4Tc
+          Event sourcing is an alternative means of storing data as log of events rather than table that is updated,read and deleted. In event sourcing, you create a table and append events to it as they occur building up an event log. So reading data has an additional step because you need to pull up all the events and reduce it to derive into table format. Doing this process in real-time for large number of events is complicated and thus needs pre-processing of table format data from event log. This technique is an example of CQRS where you write in event log and store it immediately in read-only table or materialized views for reading.  
+          Confluence using Kafka as event log for writes and generates materialized views for read 
+
 
 
 =========================================================================================================================
