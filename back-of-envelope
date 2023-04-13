@@ -1276,7 +1276,7 @@ Distributed systems today and Benchmarking on common systems
 
             When mongo DB
               query also based on secondary indexing and flexible querying
-              built in data aggregation framework
+              built in data aggregation framework like aggregation pipeline
               read-heavy workload
 
             When Cassandra 
