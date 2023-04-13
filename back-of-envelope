@@ -1101,9 +1101,13 @@ Distributed systems today and Benchmarking on common systems
                   Create multiple column families in Cassandra within a key space
                   https://www.dbrnd.com/2016/05/nosql-create-your-first-cassandra-column-family-table/  
 
-              Use of parition key + clustering key storages in Cassandra
+              Great read : Use of parition key + clustering key storages in Cassandra
                 http://distributeddatastore.blogspot.com/2020/03/cassandra-new-sstable-storage-format.html
                 -  parition key to assign the nodes and clustering key as sort key within the nodes
+
+              How updates are handled in Cassandra 
+              https://docs.datastax.com/en/cassandra-oss/3.x/cassandra/dml/dmlWriteUpdate.html 
+              Periodically, the rows stored in memory are streamed to disk into structures called SSTables. At certain intervals, Cassandra compacts smaller SSTables into larger SSTables. If Cassandra encounters two or more versions of the same row during this process, Cassandra only writes the most recent version to the new SSTable. After compaction, Cassandra drops the original SSTables, deleting the outdated rows.
 
 
               Cassandra data model and store deep dive: (not super helpful)
