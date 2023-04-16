@@ -1139,6 +1139,9 @@ Distributed systems today and Benchmarking on common systems
 
               Consistent hashing
                 If we add a new node to the cluster, it automatically rebalances the virtual nodes among all nodes. No manual resharding is required. See Cassandra’s official documentation for more details [22]. - https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
+
+              Consencus
+                Paxos - https://cassandra.apache.org/_/blog/Cassandra-4.1-is-here.html 
                 
               Benchmarking
                 - On Cheap heardware https://benchant.com/blog/cassandra-4-performance
