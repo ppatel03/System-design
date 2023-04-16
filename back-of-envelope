@@ -1053,18 +1053,28 @@ Distributed systems today and Benchmarking on common systems
       https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
         CockroachDB is a distributed SQL database. The primary design goals are scalability, strong consistency and survivability (hence the name). CockroachDB aims to tolerate disk, machine, rack, and even datacenter failures with minimal latency disruption and no manual intervention. CockroachDB nodes are symmetric; a design goal is homogeneous deployment (one binary) with minimal configuration and no required external dependencies. 
         Distributed transaction : https://www.youtube.com/watch?v=OJySfiMKXLs&t=1271s 
-        Nice video explaining how concurrency is handle on distributed transactions : https://www.youtube.com/watch?v=iD_Yk5AhNGc 
+       - uses RocksDB for its key value storage
+       -  Nice video explaining how concurrency is handle on distributed transactions : https://www.youtube.com/watch?v=iD_Yk5AhNGc 
           1. Raft : https://thesecretlivesofdata.com/raft/ 
               - Raft handles atomic rights and consistent reads
           2. Seriazable - how?
               - MVCC - multiversion concurrency control 
-                - Transaction, timestamp and object
+                - uses timestamp as form of versioning but depends on time synchronization which is a challenges in distributed systems. Even with NTP, there is a challenge. 
+
+        Example of shifting to CockroachDB from Cassandra 
+          https://www.cockroachlabs.com/blog/cassandra-to-cockroachdb/#more-on-cockroachdb-vs-cassandra
+          - needed relational data modelling
+          - SQL query flexibility
+
         Benchmarking : 
         AWS
           https://aws.amazon.com/marketplace/pp/prodview-3zbkzekdohwly  
           4 vCPU, 150 GB, 1500 IOPS
         Benchmark
           https://www.cockroachlabs.com/docs/v22.2/performance.html
+          within a single availability zone - 3 node cluster, c5d.9xlarge (36v CPUs, 72 G RAM)
+            single-row reads in 1 ms and processes 
+            single-row writes in 5 ms 
               
 
 
