@@ -303,6 +303,8 @@ Distributed best practices
 
   Change Data Capture
   CDC is a mechanism that reads data changes from the database and applies the changes to another data system. One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10].
+  Pg 455 - DDIA 
+    Rather than database triggers, Parsing replication log can be a more robust approach. Example Debezium uses MySQL binlog
 
   In-sync replicas
     https://bytebytego.com/courses/system-design-interview/distributed-message-queue
