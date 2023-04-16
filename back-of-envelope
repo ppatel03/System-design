@@ -1063,6 +1063,31 @@ Distributed systems today and Benchmarking on common systems
 
     NoSQL value DB and benchmarking
         1. Timeseries : OpenTSDB / InfluxDB
+
+              Why Time-series DB and not other key-values like Cassandra, MongoDB ???? 
+                - in built support for time-based queries example using Time-structured merge tree
+                - in built support for sampling through retention config
+
+                Proof : Thus performance is 100x faster
+                  https://www.influxdata.com/blog/influxdb-vs-cassandra-time-series/ 
+                     InfluxDB 1.8.10 and Cassandra v4.0.5, 
+                  - InfluxDB outperformed Cassandra in all three tests with 5x greater write throughput, while using 2.4x less disk space, and delivering up to 100x faster response times for tested queries. Thus, can handle spiky reads
+
+              Different time-series DB in the market and its comparison
+                https://www.youtube.com/watch?v=W-ouPw944CM
+              Influx DB
+                - private and non open source
+                - uses push based model
+                
+              Prometheus 
+                - uses pull based model and thus samples heavily. May not be ideal for monitoring based on revenue but good for system stats.
+
+              Timescale DB based on Postgres
+                - built on top of postgres so that you can run MySQL
+                - not suitable for scale and does not have AWS RDS support 
+
+
+            Influx DB benchmarking from bytebytego : 
               8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series
               (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
 
@@ -1072,6 +1097,8 @@ Distributed systems today and Benchmarking on common systems
                   - Storage : Store only delta for timestamps
                   - Storage and querying : Downsampling
                   - use cold storage for old data
+
+            
 
         2. Object storage / cold storage benchmarking
             S3 Standard is designed for 99.99% data availability and durability of 99.999999999% of objects across multiple Availability Zones in a given year. AWS S3 provides a great performance. It automatically scales to high request rates, with a very low latency of 100–200 milliseconds.Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket (https://aws.plainenglish.io/optimize-your-aws-s3-performance-27b057f231a3)
