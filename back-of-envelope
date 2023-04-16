@@ -1053,6 +1053,12 @@ Distributed systems today and Benchmarking on common systems
       https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
         CockroachDB is a distributed SQL database. The primary design goals are scalability, strong consistency and survivability (hence the name). CockroachDB aims to tolerate disk, machine, rack, and even datacenter failures with minimal latency disruption and no manual intervention. CockroachDB nodes are symmetric; a design goal is homogeneous deployment (one binary) with minimal configuration and no required external dependencies. 
         Distributed transaction : https://www.youtube.com/watch?v=OJySfiMKXLs&t=1271s 
+        Nice video explaining how concurrency is handle on distributed transactions : https://www.youtube.com/watch?v=iD_Yk5AhNGc 
+          1. Raft : https://thesecretlivesofdata.com/raft/ 
+              - Raft handles atomic rights and consistent reads
+          2. Seriazable - how?
+              - MVCC - multiversion concurrency control 
+                - Transaction, timestamp and object
         Benchmarking : 
         AWS
           https://aws.amazon.com/marketplace/pp/prodview-3zbkzekdohwly  
