@@ -1071,10 +1071,14 @@ Distributed systems today and Benchmarking on common systems
           https://aws.amazon.com/marketplace/pp/prodview-3zbkzekdohwly  
           4 vCPU, 150 GB, 1500 IOPS
         Benchmark
+        - Single row reads and writes
           https://www.cockroachlabs.com/docs/v22.2/performance.html
           within a single availability zone - 3 node cluster, c5d.9xlarge (36v CPUs, 72 G RAM)
             single-row reads in 1 ms and processes 
-            single-row writes in 5 ms 
+            single-row writes in 5 ms
+        - Batch
+          https://www.cockroachlabs.com/docs/v22.2/performance-benchmarking-with-tpcc-small   
+            - p95 in 250-300 ms with 200 GB
               
 
 
