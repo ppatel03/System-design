@@ -302,9 +302,12 @@ Distributed best practices
     Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
 
   Change Data Capture
-  CDC is a mechanism that reads data changes from the database and applies the changes to another data system. One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10].
+  CDC is a mechanism that reads data changes from the database and applies the changes to another data system. 
+    -  One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10].
+    - Another is Kafka Connect (pg 457)
   Pg 455 - DDIA 
-    Rather than database triggers, Parsing replication log can be a more robust approach. Example Debezium uses MySQL binlog (same as replication log for MUSQL)
+    Rather than database triggers, Parsing replication log can be a more robust approach. Example Debezium uses MySQL binlog (same as replication log for MYSQL).
+    Along with this you also need "Initial snapshot" since replication log cannot carry entire DB changes.
 
   In-sync replicas
     https://bytebytego.com/courses/system-design-interview/distributed-message-queue
@@ -1073,12 +1076,13 @@ Distributed systems today and Benchmarking on common systems
         Benchmark
         - Single row reads and writes
           https://www.cockroachlabs.com/docs/v22.2/performance.html
-          within a single availability zone - 3 node cluster, c5d.9xlarge (36v CPUs, 72 G RAM)
-            single-row reads in 1 ms and processes 
-            single-row writes in 5 ms
+          across availability zones - 3 node cluster, c5d.9xlarge (36v CPUs, 72 G RAM)
+            100K-200K QPS
+            single-row reads in 50-100 ms and processes 
+            single-row writes in 50-100 ms
         - Batch
           https://www.cockroachlabs.com/docs/v22.2/performance-benchmarking-with-tpcc-small   
-            - p95 in 250-300 ms with 200 GB
+            - p95 in 250-300 ms
               
 
 
@@ -1179,6 +1183,9 @@ Distributed systems today and Benchmarking on common systems
               Cassandra and map-reduce
                 https://subscription.packtpub.com/book/data/9781787127296/1/ch01lvl1sec5/mapreduce-and-spark
                 Unlike MongoDB, Cassandra does not offer built-in MapReduce capabilities. But it can be integrated with Hadoop in order to perform MapReduce operations across Cassandra data sets, or Spark for real-time data analysis. 
+                Datastax is Lightning-fast cluster computing with Apache Spark™ and Apache Cassandra (https://github.com/datastax/spark-cassandra-connector)
+
+            
 
               Cassandra performance on writes + reads on indexes 
                 - LSM tree + SS tables
@@ -1242,7 +1249,20 @@ Distributed systems today and Benchmarking on common systems
           more storage larger than RAM                                  storage size restricted due to RAM (in-memory)
           performance close to its SSD/Disk (~1-10ms)                   best performance (200 us with 50K transaction on 53 G)
 
-        10. Apache Flink
+        10. Apache Flink - Stream processing system
+          https://www.youtube.com/watch?v=ZU1r7uEAO7o 
+           - Vs Batch processing, it processes the events immediately locally storing the state
+           https://www.youtube.com/watch?v=_G-hQfT02BA 
+           - Achive fault tolerant with periodic snapshots to S3/HDFS storage which serve as a checkpoint. 
+           - Also guarantees exactly-once processing
+
+            How this is different from Kafka ?
+              - Kafka is Queuing service to transfer messages but does not process the message (i.e. perform ETL on it)
+
+            Flink vs Spark
+              https://www.youtube.com/watch?v=VAwtpa9EHf0 
+              - Spark can be configured to be near real time processing but has slow performance
+              - Flink is made for real-time processing with 2x performance as compared to Spark
 
   Bigdata systems today
     Understand Hadoop ecosystem
@@ -1290,8 +1310,30 @@ Distributed systems today and Benchmarking on common systems
           BEST - explanation  
           https://www.quora.com/What-are-the-advantages-of-DAG-directed-acyclic-graph-execution-of-big-data-algorithms-over-MapReduce-I-know-that-Apache-Spark-Storm-and-Tez-use-the-DAG-execution-model-over-MapReduce-Why-Are-there-any-disadvantages 
 
-          DAG resource manager example - Apache Airflow
+        Spark architecture
+          - components include spark SQL, streaming, machine learning, 
+          - follows master-slave architecture ( Driver which is master -> cluster manager -> worker node with cache)
+          - Driver uses its Sparkcontext and connect with cluster manager to get resource info and generates RDD datastructures. Then it convert core transformations and actions into DAG.
+          - Driver schedules the task on workers and resources are allocated to tasks by cluster manager. 
+          - Some Cluster manager used by Spark
+              https://data-flair.training/blogs/apache-spark-cluster-managers-tutorial/
+              - Apache Spark Standalone Cluster Manager 
+                  - simple allocates resources based on the core. By default, an application will grab all the cores in the cluster.
+              - Apache Mesos (popular)
+                  - Mesos handles the workload in distributed environment by dynamic resource sharing and isolation. It is healthful for deployment and management of applications in large-scale cluster environments. Apache Mesos clubs together the existing resource of the machines/nodes in a cluster. From this, a variety of workloads may use. This is node abstraction, thus it decreases an overhead of allocating a specific machine for different workloads. It is resource management platform for Hadoop and Big Data cluster.
+              - Hadoop YARN
+
+              What to use
+              Hence, in this Apache Spark Cluster Managers tutorial, we can say Standalone mode is easy to set up among all. It will provide almost all the same features as the other cluster managers.Moreover, to use richer resource scheduling capabilities (e.g. queues), both YARN and Mesos provide these features
+
+
+
+        Other DAG resource manager example - Apache Airflow
             https://www.youtube.com/watch?v=mtJHMdoi_Gg 
+
+        Parquet
+          https://spark.apache.org/docs/latest/sql-data-sources-parquet.html
+          Parquet is a columnar format that is supported by many other data processing systems. Spark SQL provides support for both reading and writing Parquet files that automatically preserves the schema of the original data. 
 
         
 
