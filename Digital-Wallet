@@ -95,6 +95,8 @@ Digital Wallet
 
                   The choice of which coordination model to use is determined by the business needs and goals. The challenge of the choreography solution is that services communicate in a fully asynchronous way, so each service has to maintain an internal state machine in order to understand what to do when other services emit an event. It can become hard to manage when there are many services. The orchestration solution handles complexity well, so it is usually the preferred solution in a digital wallet system.
 
+          Interviewer: Great work! The distributed transaction solution works, but there might be cases where it doesn’t work well. For example, users might enter the wrong operations at the application level. In this case, the money we specified might be incorrect. We need a way to trace back the root cause of the issue and audit all account operations. How can we do this?
+
           Event sourcing
               Background
                 In real life, a digital wallet provider may be audited. These external auditors might ask some challenging questions, for example:
@@ -109,7 +111,7 @@ Digital Wallet
               Let us assume the state (the account balance) is stored in a relational database. The state machine examines each command one by one in FIFO order. For each command, it checks whether the account has a sufficient balance. If yes, the state machine generates an event for each account.
                 Read commands from the command queue.
                 Read balance state from the database.
-                Validate the command. If it is valid, generate two events for each of the accounts.
+                Validate the command. If it is valid, generate two events for each of the accounts in the event queue.
                 Read the next Event.
                 Apply the Event by updating the balance in the database.
 
@@ -132,6 +134,13 @@ Digital Wallet
             More specifically, we can use SQLite [14], which is a file-based local relational database or use RocksDB [15], which is a local file-based key-value store.
 
             RocksDB is chosen because it uses a log-structured merge-tree (LSM), which is optimized for write operations. To improve read performance, the most recent data is cached.
+
+          Snapshot
+            Once everything is file-based, let us consider how to accelerate the reproducibility process. When we first introduced reproducibility, the state machine had to process events from the very beginning, every time. What we could optimize is to periodically stop the state machine and save the current state into a file. This is called a snapshot.
+
+            A snapshot is an immutable view of a historical state. Once a snapshot is saved, the state machine does not have to restart from the very beginning anymore. It can read data from a snapshot, verify where it left off, and resume processing from there.
+
+            A snapshot is a giant binary file and a common solution is to save it in an object storage solution, such as HDFS [16].
 
 
       TODO
