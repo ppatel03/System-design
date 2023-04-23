@@ -462,7 +462,7 @@ Distributed best practices
 
   Failure/Error handling
     Common techniques are retry the processing for queue consumer or offload to another server 
-    try maintaining the commit log
+    try maintaining the commit log (checkpointing)
     explore event sourcing technique
      
 
@@ -531,6 +531,8 @@ Distributed best practices
   Combine batch processing and streaming with one service 
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
     For a system that contains two processing paths (batch and streaming) simultaneously, this architecture is called lambda [14]. A disadvantage of lambda architecture is that you have two processing paths, meaning there are two codebases to maintain. Kappa architecture [15], which combines the batch and streaming in one processing path, solves the problem. The key idea is to handle both real-time data processing and continuous data reprocessing using a single stream processing engine. 
+    Why Kappa - no need to maintain two codebases for stream processing and batch processing
+      https://www.oreilly.com/radar/questioning-the-lambda-architecture/
 
   Process delayed events 
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
@@ -539,9 +541,11 @@ Distributed best practices
   Aggregation window
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
     According to the “Designing data-intensive applications” book by Martin Kleppmann [16], there are four types of window functions: tumbling (also called fixed) window, hopping window, sliding window, and session window. We will discuss the tumbling window and sliding window as they are most relevant to our system.
+      - In the tumbling window (highlighted in Figure 15), time is partitioned into same-length, non-overlapping chunks. The tumbling window is a good fit for aggregating ad click events every minute (use case 1).
+      - In the sliding window (highlighted in Figure 16), events are grouped within a window that slides across the data stream, according to a specified interval. A sliding window can be an overlapping one. This is a good strategy to satisfy our second use case; to get the top N most clicked ads during the last M minutes.
 
   Fault tolerance systems
-    - retry logic by storing last online state in S3 / KV store
+    - retry logic by storing last online state in S3 / KV store (checkpointing)
     - save computational work in snapshots storage for low latency (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
 
   Monitoring metrics
@@ -785,6 +789,13 @@ Distributed best practices
           Event sourcing is an alternative means of storing data as log of events rather than table that is updated,read and deleted. In event sourcing, you create a table and append events to it as they occur building up an event log. So reading data has an additional step because you need to pull up all the events and reduce it to derive into table format. Doing this process in real-time for large number of events is complicated and thus needs pre-processing of table format data from event log. This technique is an example of CQRS where you write in event log and store it immediately in read-only table or materialized views for reading.  
           Confluence using Kafka as event log for writes and generates materialized views for read 
 
+  Read after write consistency 
+    https://avikdas.com/2020/04/13/scalability-concepts-read-after-write-consistency.html 
+      Read-after-write consistency is the ability to view changes (read data) right after making those changes (write data). For example, if you have a user profile and you change your bio on the profile, you should see the updated bio if you refresh the page. There should be no delay during which the old bio shows up.
+
+      If there is a delay, this is known as a read-after-write inconsistency.
+
+        It’s important to note the consistency only applies to the one performing the write. For example, you may update your profile, but someone else may not see the update for another minute. For most large-scale systems, some amount of delay like this is inevitable, but it’s really important the original writer see their update immediately.
 
 
 =========================================================================================================================
