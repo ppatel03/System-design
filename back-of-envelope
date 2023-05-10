@@ -797,9 +797,20 @@ Distributed best practices
 
         It’s important to note the consistency only applies to the one performing the write. For example, you may update your profile, but someone else may not see the update for another minute. For most large-scale systems, some amount of delay like this is inevitable, but it’s really important the original writer see their update immediately.
 
-  Use Parquet over 
+  Use Parquet column over row format or csv file 
     https://www.upsolver.com/blog/apache-parquet-why-use
-      
+    https://towardsdatascience.com/demystifying-the-parquet-file-format-13adb0206705
+      Have you ever used pd.read_csv() in pandas? Well, that command could have run ~50x faster if you had used parquet  instead of CSV.
+      Traditionally there are three main layouts that convert our 2 dimensional table down to 1:
+        Row-based: sequentially store rows (CSV).
+        Column-based: sequentially store columns (ORC).
+        Hybrid-base: sequentially store chunks of columns (Parquet).
+      hybrid layouts are really effective for OLAP workflows because they support both projection(select) and predicates(where).
+      Before moving on, it’s important to note that parquet is often described as a columnar format. However, due to the fact that it stores chunks of columns, as shown in the bottom of figure 2, a hybrid storage layout is a more precise description.
+      Parquet leverages metadata to skip parts of our data that can be excluded according to our predicate. 
+      Parquet intelligently solves this by storing max and min values for each row group, allowing us to skip entire row groups
+     
+
 
 
 =========================================================================================================================
