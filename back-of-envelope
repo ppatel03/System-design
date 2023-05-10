@@ -797,6 +797,10 @@ Distributed best practices
 
         It’s important to note the consistency only applies to the one performing the write. For example, you may update your profile, but someone else may not see the update for another minute. For most large-scale systems, some amount of delay like this is inevitable, but it’s really important the original writer see their update immediately.
 
+  Use Parquet over 
+    https://www.upsolver.com/blog/apache-parquet-why-use
+      
+
 
 =========================================================================================================================
 =========================================================================================================================
