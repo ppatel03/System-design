@@ -808,7 +808,8 @@ Distributed best practices
       hybrid layouts are really effective for OLAP workflows because they support both projection(select) and predicates(where).
       Before moving on, it’s important to note that parquet is often described as a columnar format. However, due to the fact that it stores chunks of columns, as shown in the bottom of figure 2, a hybrid storage layout is a more precise description.
       Parquet leverages metadata to skip parts of our data that can be excluded according to our predicate. 
-      Parquet intelligently solves this by storing max and min values for each row group, allowing us to skip entire row groups
+      Parquet intelligently solves this by storing max and min values for each row group, allowing us to skip entire row groups.
+      Additionally it supports compression techniques like RLE, Dictionary and Bit encoding
      
 
 
