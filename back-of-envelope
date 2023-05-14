@@ -68,6 +68,7 @@ QPS estimate
 - 1 day ~ 10^5 s
 - 1 month ~ 3 * 10 ^ 6s and further ~ 10 ^ 6s
 - 1 week ~ 7 * 10 ^ 5s and further ~ 10 ^ 6s
+- 1 year ~ 365 * 10 ^ 5s and further ~ 10 ^ 8s
 ----- For time constraints, do not hesitate to round off large amounts
 
 How to use non-functional requirements in decison making
