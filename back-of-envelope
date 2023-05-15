@@ -17,16 +17,43 @@ High level Tips :
       1. mobile could be low bandwidth network ~ 100 Mbps or 10 MBps) - https://www.quora.com/From-what-maximum-speed-can-a-smartphone-download-or-upload-some-data
 - Ask DAU. If MAU is provided, atleast ask % of concurrent users. 
 - Ask user activity : example read vs write ratio, or number of writes (example, 2 tweets per day)
-- Ask non-functional requirements 
 
-  Usually Latency and Scale and most important 
+- Ask non-functional requirements  
+
+  Usually Latency and Scale are most important 
 
   These are very important and can convert entire inteview in your favor. Example if latency is 1s, then you do not need complex caching architecture if your data transfer is less than 100 MB (100 MBps max bandwidth today)
 
+  So ask with this format  
+    1. Ask about # of users - DAU/MAU
+        QPS estimate
+          - Read : Write ratio
+            DO NOT divided by no. of seconds to get QPS if its explictly mentioned about concurrent users say 10% of DAU. In such cases, QPS = 10% DAU
+          - 1 day ~ 10^5 s
+          - 1 month ~ 3 * 10 ^ 6s and further ~ 10 ^ 6s
+          - 1 week ~ 7 * 10 ^ 5s and further ~ 10 ^ 6s
+          - 1 year ~ 365 * 10 ^ 5s and further ~ 10 ^ 8s
+          For sake of time constraints, do not hesitate to round off large amount
+    2. Now discuss about Reliability standards / SLA
+        1. Now best thing to ask about : Availability over Consistency 
+          - get availability nos
+          - consistency levels (low, medium, high)
+        2. Latency 
+        If time permits
+        3. Accuracy (low, medium, high) since its hard to determine
+        4. Durability (data loss, error rate) can be measure in % - eg., 99.999% for S3
+        5. Resiliency (measures MTTR - mean time to repair)
+        6. Security (low, medium, high) (eg., assumed auth users, VPC)
+    3. Scalability (always assume high scalability)
+    
+    Lets look in detail : 
+    https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ 
    
-    1. Reliability (Superset of latency -> availability -> consistency -> durability) 
+    1. Reliability (Superset of latency -> availability -> consistency -> durability -> resiliency) 
+          https://www.pagerduty.com/resources/learn/reliability/ 
+          Reliability, on the other hand, is a measure of the probability that the system will meet defined performance standards in performing its intended function during a specified interval.  Example of not meeting reliability stands is Twitter was hacked in 2019.
           means you need to meet certain standards. 
-          Example - latency, consistency, accuracy, durability - error rate, faults
+          Example - latency, consistency, accuracy, durability -  error rate, faults, resiliency (self correct)
 
             Ask specific questions here rather than - ":((sad) how reliable you need the system to be :((sad)" 
               - availability over consistency ? 
@@ -42,7 +69,9 @@ High level Tips :
               this would help decide whether you really need low latency optimizations like cache, or not. 
               Remember today mosts have 1 Gbps network which has 10 us to transfer 1 KB
 
-            -- Availability 
+            -- Availability
+              https://www.pagerduty.com/resources/learn/reliability/ 
+              Availability is a measure of the percentage of time that an IT service or component is in an operable state. Example of not meeting availability is Facebook was down in 2021 for about 3-5 hrs.
               this would help decide the redundancy and reliability - example mostly 99.99% a day means you can compromise 10s (10 ^ 5 * 10 ^ -4).
               of unavailability (its different from being unrelible). 
               With this you can even decide that, your system/part of the sytem could be offline for 10s in a day for reasons like roll out, stateful servers scaling, upgrading the database or even doing DB sync etc. 
@@ -50,6 +79,11 @@ High level Tips :
               4 9s -> 100 ms or less than 1s
               6 9s -> 1 ms or very high (no downtime)
               > 6 ps -> in us or super high (no downtime else SLA violated)
+
+            -- Resiliency
+                https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ 
+                Resiliency describes the ability of a storage system to self-heal, recover, and continue operating after encountering failure, outage, security incidents, etc. High resiliency doesn’t mean there is high data availability. It just means that the storage infrastructure is equipped enough to overcome disruptions.
+                One indication of resiliency is measuring mean time to repair (MTTR), which captures how long it takes to get the storage infrastructure up and running after a failure. Lower the MTTR, better the resiliency.
 
     2. Scalability
           means ability to scale the system with traffic/data increase. 
@@ -62,28 +96,18 @@ High level Tips :
 System design interview framework
   https://www.youtube.com/watch?v=i7twT3x5yv8 
 
-QPS estimate
-- Read : Write ratio
-  DO NOT divided by no. of seconds to get QPS if its explictly mentioned about concurrent users say 10% of DAU. In such cases, QPS = 10% DAU
-- 1 day ~ 10^5 s
-- 1 month ~ 3 * 10 ^ 6s and further ~ 10 ^ 6s
-- 1 week ~ 7 * 10 ^ 5s and further ~ 10 ^ 6s
-- 1 year ~ 365 * 10 ^ 5s and further ~ 10 ^ 8s
------ For time constraints, do not hesitate to round off large amounts
+s
 
-How to use non-functional requirements in decison making
 
-  Availability vs Reliablity 
-    https://www.pagerduty.com/resources/learn/reliability/ 
-    Availability is a measure of the percentage of time that an IT service or component is in an operable state. Example of not meeting availability is Facebook was down in 2021 for about 3-5 hrs
-    Reliability, on the other hand, is a measure of the probability that the system will meet defined performance standards in performing its intended function during a specified interval.  Example of not meeting reliability stands is Twitter was hacked in 2019
+So How to use non-functional requirements in decison making
+   
 
   Bandwidth (assume to be 1 GBps ~ 100 MBps which means 1 KB = 10us) 
     - can help reason your latency
     - can help reason your replication or multiple servers
     - can help reason your sharding for database (remember internal data center max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html 
 
-  Durability  (I even refer as availability + data correctness with techniques like checksum, parity)
+  Durability  ( avoid data corruption/loss which means ensuring data correctness with techniques like checksum, parity)
     - can help reason how much to replicate. 
         Example, say 99.999999% (six 9's) durability can be achieved assuming failure rate of one server is  0.01% (say 99.99% guarantee for ec2 on aws). This means you need 2 servers atleast which means 1 replica 
           0.0001 ^ 2    = 0.0000001    or  10 ^ -8
