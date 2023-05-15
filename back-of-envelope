@@ -1267,7 +1267,7 @@ Distributed systems today and Benchmarking on common systems
                   Write Latency : ~7 ms
 
                 - Expensive hardware https://www.scylladb.com/2021/08/19/cassandra-4-0-vs-cassandra-3-11-comparing-performance/
-                  i3.4xlarge (16 vCPUs, 122 GB)
+                  i3.4xlarge (16 vCPUs, 122 GB), 3 node cluster
                    Read : 30 K ops/s
                    Write : 20 K ops/s
                    Read Latency : ~10 ms
