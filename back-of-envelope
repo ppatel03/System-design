@@ -226,7 +226,9 @@ Distributed Systems estimate
       OS level 
         Page cache  - recently used disks blocks in memory
         File cache  - 
-        iNode cache - speed up file system operations by reducing disk access
+        iNode cache 
+          (https://www.bluematador.com/blog/what-is-an-inode-and-what-are-they-used-for )
+          - speed up file system operations by reducing disk access
 
     Front-end :
       Browser 
