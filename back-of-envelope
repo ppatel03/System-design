@@ -41,8 +41,10 @@ High level Tips :
         2. Latency 
         If time permits
         3. Accuracy (low, medium, high) since its hard to determine
+        Fault tolerant measures
         4. Durability (data loss, error rate) can be measure in % - eg., 99.999% for S3
         5. Resiliency (measures MTTR - mean time to repair)
+        Auth
         6. Security (low, medium, high) (eg., assumed auth users, VPC)
     3. Scalability (always assume high scalability)
     
