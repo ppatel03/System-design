@@ -133,13 +133,13 @@ So How to use non-functional requirements in decison making
 
 
 Back of envelope questions : 
-  1. calculate qps (round this number).  
+  1. calculate qps first (round this number).  
       Why ? 
         - help in estimating bandwidth and reasons out the need for distributed system
         - helps in estimating storage requirements
   2. if latency requirement is present, calculate api payload rough estimate say 1 KB for 100K QPS ~ 100 MBps
       Why ? 
-        - helps in estimating # of servers needed 
+        - helps in estimating # of servers needed from bandwidth
   3. calculate storage estimate 
       Why ? 
      - to help decide if sharding is need or master-replica model. Example more than 64 TB of storage definitely needs sharding (most AWS DBs or even cache like Redis has max 64 - 128 TB of storage https://aws.amazon.com/about-aws/whats-new/2020/09/amazon-aurora-increases-maximum-storage-size-128tb/ )
