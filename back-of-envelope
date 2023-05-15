@@ -127,7 +127,7 @@ So How to use non-functional requirements in decison making
         more availability -> more bandwidth split -> less latency 
 
   Consistency
-    - can help reason for high latency 
+    - can help reason for low latency 
     - can help reason for low replication
     - can help reason for MySQL if combined with ACID
 
