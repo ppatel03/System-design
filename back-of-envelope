@@ -849,6 +849,20 @@ Distributed best practices
 
      
 
+  Choosing the right Batch size - https://bytebytego.com/courses/system-design-interview/distributed-message-queue 
+    The choice of the batch size is a classic tradeoff between throughput and latency (Figure 13). With a large batch size, the throughput increases but latency is higher, due to a longer wait time to accumulate the batch. With a small batch size, requests are sent sooner so the latency is lower, but throughput suffers. Producers can tune the batch size based on use cases.
+
+  Choosing pull over push model for Queue. - https://bytebytego.com/courses/system-design-interview/distributed-message-queue 
+    Pros:
+
+      Consumers control the consumption rate. We can have one set of consumers process messages in real-time and another set of consumers process messages in batch mode.
+
+      If the rate of consumption falls below the rate of production, we can scale out the consumers, or simply catch up when it can.
+
+      The pull model is more suitable for batch processing. In the push model, the broker has no knowledge of whether consumers will be able to process messages immediately. If the broker sends one message at a time to the consumer and the consumer is backed up, new messages will end up waiting in the buffer. A pull model pulls all available messages after the consumer’s current position in the log (or up to the configurable max size). It is suitable for aggressive batching of data.
+
+    Cons:
+        When there is no message in the broker, a consumer might still keep pulling data, wasting resources. To overcome this issue, many message queues support long polling mode, which allows pulls to wait a specified amount of time for new messages [6].
 
 
 =========================================================================================================================
