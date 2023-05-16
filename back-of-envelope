@@ -839,6 +839,14 @@ Distributed best practices
       Parquet leverages metadata to skip parts of our data that can be excluded according to our predicate. 
       Parquet intelligently solves this by storing max and min values for each row group, allowing us to skip entire row groups.
       Additionally it supports compression techniques like RLE, Dictionary and Bit encoding
+
+  
+
+  Use Circuit breaker pattern to support Fault tolerant/resilient services (like services doing retry for failed operations)
+    https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker
+    The Circuit Breaker pattern, popularized by Michael Nygard in his book, Release It!, can prevent an application from repeatedly trying to execute an operation that's likely to fail. Allowing it to continue without waiting for the fault to be fixed or wasting CPU cycles while it determines that the fault is long lasting.
+      The purpose of the Circuit Breaker pattern is different than the Retry pattern. The Retry pattern enables an application to retry an operation in the expectation that it'll succeed. The Circuit Breaker pattern prevents an application from performing an operation that is likely to fail. An application can combine these two patterns by using the Retry pattern to invoke an operation through a circuit breaker. However, the retry logic should be sensitive to any exceptions returned by the circuit breaker and abandon retry attempts if the circuit breaker indicates that a fault is not transient.
+
      
 
 
