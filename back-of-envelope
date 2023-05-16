@@ -1376,6 +1376,12 @@ Distributed systems today and Benchmarking on common systems
               https://www.youtube.com/watch?v=VAwtpa9EHf0 
               - Spark can be configured to be near real time processing but has slow performance
               - Flink is made for real-time processing with 2x performance as compared to Spark
+              
+          11. Google Cloud Spanner
+            https://research.google/pubs/pub39966/
+            Spanner is Google's scalable, multi-version, globally-distributed, and synchronously-replicated database. It is the first system to distribute data at global scale and support externally-consistent distributed transactions.
+            https://en.wikipedia.org/wiki/Spanner_(database)
+            Spanner is a distributed SQL database management and storage service developed by Google.[1] It provides features such as global transactions, strongly consistent reads, and automatic multi-site replication and failover. Spanner is used in Google F1, the database for its advertising business Google Ads.[2]
 
   Bigdata systems today
     Understand Hadoop ecosystem
