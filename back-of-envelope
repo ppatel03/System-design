@@ -1329,8 +1329,12 @@ Distributed systems today and Benchmarking on common systems
            - Achive fault tolerant with periodic snapshots to S3/HDFS storage which serve as a checkpoint. 
            - Also guarantees exactly-once processing
 
+          https://www.openlogic.com/blog/apache-flink-vs-kafka-streams# 
+           It was the first open source framework that could deliver on throughput at scale (up to tens of millions of events per second), sub-second latency as low as 10s of milliseconds, and accurate results.
+
             How this is different from Kafka ?
-              - Kafka is Queuing service to transfer messages but does not process the message (i.e. perform ETL on it)
+            https://www.openlogic.com/blog/apache-flink-vs-kafka-streams#
+              - The main difference between Flink vs. Kafka Streams is that Flink is a data processing framework that uses a cluster model, whereas the Kafka Streams API is an embeddable library that eliminates the need for building clusters.
 
             Flink vs Spark
               https://www.youtube.com/watch?v=VAwtpa9EHf0 
@@ -1351,7 +1355,7 @@ Distributed systems today and Benchmarking on common systems
 
     Hive
       https://www.youtube.com/watch?v=taTfW2kXSoE 
-      - Hive creates SQL query layer which in turen uses map reduce to query big tables stored in HDFS. This helps SQL experts query big data in HDFS directly in SQL and does not need complicated logic of map reduce.
+      - Hive creates SQL query layer which in turn uses map reduce to query big tables stored in HDFS. This helps SQL experts query big data in HDFS directly in SQL and does not need complicated logic of map reduce.
       - Hive is not a database
 
       Hive architecture - https://www.youtube.com/watch?v=rr17cbPGWGA&t=270s
