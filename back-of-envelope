@@ -1398,6 +1398,7 @@ Distributed systems today and Benchmarking on common systems
                   - simple allocates resources based on the core. By default, an application will grab all the cores in the cluster.
               - Apache Mesos (popular)
                   - Mesos handles the workload in distributed environment by dynamic resource sharing and isolation. It is healthful for deployment and management of applications in large-scale cluster environments. Apache Mesos clubs together the existing resource of the machines/nodes in a cluster. From this, a variety of workloads may use. This is node abstraction, thus it decreases an overhead of allocating a specific machine for different workloads. It is resource management platform for Hadoop and Big Data cluster.
+                  In some way, Apache Mesos is the reverse of virtualization. This is because in virtualization one physical resource divides into many virtual resources. While in Mesos many physical resources are club into a single virtual resource. 
               - Hadoop YARN
 
               What to use
@@ -1458,7 +1459,7 @@ Distributed systems today and Benchmarking on common systems
 
             When Cassandra 
                 query based on primary key indexing 
-                100% uptime guarantee due to replication and inconsistency resolution
+                100% uptime guarantee due to replication and inconsistency resolution using Paxos(similar to raft)
                 high write speed
                 language support for SQL
                 write-heavy, read-heavy workload
@@ -1567,7 +1568,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
           Belpw are Cache writes invalidation policy 
 
-          d through (data is written to cache and synced with storage)
+          Write through (data is written to cache and synced with storage)
             - Pros : fast retreival and data consistent systems
             - Cons : slow writes though
           Write around (data is written to storage, not cache)
