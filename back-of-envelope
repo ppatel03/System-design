@@ -531,7 +531,7 @@ Distributed best practices
     https://www.youtube.com/watch?v=f1hlCZB0GDA 
     - Use network time protocol (NTP)
     - NTP has some challenges but its still the reliable way to synchronize clocks over the network with the error delay of 35 ms - Pg 288 DDIA. So applicable for scheduling systems with 1s - 1 min granularity
-    However, some trading firms enforce accuracy of no more than 100 us microseconds. Such accuracy can be achieved with GPS (the precision time protocol PTP) with careful deployment and monitoring but requires effort and expertise.
+    However, some trading firms enforce accuracy of no more than 100 us microseconds and worst case 100 ms for network congestion. Such accuracy can be achieved with GPS (the precision time protocol PTP) with careful deployment and monitoring but requires effort and expertise.
     For systems which highly relies on time like "Scheduler", any server(node) which drifts too far at NTP sync (say 10s or even 1 min) should be removed.
     - LWW (last write wins) is common issue with multi-leader replication and leaderless databases like Cassandra - Pg 292 DDIA
 
