@@ -953,6 +953,14 @@ Distributed systems today and Benchmarking on common systems
       Why fast :
       - sequential access from the disk with append-omly log 
       - zero copy principle ( copy path from disk -> os buffer -> application buffer -> socket buffer -> nic buffer TO  disk -> os buffer  -> socket buffer )
+      How to guarantee "exactly-once" processing ? 
+        1. https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/
+            From producer to broker
+              Through idempotence of message through sequnce number. So even if the producer sends twice, broker can dedup.
+            From broker to consumer
+              Through Atomic transaction - This feature also allows you to commit your consumer offsets in the same transaction along with the data you have processed, thereby allowing end-to-end exactly-once semantics. It can be enabled by selected isolation level = read committed.
+            
+
       Excatly once delivery is hard but Yelp implements it. Check it out https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
         To achieve “exactly-once” processing, we need to put operations between step 4 to step 6 in one distributed transaction. A distributed transaction is a transaction that works across several nodes. If any of the operations fails, the whole transaction is rolled back.
       Benchmarking
