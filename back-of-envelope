@@ -1302,6 +1302,9 @@ Distributed systems today and Benchmarking on common systems
                 Paxos - https://cassandra.apache.org/_/blog/Cassandra-4.1-is-here.html 
                   Some examples of use cases are selling seats to a concert and where an INSERT or UPDATE operation must be unique, such as for a customer ID. Historically, Lightweight Transactions (LWTs) have suffered from poor performance, particularly in a WAN setting and under contention. As LWTs used a read-before-write approach, LWTs had more round trips which hurt performance.
                   Recognizing these shortcomings, Paxos was optimized, improving LWT performance by 50%, improving latency, and halving the number of required round-trip to achieve consensus. Linearizability is now guaranteed across range movements in-line with what you would expect from a database with strong consistency.
+
+              Challenges with Cassandra
+                1. Data loss or durability challenge : LWW (last write wins) is common issue with multi-leader replication and leaderless databases like Cassandra - Pg 292 DDIA. With Paxos, you can achieve Linearizability but face issue with LWW if clocks are not synchronized.
                 
               Benchmarking
                 - On Cheap heardware https://benchant.com/blog/cassandra-4-performance
