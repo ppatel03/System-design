@@ -872,6 +872,14 @@ Distributed best practices
     Cons:
         When there is no message in the broker, a consumer might still keep pulling data, wasting resources. To overcome this issue, many message queues support long polling mode, which allows pulls to wait a specified amount of time for new messages [6].
 
+  Transactional database like SQL
+    Pros :
+    1. guarantees ACID (ddia pg. 224)
+        Atomicity : (overloaded and different from atomic operations in multithreaded programming), here it just means abortability if anything fails
+        Consistency : (overloaded due to replica consistency, consistent hashing and in CAP theorem), here it just means invariants in your database must hold true. Example, credits and debits must be balanced. Your application should control this but at times even database can help by integrity constraints (db constraints in hotel reservation system - https://bytebytego.com/courses/system-design-interview/hotel-reservation-system). The letter C does not belong in ACID since its upto the application to handle C
+        Isolation : means that concurrently executing transaction are isolated from each other. In textbooks, isolation is formalized as "serializability" which ensures that when all transactions have committed, the result is same as if they all ran serially(one after another) even though they may have run concurrently causing race condition. Oracle 11g offers weak isolation level called Snapshot Isolation
+        Durability : committed transactions are never lost despite of failures like disk, network, outage,etc.
+
 
 =========================================================================================================================
 =========================================================================================================================
