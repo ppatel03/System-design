@@ -889,7 +889,11 @@ Distributed best practices
             1. Atomic writes
             2. Explicit locking
 
-
+  How to design ranking system based on multile criteria (used in multiple designs like google ranking, FB ranking)
+    https://towardsdatascience.com/ranking-algorithms-know-your-multi-criteria-decision-solving-techniques-20949198f23e
+      Consider one attribute at a time and try to maximize or minimize it (as per the requirement) to generate optimized score.
+      Introduce weights to each attributes to get optimized weighted scores.
+      Combine the weighted scores (of each attribute) to create a final score for an entity (here car).
 
 
 =========================================================================================================================
@@ -1544,6 +1548,8 @@ Distributed systems today and Benchmarking on common systems
  Operation system
     User level threads vs Kernel level threads
       https://www.youtube.com/watch?v=_5q8ZK6hwzM
+
+ 
 
  
 =========================================================================================================================
