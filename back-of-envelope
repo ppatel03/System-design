@@ -880,6 +880,17 @@ Distributed best practices
         Isolation : means that concurrently executing transaction are isolated from each other. In textbooks, isolation is formalized as "serializability" which ensures that when all transactions have committed, the result is same as if they all ran serially(one after another) even though they may have run concurrently causing race condition. Oracle 11g offers weak isolation level called Snapshot Isolation
         Durability : committed transactions are never lost despite of failures like disk, network, outage,etc.
 
+        Isolation level pg 234 DDIA
+        1. Read committed : can solve the problem of dirty reads and dirty writes. It can be implemented with row level locking.
+        locking is fine for writes but slows down read. So to avoid locking on read operations, we need to allow reading the last committed read.
+        2. Snapshot isolation / Reapeatable Read: With last committed read, there is still an issue of databasse concurrency issue. If user A has 500$ in account 1 and 2 and transfer 100$ from account 1 to account 2, balance is first updated and committed for account 1 and then on account 2. If before account 2 committed, values are read, then from it may appear that the user have only 900$ (account 1 is now 400$ but account 2 is still 500$).
+          This isolation solves this problem by taking the snapshot at particular version (MVCC say using timestamp) and allows reading only from that version.
+          Preventing Lost updates
+            1. Atomic writes
+            2. Explicit locking
+
+
+
 
 =========================================================================================================================
 =========================================================================================================================
