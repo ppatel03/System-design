@@ -187,6 +187,9 @@ Distributed Systems estimate
         So suggest to use nginx for keep alive and caching session key to avoid SSL/TLS handshake
     Multi-region failover time for AWS RDS : 60-100s  
       https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
+    Hard disk random seeks 
+      https://bytebytego.com/courses/system-design-interview/s3-like-object-storage
+      100 ~ 150 IOPS
 
     AWS availability ~ 99.9% https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html
     AWS A100 GPU Lambda ~ 1$ per hour https://lambdalabs.com/service/gpu-cloud 
