@@ -898,6 +898,10 @@ Distributed best practices
       Introduce weights to each attributes to get optimized weighted scores.
       Combine the weighted scores (of each attribute) to create a final score for an entity (here car).
 
+  Use Virtual Cluster map for placement service (placement service will help to indentify where to place the job or upload the file)
+    https://bytebytego.com/courses/system-design-interview/s3-like-object-storage
+    The placement service determines which data nodes (primary and replicas) should be chosen to store an object. It maintains a virtual cluster map, which provides the physical topology of the cluster. The virtual cluster map contains location information for each data node which the placement service uses to make sure the replicas are physically separated. This separation is key to high durability. See the “Durability” section below for details.
+
 
 =========================================================================================================================
 =========================================================================================================================
