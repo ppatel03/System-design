@@ -288,6 +288,9 @@ Distributed best practices
           Video calling (app like Zoom): UDP can support video 30 frames per second refresh rates (frame is single image in the video - https://darvideo.tv/dictionary/frame/ and min is 24 fps and max is 60 fps even better). The data transmission is so fast that a few dropped packets do not affect the user experience. 
           Online gaming: TCP’s many checklists and balances will significantly impact gaming experiences. Without perfect network conditions, frames will frequently freeze, and connections will restart if using TCP. That is why UDP is recommended. 
 
+  Remove inconsistency caused by writes through multiple servers - versioning
+    https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
+
   Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems
     - Raft (description below) using used for master-replica model
@@ -1680,6 +1683,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
               It would take downtime, check directory based partitioning as per our educative.io resource.
               But consistent hashing can solve this problem better - https://medium.com/nerd-for-tech/consistent-hashing-6524e48ac648
               Great guide above - check consistent hashing with gossip protocol so that each partition knows where to fetch data from db
+            Heterogeneity: the number of virtual nodes for a server is proportional to the server capacity. For example, servers with higher capacity are assigned with more virtual nodes.
           Applications of consistent hashing ?
           Apache Cassandra, Dynamo DB
  
