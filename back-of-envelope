@@ -290,6 +290,7 @@ Distributed best practices
 
   Remove inconsistency caused by writes through multiple servers - versioning using vector clocks
     https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
+    This is very applicable for leaderless replication like Cassandra
     Vector clocks
       https://www.waitingforcode.com/big-data-algorithms/conflict-resolution-distributed-applications-vector-clocks/read 
 
@@ -300,9 +301,9 @@ Distributed best practices
 
         Until now we saw that vector clocks can easily detect conflicts. But what happens after detecting one ? The first solution delegates the conflict resolution to the client. The client application receives all conflicted values and it decides how to deal with them (merge, discard, etc.). Another approach is server-based. One of its implementations can be last-write-wins strategy where the most recent value is returned to the client. It's only a short introduction to available solutions that will probably be detailed more in further posts.
 
-          Failure detection algo 
-            - gossip prototocol to detect availability failures in distributed systems
-            - Raft (description below) using used for master-replica model
+  Failure detection algo 
+    - gossip prototocol to detect availability failures in distributed systems
+    - Raft (description below) using used for master-replica model does both detect failures and resolve conflicts
       
 
   Master election concensus algo
