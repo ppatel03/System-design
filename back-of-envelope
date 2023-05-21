@@ -288,12 +288,21 @@ Distributed best practices
           Video calling (app like Zoom): UDP can support video 30 frames per second refresh rates (frame is single image in the video - https://darvideo.tv/dictionary/frame/ and min is 24 fps and max is 60 fps even better). The data transmission is so fast that a few dropped packets do not affect the user experience. 
           Online gaming: TCP’s many checklists and balances will significantly impact gaming experiences. Without perfect network conditions, frames will frequently freeze, and connections will restart if using TCP. That is why UDP is recommended. 
 
-  Remove inconsistency caused by writes through multiple servers - versioning
+  Remove inconsistency caused by writes through multiple servers - versioning using vector clocks
     https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
+    Vector clocks
+      https://www.waitingforcode.com/big-data-algorithms/conflict-resolution-distributed-applications-vector-clocks/read 
 
-  Failure detection algo 
-    - gossip prototocol to detect availability failures in distributed systems
-    - Raft (description below) using used for master-replica model
+        Local vector	                            Sent vector	                                New vector
+        [(N1, 1), (N2, 1), (N3, 3)]	      [(N1, 1), (N2, 0), (N3, 3)]	                    [(N1, 1), (N2, 1), (N3, 3)]
+        [(N1, 1), (N2, 0), (N3, 3)]	      [(N1, 1), (N2, 1), (N3, 3)]	                    [(N1, 1), (N2, 1), (N3, 3)]
+        As you can see, during the merge of vectors, the largest values are taken. The whole process is illustrated more clearly in the last section vector clock example.
+
+        Until now we saw that vector clocks can easily detect conflicts. But what happens after detecting one ? The first solution delegates the conflict resolution to the client. The client application receives all conflicted values and it decides how to deal with them (merge, discard, etc.). Another approach is server-based. One of its implementations can be last-write-wins strategy where the most recent value is returned to the client. It's only a short introduction to available solutions that will probably be detailed more in further posts.
+
+          Failure detection algo 
+            - gossip prototocol to detect availability failures in distributed systems
+            - Raft (description below) using used for master-replica model
       
 
   Master election concensus algo
