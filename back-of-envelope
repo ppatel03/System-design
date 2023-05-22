@@ -916,6 +916,10 @@ Distributed best practices
     The placement service determines which data nodes (primary and replicas) should be chosen to store an object. It maintains a virtual cluster map, which provides the physical topology of the cluster. The virtual cluster map contains location information for each data node which the placement service uses to make sure the replicas are physically separated. This separation is key to high durability. See the “Durability” section below for details.
 
 
+  Perform rate limiting whenever possible to absorb spikes (eg., NewsFeed service)
+    https://bytebytego.com/courses/system-design-interview/design-a-news-feed-system 
+
+
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
