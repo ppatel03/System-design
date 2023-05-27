@@ -1432,6 +1432,12 @@ Distributed systems today and Benchmarking on common systems
         7. S3
 
         8. Neo4j
+            https://www.youtube.com/watch?v=GM9bB4ytGao&ab_channel=Neo4j 
+            Data is already in the form of relationship 
+            benchmark
+             -> depth of 2 ~ 10 ms
+             -> depth of 3 ~ 150ms
+             -> depth of 5 ~ 2s vs 1 hour in MySQL
 
         9. RocksDB
            https://rocksdb.org/
