@@ -390,7 +390,7 @@ Distributed best practices
           TLS handshake time : 250 - 500 ms https://zoompf.com/blog/2014/12/optimizing-tls-handshake/#:~:text=This%20handshake%20will%20typically%20take,is%20when%20the%20handshake%20happens.  
           Suggestion is to use nginx which uses keep-alive and stores encrypted session key 
 
-          How SSO work ? 
+        How SSO work ? 
             https://www.youtube.com/watch?v=O1cRJWYF-g4
             
             Two ways 
@@ -400,6 +400,9 @@ Distributed best practices
               Open id connect
                 - uses json web token (JWT) 
                 - which uses token
+        
+        What is SAML ? 
+          https://www.youtube.com/watch?v=7RrFhC-e8QA&pp=ygUEU0FNTA%3D%3D&ab_channel=JumpCloud
 
         Authentication and Authorization
           https://blog.bytebytego.com/p/password-session-cookie-token-jwt 
