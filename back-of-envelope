@@ -436,7 +436,18 @@ Distributed best practices
               Currently, Okta falls short on passwordless solutions, prompting users to change their passwords often. In addition, users also report some technical issues with logins.
             While Auth0 could be integrated with Google / Twitter / FB sign-in (which uses open id connect) - https://www.youtube.com/watch?v=yufqeJLP1rI&ab_channel=Fireship 
 
-
+      So what tools usually company use for authorization internally ? 
+        https://www.reddit.com/r/sysadmin/comments/k09crr/what_tools_does_your_company_use_for/ 
+          SAML and LDAPS would cover most use cases which are standardized authentication protocols
+          SAML can be offered via Okta 
+          SAML vs LDAP
+            https://www.youtube.com/watch?v=_NCcLJin30E&ab_channel=JumpCloud
+            Both are used to access IT resources
+            LDAP -                                                                            SAML 
+            1990s (still used today)                                2000s has SSO solutions which federates identities through web applications
+            mostly used in back-end of user auth such user info     extends user creds to the cloud  
+            source of truth for IDP                                 its not SOT but protocol for exchanging authenication between directories and web apps. 
+            used in Linux applications like OpenVPN, docker         used by IAM providers like Okta 
 
   Network/s / Networking
     OSI model
