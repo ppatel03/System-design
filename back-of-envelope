@@ -418,6 +418,26 @@ Distributed best practices
           - session id needs db look up after authentication although nginx can cache it
           - jwt does not need db look up since all necessary info is contained in the client request. Invalidating JWT token is complex so token is valid even after log out.
 
+      Difference between Oauth 2.0 vs SAML and OpenID Connect
+        https://www.okta.com/identity-101/whats-the-difference-between-oauth-openid-connect-and-saml/
+          OAuth 2.0 is a framework that controls authorization to a protected resource such as an application or a set of files, while OpenID Connect and SAML are both industry standards for federated authentication. That means that OAuth 2.0 is used in fundamentally different situations than the other two standards (examples of which can be seen below), and can be used simultaneously with either OpenID Connect or SAML.
+
+          Using either OpenID Connect or SAML independently, enterprises can achieve user authentication and deploy single sign-on. Though they both deal with logins, they have different strengths and weaknesses.
+
+          OpenID Connect is built on the OAuth 2.0 protocol and uses an additional JSON Web Token (JWT), called an ID token, to standardize areas that OAuth 2.0 leaves up to choice, such as scopes and endpoint discovery. It is specifically focused on user authentication and is widely used to enable user logins on consumer websites and mobile apps.
+          SAML is independent of OAuth, relying on an exchange of messages to authenticate in XML SAML format, as opposed to JWT. It is more commonly used to help enterprise users sign in to multiple applications using a single login. 
+
+      What Is IAM (Identity & Access Management)?
+        https://spectralops.io/blog/top-11-identity-access-management-tools/
+          Identity and Access Management (IAM) tools are designed to manage identities (users) and access (authentication and authorization). The goal of IAM tools is to streamline the management of user accounts and privileges from all aspects.
+          In most cases, an IAM solution will let you define a policy. This policy will, in turn, determine the roles of users. Each role defined will have permissions set. These permissions allow access to specific resources. 
+          Example, Okta, Auth0 and other cloud service providers (AWS IAM, Microsoft Azure)
+            Small disadvantage with Okta
+              Currently, Okta falls short on passwordless solutions, prompting users to change their passwords often. In addition, users also report some technical issues with logins.
+            While Auth0 could be integrated with Google / Twitter / FB sign-in (which uses open id connect) - https://www.youtube.com/watch?v=yufqeJLP1rI&ab_channel=Fireship 
+
+
+
   Network/s / Networking
     OSI model
       https://www.youtube.com/watch?v=0y6FtKsg6J4
