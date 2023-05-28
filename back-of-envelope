@@ -966,7 +966,9 @@ It is worth noting that effective auto-scaling of stateful servers is the job of
     https://bytebytego.com/courses/system-design-interview/design-google-drive 
     Moving infrequently used data to cold storage. Cold data is the data that has not been active for months or years. Cold storage like Amazon S3 glacier [11] is much cheaper than S3.
 
-
+  Try to keep UI and back-end as separate services
+    https://michaelwashburnjr.com/blog/4-reasons-web-app-separated-frontend-backend
+      Modularity, Re-usability, Content Delivery, Responsiveness(?) and Versioning
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
