@@ -780,6 +780,13 @@ Distributed best practices
     Difference between socket and a port
       https://www.geeksforgeeks.org/difference-between-socket-and-port/?ref=rp
       Both Socket and Port are the terms used in Transport Layer. A port is a logical construct assigned to network processes so that they can be identified within the system. A socket is a combination of port and IP address. An incoming packet has a port number which is used to identify the process that needs to consume the packet.
+    How to scale Websocket clusters
+      https://bytebytego.com/courses/system-design-interview/nearby-friends
+        For the WebSocket cluster, it is not difficult to auto-scale based on usage. However, the WebSocket servers are stateful, so care must be taken when removing existing nodes. Before a node can be removed, all existing connections should be allowed to drain. To achieve that, we can mark a node as “draining” at the load balancer so that no new WebSocket connections will be routed to the draining server. Once all the existing connections are closed (or after a reasonably long wait), the server is then removed.
+
+Releasing a new version of the application software on a WebSocket server requires the same level of care.
+
+It is worth noting that effective auto-scaling of stateful servers is the job of a good load balancer. Most cloud load balancers handle this job very well.
 
     IOT devices
       https://www.youtube.com/watch?v=6mBO2vqLv38
