@@ -545,6 +545,7 @@ Distributed best practices
     Common techniques are retry the processing for queue consumer or offload to another server 
     try maintaining the commit log (checkpointing)
     explore event sourcing technique
+    Exponential backoff [14] might be a good retry strategy (https://bytebytego.com/courses/system-design-interview/distributed-email-service)
      
 
 
