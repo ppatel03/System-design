@@ -1263,9 +1263,10 @@ Distributed systems today and Benchmarking on common systems
         Distributed transaction : https://www.youtube.com/watch?v=OJySfiMKXLs&t=1271s 
        - uses RocksDB for its key value storage
        -  Nice video explaining how concurrency is handle on distributed transactions : https://www.youtube.com/watch?v=iD_Yk5AhNGc 
-          1. Raft : https://thesecretlivesofdata.com/raft/ 
+          1. So atomicity is guaranteed with Raft
+            Raft : https://thesecretlivesofdata.com/raft/ 
               - Raft handles atomic rights and consistent reads
-              So atomicity is guaranteed with Raft
+              
           How about Isolation 
           2. Seriazable in distributed databases - how?
               - MVCC - multiversion concurrency control -  https://youtu.be/iD_Yk5AhNGc?t=1783
