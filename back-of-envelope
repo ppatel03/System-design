@@ -971,7 +971,7 @@ It is worth noting that effective auto-scaling of stateful servers is the job of
       Modularity, Re-usability, Content Delivery, Responsiveness(?) and Versioning
 
   How VPN works ? 
-    
+
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
@@ -1265,7 +1265,9 @@ Distributed systems today and Benchmarking on common systems
        -  Nice video explaining how concurrency is handle on distributed transactions : https://www.youtube.com/watch?v=iD_Yk5AhNGc 
           1. Raft : https://thesecretlivesofdata.com/raft/ 
               - Raft handles atomic rights and consistent reads
-          2. Seriazable - how?
+              So atomicity is guaranteed with Raft
+          How about Isolation 
+          2. Seriazable in distributed databases - how?
               - MVCC - multiversion concurrency control -  https://youtu.be/iD_Yk5AhNGc?t=1783
                 - uses timestamp as form of versioning but depends on time synchronization which is a challenges in distributed systems. Even with NTP, there is a challenge. 
 
