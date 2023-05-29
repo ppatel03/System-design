@@ -725,7 +725,8 @@ Distributed best practices
   
   How to store password in the database
     https://www.youtube.com/watch?v=zt8Cocdy15c
-    use hashing + salt
+    use hash(password + salt(random string attached))
+    salting helps in eliminating rainbow attacks - https://www.beyondidentity.com/glossary/rainbow-table-attack
 
   Bare metal, VMs and containers
     https://www.youtube.com/watch?v=Jz8Gs4UHTO8
