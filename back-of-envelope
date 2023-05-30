@@ -1119,6 +1119,9 @@ Distributed systems today and Benchmarking on common systems
         - (Smart broker) - Complex routing to consumers
         - Applications that need a variety of publish/subscribe, point-to-point request/reply messaging capabilities.
 
+    RocketMQ 
+      doesn’t support delayed messages with arbitrary time precision, but delayed messages with specific levels are supported. Message delay levels are 1s, 5s, 10s, 30s, 1m, 2m, 3m, 4m, 6m, 8m, 9m, 10m, 20m, 30m, 1h, and 2h. https://bytebytego.com/courses/system-design-interview/distributed-message-queue 
+
 
     Streaming vs Batching systems 
      https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
