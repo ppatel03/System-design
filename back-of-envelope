@@ -541,11 +541,12 @@ Distributed best practices
         develop -> commit -> build -> test ->  deploy
       https://blog.inedo.com/continuous-integration-performance-testing-best-practices
 
-  Failure/Error handling
-    Common techniques are retry the processing for queue consumer or offload to another server 
-    try maintaining the commit log (checkpointing)
-    explore event sourcing technique
-    Exponential backoff [14] might be a good retry strategy (https://bytebytego.com/courses/system-design-interview/distributed-email-service)
+  Failure/Error handling to make fault tolerant and recover it making it resilient
+    - Common techniques are retry the processing for queue consumer or offload to another server 
+    - try maintaining the commit log (checkpointing)
+    - explore event sourcing technique
+    - Exponential backoff [14] might be a good retry strategy (https://bytebytego.com/courses/system-design-interview/distributed-email-service)
+    - Using Kafka Queue which can persist messages even when downstream services are down
      
 
 
@@ -1139,7 +1140,12 @@ Distributed systems today and Benchmarking on common systems
 
 
     RocketMQ 
-      doesn’t support delayed messages with arbitrary time precision, but delayed messages with specific levels are supported. Message delay levels are 1s, 5s, 10s, 30s, 1m, 2m, 3m, 4m, 6m, 8m, 9m, 10m, 20m, 30m, 1h, and 2h. https://bytebytego.com/courses/system-design-interview/distributed-message-queue 
+      doesn’t support delayed messages with arbitrary time precision, but delayed messages with specific levels are supported. Message delay levels are 1s, 5s, 10s, 30s, 1m, 2m, 3m, 4m, 6m, 8m, 9m, 10m, 20m, 30m, 1h, and 2h. https://bytebytego.com/courses/system-design-interview/distributed-message-queue
+
+    Hierarchical time wheel [17].
+      https://bytebytego.com/courses/system-design-interview/distributed-message-queue
+      for scheduled messages
+ 
 
 
     Streaming vs Batching systems 
