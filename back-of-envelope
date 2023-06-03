@@ -42,7 +42,7 @@ High level Tips :
         If time permits
         3. Accuracy (low, medium, high) since its hard to determine
         Fault tolerant measures
-        4. Durability (data loss, error rate) can be measure in % - eg., 99.999% for S3
+        4. Durability (no data loss) can be measure in % - eg., 99.999% for S3
         5. Resiliency (measures MTTR - mean time to repair)
         Auth
         6. Security (low, medium, high) (eg., assumed auth users, VPC)
@@ -51,7 +51,7 @@ High level Tips :
     Lets look in detail : 
     https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ 
    
-    1. Reliability (Superset of latency -> availability -> consistency -> durability -> resiliency) 
+    1. Reliability (Superset of latency -> availability -> consistency -> fault tolerance -> resiliency -> durability) 
           https://www.pagerduty.com/resources/learn/reliability/ 
           Reliability, on the other hand, is a measure of the probability that the system will meet defined performance standards in performing its intended function during a specified interval.  Example of not meeting reliability stands is Twitter was hacked in 2019.
           means you need to meet certain standards. 
