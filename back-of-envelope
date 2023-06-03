@@ -1278,6 +1278,8 @@ Distributed systems today and Benchmarking on common systems
           - Replication lag for AWS RDS : < 100 ms 
               https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
 
+          - we could simply deploy a simple relational database on each data node. SQLite [19] is a good choice here. It is a file-based relational database with a solid reputation. https://bytebytego.com/courses/system-design-interview/s3-like-object-storage 
+
 
           - Practical
               how MySQL gurantees ACID : https://www.youtube.com/watch?v=0OYFsJ1-1YA
