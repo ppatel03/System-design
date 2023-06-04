@@ -464,7 +464,9 @@ Distributed best practices
     OSI model
       https://www.youtube.com/watch?v=0y6FtKsg6J4
 
-    Modern day uses TCP/IP over OSI model
+    TCP/IP model
+      https://www.techtarget.com/searchnetworking/definition/TCP-IP 
+      Modern day uses TCP/IP over OSI model
 
     HTTP over TCP/IP 
       https://www.goanywhere.com/blog/http-vs-tcp-whats-the-difference
@@ -484,8 +486,7 @@ Distributed best practices
           multiple streams share the same Quic connection. Due to use of UDP, it resolves head of line blocking even at transport layer
           Application : 
             designed for mobile heavy internet usage where user keeps connecting between different networks.
-            How ? uses the concept of connection id between client and server which always remains same even if different network is selected. 
-
+            How ? uses the concept of connection id between client and server which always remains same even if different network is selected.
         https://www.linkedin.com/posts/gkcs_http3-systemdesign-networkprotocols-activity-7041095963335139329-uV44/?utm_source=share&utm_medium=member_desktop 
 
     Video streaming protocol
