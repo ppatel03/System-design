@@ -982,7 +982,11 @@ It is worth noting that effective auto-scaling of stateful servers is the job of
     https://michaelwashburnjr.com/blog/4-reasons-web-app-separated-frontend-backend
       Modularity, Re-usability, Content Delivery, Responsiveness(?) and Versioning
 
-  How VPN works ? 
+  How VPN works ?
+
+  CORS - Cross origin resource sharing 
+    https://www.youtube.com/watch?v=4KHiSt0oLJ0&ab_channel=Fireship
+    by default, browser does not allow requests to another domain on your website. To allow this, you need to send "Access-Control-Allow-Origin" header in the response.
 
 =========================================================================================================================
 =========================================================================================================================
@@ -1122,7 +1126,7 @@ Distributed systems today and Benchmarking on common systems
 
     RabbitMQ
       https://www.upsolver.com/blog/kafka-versus-rabbitmq-architecture-performance-use-case
-      - Slow as compared to Kafa and Redis pub-sub 50K messages per second (https://www.engati.com/blog/redis-kafka-rabbitmq)
+      - Slow as compared to Kafa and RabbitMQ pub-sub 50K messages per second (https://www.engati.com/blog/redis-kafka-rabbitmq)
       - supports both point to point and pub-sub model.
       - once messages are consumed, the are removed from queue and acknowledgement is provided but they can also be persisted like Kafka depending on configuration
       - It can be both synchronous and asynchronous. supports acknowledge too
