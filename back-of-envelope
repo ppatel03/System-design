@@ -1297,10 +1297,7 @@ Distributed systems today and Benchmarking on common systems
           - Practical
               how MySQL gurantees ACID : https://www.youtube.com/watch?v=0OYFsJ1-1YA
               Nice theoretical : https://www.youtube.com/watch?v=clPPKgYJC10 
-                Atomicity : Transaction is complete or lost but not in partial state. Achieved with begin trans --> comitt statement in MySQL
-                Consistency : Ensures any transaction does not violate the integrity. Achieved with integrity constraints in MySQL (guessing)
-                Isolation : Ensures concurrent transactuob will leave the database in same state if executed sequentially. concurency control subsytem. done through locks. 
-                Durability : ? 
+               
 
     2. CockroachDB
       https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
