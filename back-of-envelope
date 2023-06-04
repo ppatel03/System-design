@@ -420,6 +420,14 @@ Distributed best practices
           https://stytch.com/blog/jwts-vs-sessions-which-is-right-for-you/ 
           - session id needs db look up after authentication although nginx can cache it
           - jwt does not need db look up since all necessary info is contained in the client request. Invalidating JWT token is complex so token is valid even after log out.
+      
+      How to send passwords from client to server
+        https://github.dev/ppatel03/System-design/blob/main/back-of-envelope 
+        before you send the password from browser, you should know the server is already https which uses TLS encryption. So no need to encrypt on client side code.  
+        - this is why you that client passwords are sent in plaintext from developer tools at application layer (browser) which is layer 7
+        - Encryption takes place in between application and transport which could be presentation layer or session layer in OSI or Transport layer in TCP/IP
+            (https://community.fs.com/blog/tcpip-vs-osi-whats-the-difference-between-the-two-models.html)
+            (https://security.stackexchange.com/questions/19681/where-does-ssl-encryption-take-place)
 
       Difference between Oauth 2.0 vs SAML and OpenID Connect
         https://www.okta.com/identity-101/whats-the-difference-between-oauth-openid-connect-and-saml/
@@ -455,6 +463,8 @@ Distributed best practices
   Network/s / Networking
     OSI model
       https://www.youtube.com/watch?v=0y6FtKsg6J4
+
+    Modern day uses TCP/IP over OSI model
 
     HTTP over TCP/IP 
       https://www.goanywhere.com/blog/http-vs-tcp-whats-the-difference
