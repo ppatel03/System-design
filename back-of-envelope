@@ -42,7 +42,7 @@ High level Tips :
         If time permits
         3. Accuracy (low, medium, high) since its hard to determine
         Fault tolerant measures
-        4. Durability (no data loss) can be measure in % - eg., 99.999% for S3
+        4. Durability (no data loss) can be measure in % - eg., 99.9999% for S3
         5. Resiliency (measures MTTR - mean time to repair)
         Auth
         6. Security (low, medium, high) (eg., assumed auth users, VPC)
@@ -98,8 +98,6 @@ High level Tips :
 System design interview framework
   https://www.youtube.com/watch?v=i7twT3x5yv8 
 
-s
-
 
 So How to use non-functional requirements in decison making
    
@@ -124,7 +122,7 @@ So How to use non-functional requirements in decison making
     with 2 aws server : 99.9999%
           0.001 ^ 2    = 0.000001         or  10 ^ -6
           1 - 0.000001 = 0.999999         or  6 9s  
-          % * 100       = 99.999999%        or  4 9s 
+          % * 100       = 99.9999%        or  4 9s 
     - can help reason for latency
         more availability -> more bandwidth split -> less latency 
 
