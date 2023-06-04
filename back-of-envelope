@@ -598,7 +598,7 @@ Distributed best practices
     For systems which highly relies on time like "Scheduler", any server(node) which drifts too far at NTP sync (say 10s or even 1 min) should be removed.
     - LWW (last write wins) is common issue with multi-leader replication and leaderless databases like Cassandra - Pg 292 DDIA
     Google achieving accuracy with time synchronization
-    - Google Spanner provides time intervals to support visibility into accuracy of its time. - Pg 294 DDIA
+    - Google Spanner (the next CockroachDB) provides time intervals to support visibility into accuracy of its time. - Pg 294 DDIA
     - Using above, Google Spanner implements snapshot isolation across datacenters based on timestamp with intervals reported above
     - To improve accuracy, Google deploys GPS or atomic clock in each datacenter with guarantee SLA of 10 ms
 
