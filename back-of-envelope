@@ -1396,17 +1396,14 @@ Distributed systems today and Benchmarking on common systems
 
               Great read : Use of parition key + clustering key storages in Cassandra
                 http://distributeddatastore.blogspot.com/2020/03/cassandra-new-sstable-storage-format.html
-                -  parition key to assign the nodes and clustering key as sort key within the nodes
+                https://cassandra.apache.org/doc/latest/cassandra/architecture/storage_engine.html
+                - parition key to assign the nodes and also the key component of SS Table. So there inside every node, there is an index.db in form of SSTable storing partition key and its position of data in data.db
+                - At the position of parition key in data.db, clustering key is used as sorted data within that partition key
+                - Remember a partition key could be in more than 1 SSTable due to subsequent insert/update
 
               How updates are handled in Cassandra 
               https://docs.datastax.com/en/cassandra-oss/3.x/cassandra/dml/dmlWriteUpdate.html 
               Periodically, the rows stored in memory are streamed to disk into structures called SSTables. At certain intervals, Cassandra compacts smaller SSTables into larger SSTables. If Cassandra encounters two or more versions of the same row during this process, Cassandra only writes the most recent version to the new SSTable. After compaction, Cassandra drops the original SSTables, deleting the outdated rows.
-
-
-              Cassandra data model and store deep dive: (not super helpful)
-               https://www.youtube.com/watch?v=X-_vS8q4nu4&list=PLGkHHA2RcrgeV35CBtIlUjiXJzVXLxMbL&index=3
-               https://www.youtube.com/watch?v=69dLARZxIVw&list=PLGkHHA2RcrgeV35CBtIlUjiXJzVXLxMbL&index=4 
-                How Cassandra read / write data : https://www.youtube.com/watch?v=t276nhhkkI8&t=523s
               
               Cassandra indexing
                 Paritioning : https://www.youtube.com/watch?v=Np5RJpCiCzM
