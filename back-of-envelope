@@ -954,38 +954,51 @@ It is worth noting that effective auto-scaling of stateful servers is the job of
         Isolation level pg 234 DDIA
         1. Read committed : can solve the problem of dirty reads and dirty writes. It can be implemented with row level locking.
         locking is fine for writes but slows down read. So to avoid locking on read operations, we need to allow reading the last committed read.It ensures two things - 1. No dirty reads and 2. No dirty writes
-        2. Snapshot isolation / Reapeatable Read: With last committed read, there is still an issue of databasse concurrency issue. If user A has 500$ in account 1 and 2 and transfer 100$ from account 1 to account 2, balance is first updated and committed for account 1 and then on account 2. If before account 2 committed, values are read, then from it may appear that the user have only 900$ (account 1 is now 400$ but account 2 is still 500$).
-        This isolation solves this problem by taking the snapshot at particular version (MVCC say using timestamp) and allows reading only from that version.
+        2. Snapshot isolation / Reapeatable Read: 
+          With last committed read, there is still an issue of databasse concurrency issue. If user A has 500$ in account 1 and 2 and transfer 100$ from account 1 to account 2, balance is first updated and committed for account 1 and then on account 2. If before account 2 committed, values are read, then from it may appear that the user have only 900$ (account 1 is now 400$ but account 2 is still 500$).
+          This isolation solves this problem by taking the snapshot at particular version (MVCC say using timestamp) and allows reading only from that version.
           Issue with snapshot isolation and also read isolation : The read committed and snapshot isolation levels we’ve discussed so far have been primarily about the guarantees of what a read-only transaction can see in the pres‐ ence of concurrent writes. We have mostly ignored the issue of two transactions writing concurrently. The best known of these is the lost update problem, illustrated in Figure 7-1 with the example of two concurrent counter increments.
-          Preventing Lost updates
-            We have mostly ignored the issue of two transactions writing concurrently
-            1. Atomic writes
-                For example, the following instruction is concurrency-safe in most relational databases:
-                  UPDATE counters SET value = value + 1 WHERE key = 'foo';
-                Atomic operations are usually implemented by taking an exclusive lock on the object when it is read so that no other transaction can read it until the update has been applied. This technique is sometimes known as cursor stability.
-            2. Explicit locking
-                Another option for preventing lost updates, if the database’s built-in atomic opera‐tions don’t provide the necessary functionality, is for the application to explicitly lock objects that are going to be updated.
-                  BEGIN TRANSACTION;
-                    SELECT * FROM figures
-                    WHERE name = 'robot' AND game_id = 222
-                    FOR UPDATE;
-                    -- Application logic code starts here
-                      -- Check whether move is valid, then update the position
-                      -- of the piece that was returned by the previous SELECT.
-                    -- Application logic code ends here
-                    UPDATE figures SET position = 'c4' WHERE id = 1234;
-                  COMMIT;
-                  The FOR UPDATE clause indicates that the database should take a lock on all rows returned by this query.
-                    This works, but to get it right, you need to carefully think about your application logic. It’s easy to forget to add a necessary lock somewhere in the code, and thus introduce a race condition.
-        Automatically detecting lost updates
-          1. Compare-and-set
-              If the content has changed and no longer matches 'old content', this update will have no effect, so you need to check whether the update took effect and retry if necessary
-                UPDATE wiki_pages SET content = 'new content'
-                WHERE id = 1234 AND content = 'old content';
-          2. Conflict resolution and replication
-              Locks and compare-and-set operations assume that there is a single up-to-date copy of the data. However, databases with multi-leader or leaderless replication usually allow several writes to happen concurrently and replicate them asynchronously, so they cannot guarantee that there is a single up-to-date copy of the data. 
-              Instead, as discussed in “Detecting Concurrent Writes” on page 184, a common approach in such replicated databases is to allow concurrent writes to create several conflicting versions of a value (also known as siblings), and to use application code or special data structures to resolve and merge these versions after the fact. On the other hand, the last write wins (LWW) conflict resolution method is prone to lost updates, as discussed in “Last write wins (discarding concurrent writes)” on page 186. Unfortunately, LWW is the default in many replicated databases. 
-            
+            Preventing Lost updates
+                We have mostly ignored the issue of two transactions writing concurrently
+                1. Atomic writes
+                    For example, the following instruction is concurrency-safe in most relational databases:
+                      UPDATE counters SET value = value + 1 WHERE key = 'foo';
+                    Atomic operations are usually implemented by taking an exclusive lock on the object when it is read so that no other transaction can read it until the update has been applied. This technique is sometimes known as cursor stability.
+                2. Explicit locking
+                    Another option for preventing lost updates, if the database’s built-in atomic opera‐tions don’t provide the necessary functionality, is for the application to explicitly lock objects that are going to be updated.
+                      BEGIN TRANSACTION;
+                        SELECT * FROM figures
+                        WHERE name = 'robot' AND game_id = 222
+                        FOR UPDATE;
+                        -- Application logic code starts here
+                          -- Check whether move is valid, then update the position
+                          -- of the piece that was returned by the previous SELECT.
+                        -- Application logic code ends here
+                        UPDATE figures SET position = 'c4' WHERE id = 1234;
+                      COMMIT;
+                      The FOR UPDATE clause indicates that the database should take a lock on all rows returned by this query.
+                        This works, but to get it right, you need to carefully think about your application logic. It’s easy to forget to add a necessary lock somewhere in the code, and thus introduce a race condition.
+            Automatically detecting lost updates
+              1. Compare-and-set
+                  If the content has changed and no longer matches 'old content', this update will have no effect, so you need to check whether the update took effect and retry if necessary
+                    UPDATE wiki_pages SET content = 'new content'
+                    WHERE id = 1234 AND content = 'old content';
+              2. Conflict resolution and replication
+                  Locks and compare-and-set operations assume that there is a single up-to-date copy of the data. However, databases with multi-leader or leaderless replication usually allow several writes to happen concurrently and replicate them asynchronously, so they cannot guarantee that there is a single up-to-date copy of the data. 
+                  Instead, as discussed in “Detecting Concurrent Writes” on page 184, a common approach in such replicated databases is to allow concurrent writes to create several conflicting versions of a value (also known as siblings), and to use application code or special data structures to resolve and merge these versions after the fact. On the other hand, the last write wins (LWW) conflict resolution method is prone to lost updates, as discussed in “Last write wins (discarding concurrent writes)” on page 186. Unfortunately, LWW is the default in many replicated databases. 
+            Write Skew and Phantoms
+              In the previous sections we saw dirty writes and lost updates, two kinds of race conditions that can occur when different transactions concurrently try to write to the same objects. 
+              But what if the objects are different ? The explicit locking query won't work in following cases because the returned rows are different
+                1. there are at least two doctors on call,
+                2. there are no existing bookings for that room at that time, 
+                3. the position on the board doesn’t already have another figure on it, 
+                4. the username isn’t already taken, there is still money in the account
+              This effect, where a write in one transaction changes the result of a search query in another transaction, is called a phantom [3]. Snapshot isolation avoids phantoms in read-only queries, but in read-write transactions like the examples we discussed, phantoms can lead to particularly tricky cases of write skew. 
+              Materializing conflicts : please consider this as last resort though due to complexities
+                For example, in the meeting room booking case you could imagine creating a table of time slots and rooms. Each row in this table corresponds to a particular room for a particular time period (say, 15 minutes). You create rows for all possible combinations of rooms and time periods ahead of time, e.g. for the next six months.
+                Now a transaction that wants to create a booking can lock (SELECT FOR UPDATE) the rows in the table that correspond to the desired room and time period. After it has acquired the locks, it can check for overlapping bookings and insert a new booking as before
+
+                
 
   How to design ranking system based on multile criteria (used in multiple designs like google ranking, FB ranking)
     https://towardsdatascience.com/ranking-algorithms-know-your-multi-criteria-decision-solving-techniques-20949198f23e
