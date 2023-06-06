@@ -998,6 +998,34 @@ It is worth noting that effective auto-scaling of stateful servers is the job of
                 For example, in the meeting room booking case you could imagine creating a table of time slots and rooms. Each row in this table corresponds to a particular room for a particular time period (say, 15 minutes). You create rows for all possible combinations of rooms and time periods ahead of time, e.g. for the next six months.
                 Now a transaction that wants to create a booking can lock (SELECT FOR UPDATE) the rows in the table that correspond to the desired room and time period. After it has acquired the locks, it can check for overlapping bookings and insert a new booking as before.
                 This approach is called materializing conflicts, because it takes a phantom and turns it into a lock conflict on a concrete set of rows that exist in the database 
+        3. Serializability  
+            Serializable isolation is usually regarded as the strongest isolation level. It guarantees that even though transactions may execute in parallel, the end result is the same as if they had executed one at a time, serially, without any concurrency.
+            1. Actual Serial Execution
+              The simplest way of avoiding concurrency problems is to remove the concurrency entirely: to execute only one transaction at a time, in serial order, on a single thread.
+              Two developments caused this rethink: 
+                a. RAM became cheap enough that for many use cases is now feasible to keep the entire active dataset in memory (see “Keeping everything in memory” on page 88). When all data that a transaction needs to access is in memory, transactions can execute much faster than if they have to wait for data to be loaded from disk.
+                b. Database designers realized that OLTP transactions are usually short and only make a small number of reads and writes (see “Transaction Processing or Analytics?” on page 90). By contrast, long-running analytic queries are typically readonly, so they can be run on a consistent snapshot (using snapshot isolation) outside of the serial execution loop.
+              Encapsulating transactions in stored procedures
+                systems with single-threaded serial transaction processing don’t allow interactive multi-statement transactions. Instead, the application must submit the entire transaction code to the database ahead of time, as a stored procedure.
+                Stored procedures have existed for some time in relational databases, They have gained a somewhat bad reputation, for various reasons:
+                  Each database vendor has its own language for stored procedures. These languages haven’t kept up with developments in general-purpose programming languages, so they look quite ugly.
+                  A database is often much more performance-sensitive than an application server, because a single database instance is often shared by many application servers. A badly written stored procedure (e.g., using a lot of memory or CPU time) in a database can cause much more trouble than equivalent badly written code in an application server
+                Partitioning
+                  Executing all transactions serially makes concurrency control much simpler, but lim‐its the transaction throughput of the database to the speed of a single CPU core on a single machine. Read-only transactions may execute elsewhere, using snapshot isola‐tion, but for applications with high write throughput, the single-threaded transaction processor can become a serious bottleneck. If you can find a way of partitioning your dataset so that each transaction only needs to read and write data within a single partition, then each partition can have its own transaction processing thread running independently from the others. Since cross-partition transactions have additional coordination overhead, they are vastly slower than single-partition transactions. VoltDB reports a throughput of about 1,000 cross-partition writes per second, which is orders of magnitude below its single-partition throughput and cannot be increased by adding more machines 
+            2. Two-Phase Locking (2PL)
+                    - If transaction A has read an object and transaction B wants to write to that object, B must wait until A commits or aborts before it can continue. (This ensures that B can’t change the object unexpectedly behind A’s back.)
+                    - If transaction A has written an object and transaction B wants to read that object, B must wait until A commits or aborts before it can continue. (Reading an old version of the object, like in Figure 7-1, is not acceptable under 2PL.)
+                  After a transaction has acquired the lock, it must continue to hold the lock untilthe end of the transaction (commit or abort). This is where the name “twophase” comes from: the first phase (while the transaction is executing) is when the locks are acquired, and the second phase (at the end of the transaction) is when all the locks are released.
+            3. Serializable Snapshot Isolation (SSI)  
+                an algorithm called serializable snapshot isolation (SSI) is very promis‐ing. It provides full serializability, but has only a small performance penalty com‐pared to snapshot isolation. Today SSI is used both in single-node databases (the serializable isolation level in PostgreSQL since version 9.1 [41]) and distributed databases (FoundationDB, CockroachDB uses a similar algorithm).
+                Basically you read using Snapshot Isolation but while writing, the database detects its a stale snapshot(new values are updated) and instructs abort/retry operations
+                How does the database know if a query result might have changed? There are two cases to consider:
+                  • Detecting reads of a stale MVCC object version (uncommitted write occurred before the read)
+                  • Detecting writes that affect prior reads (the write occurs after the read)
+              Performance of serializable snapshot isolation
+                Compared to two-phase locking, the big advantage of serializable snapshot isolation is that one transaction doesn’t need to block waiting for locks held by another trans‐action. Like under snapshot isolation, writers don’t block readers, and vice versa. 
+                Compared to serial execution, serializable snapshot isolation is not limited to the throughput of a single CPU core.
+                The rate of aborts significantly affects the overall performance of SSI. For example, a transaction that reads and writes data over a long period of time is likely to run into conflicts and abort, so SSI requires that read-write transactions be fairly short
 
                 
 
@@ -1247,6 +1275,7 @@ Distributed systems today and Benchmarking on common systems
         Sorted Set - https://redis.io/docs/data-types/sorted-sets/
         How redis works 
           https://www.youtube.com/watch?v=5TRFpFBccQM
+        Redis is single threaded and supports serializability isolation level (serial execution), epi pg. 253
 
     CDN
         https://www.youtube.com/watch?v=RI9np1LWzqw
