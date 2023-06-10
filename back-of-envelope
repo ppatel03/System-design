@@ -1650,7 +1650,9 @@ Distributed systems today and Benchmarking on common systems
           - components include spark SQL, streaming, machine learning, 
           - follows master-slave architecture ( Driver which is master -> cluster manager -> worker node with cache)
           - Driver uses its Sparkcontext and connect with cluster manager to get resource info and generates RDD datastructures. Then it convert core transformations and actions into DAG.
-          - Driver schedules the task on workers and resources are allocated to tasks by cluster manager. 
+          - Driver schedules the task on workers and resources are allocated to tasks by cluster manager.
+            Spark architecture in 3 mins : https://www.youtube.com/watch?v=rJFg2i_auAg&ab_channel=BigDataElearning 
+
           - Some Cluster manager used by Spark
               https://data-flair.training/blogs/apache-spark-cluster-managers-tutorial/
               - Apache Spark Standalone Cluster Manager 
