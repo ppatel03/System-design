@@ -593,6 +593,10 @@ Distributed best practices
   Clock synchronization amongst different servers in distributed systems
     https://www.youtube.com/watch?v=f1hlCZB0GDA 
     - Use network time protocol (NTP)
+    - How does NTP gets the time from GPS 
+        https://www.galsys.co.uk/time-reference/development-of-atomic-clocks-and-timescales/atomic-clock-ntp-servers.html 
+        Atomic clocks are also the basis of GPS (Global Positioning System) as each satellite contains an atomic clock as accurate time is integral for positioning (a position anywhere is made up of a direction, a velocity and time).
+        GPS signals can also be used to capture a time signal. This is now the most common way computer networks retain accurate time which is also essential in many communications and applications.Most computer networks use a NTP server (Network Time Protocol) to synchonise their devices to an atomic time signal received via the GPS network.
     - NTP has some challenges but its still the reliable way to synchronize clocks over the network with the error delay of 35 ms - Pg 288 DDIA. So applicable for scheduling systems with 1s - 1 min granularity
     However, some trading firms enforce accuracy of no more than 100 us microseconds and worst case 100 ms for network congestion. Such accuracy can be achieved with GPS (the precision time protocol PTP) with careful deployment and monitoring but requires effort and expertise.
     For systems which highly relies on time like "Scheduler", any server(node) which drifts too far at NTP sync (say 10s or even 1 min) should be removed.
