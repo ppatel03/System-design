@@ -799,10 +799,10 @@ Distributed best practices
     How to scale Websocket clusters
       https://bytebytego.com/courses/system-design-interview/nearby-friends
         For the WebSocket cluster, it is not difficult to auto-scale based on usage. However, the WebSocket servers are stateful, so care must be taken when removing existing nodes. Before a node can be removed, all existing connections should be allowed to drain. To achieve that, we can mark a node as “draining” at the load balancer so that no new WebSocket connections will be routed to the draining server. Once all the existing connections are closed (or after a reasonably long wait), the server is then removed.
-
-Releasing a new version of the application software on a WebSocket server requires the same level of care.
-
-It is worth noting that effective auto-scaling of stateful servers is the job of a good load balancer. Most cloud load balancers handle this job very well.
+         
+        Releasing a new version of the application software on a WebSocket server requires the same level of care.
+        It is worth noting that effective auto-scaling of stateful servers is the job of a good load balancer. Most cloud load balancers handle this job very well.
+        So Suggest to use least-connection load balancer so that it can route new request to Web socket servers with least connections
 
     IOT devices
       https://www.youtube.com/watch?v=6mBO2vqLv38
@@ -1031,7 +1031,8 @@ It is worth noting that effective auto-scaling of stateful servers is the job of
                 Compared to serial execution, serializable snapshot isolation is not limited to the throughput of a single CPU core.
                 The rate of aborts significantly affects the overall performance of SSI. For example, a transaction that reads and writes data over a long period of time is likely to run into conflicts and abort, so SSI requires that read-write transactions be fairly short
 
-                
+    Consistency and Concensus with distributed databases  Pg 321
+         
 
   How to design ranking system based on multile criteria (used in multiple designs like google ranking, FB ranking)
     https://towardsdatascience.com/ranking-algorithms-know-your-multi-criteria-decision-solving-techniques-20949198f23e
