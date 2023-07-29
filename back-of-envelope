@@ -1302,8 +1302,31 @@ Distributed systems today and Benchmarking on common systems
 
           5 million * 5 videos * 0.3GB * 0.02 = 150,000 per day.
 
-          
-      
+      Memcache Vs Redis
+        https://www.baeldung.com/memcached-vs-redis#:~:text=Architecture,can%20perform%20better%20than%20Redis. 
+
+        Memcached is a distributed memory caching system designed for ease of use and simplicity and is well-suited as a cache or a session store.
+        Redis is an in-memory data structure store that offers a rich set of features. It is useful as a cache, database, message broker (pub sub), and queue.
+
+        Memcached stores key-value pairs as a String and has a 1MB size limit per value. 
+        However, Redis also supports other data structures like list, set, and hash, and can store values of up to 512MB in size.
+
+        Memcached doesn't support transactions, although its operations are atomic.
+        Redis provides out-of-the-box support for transactions to execute commands. We can start the transaction using the MULTI command. Then, we can use the EXEC command for the execution of the following subsequent commands. Finally, Redis provides the WATCH command for the conditional execution of the transaction. 
+        One of the reason why Redis is a good choice for applications which need atomic transactions and serializable isolation - Rate limiter
+
+        Memcached doesn't support publish/subscribe messaging out-of-the-box.
+        Redis, on the other hand, provides functionality to publish and subscribe to messages using pub/sub message queues.
+
+        Geospatial support is useful for implementing location-based features for our applications. Unlike Memcached, Redis comes with special commands to manage real-time geospatial data. For instance, the GEODIST command calculates the distance between two geospatial entries. Likewise, the GEORADIUS command returns all the entries within the radius provided. Additionally, we can use Spring Data Redis to enable Redis geospatial support in a Java application.
+
+        Memcached implements a multi-threaded architecture by utilizing multiple cores. Therefore, for storing larger datasets, Memcached can perform better than Redis.
+        Redis uses a single core and shows better performance than Memcached in storing small datasets when measured in terms of cores.
+
+
+        We can certainly conclude that Memcached is a solid choice for solving simple caching problems. However, generally speaking, Redis outperforms Memcached by offering richer functionality and various features that are promising for complex use-cases.
+
+
 
   SQL DB and benchmarking - Relational
     1. MySQL benchmarking
