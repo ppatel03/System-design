@@ -1,3 +1,5 @@
+THESE ARE IMPORTANT NOTES WHICH CAN HELP A LEAD ENGINEER IN DAY TO DAY JOB. I RECOMMEND TO EVEN ENTRY LEVEL ENGINEERS UNDERSTAND AND DESIGN SOFTWARE DESIGN BASED ON TRADE-OFFS.
+
 Links :
 
 https://bytebytego.com/courses/system-design-interview/back-of-the-envelope-estimation
@@ -9,20 +11,26 @@ https://docs.google.com/document/d/1wUCqhVHydWiDk6FJdFLSMpgigNrGcs4OFZg0Wa7JGEw/
 
 
 High level Tips :
-- Ask functional requirements first (example, ability to post tweet, view tweet)
+- Ask detailed functional requirements 
+    Why ? 
+      - first since it helps with API design (example, ability to post tweet, view tweet)
 - Ask types of users (admin, general) 
-- Ask about interaction points - API, UI
+    Why ? 
+      - since it helps with data access patterns and security checks (admin can edit personal info/block users )
+- Ask about interaction points - API, UI 
+    Why ? 
+      - since it helps you think end to end from UX perspective 
 - Ask about devices - Mobile or WEB 
     (though need reasoning why you asked this question :) . 
       1. mobile could be low bandwidth network ~ 100 Mbps or 10 MBps) - https://www.quora.com/From-what-maximum-speed-can-a-smartphone-download-or-upload-some-data
 - Ask DAU. If MAU is provided, atleast ask % of concurrent users. 
 - Ask user activity : example read vs write ratio, or number of writes (example, 2 tweets per day)
 
-- Ask non-functional requirements  
+- Ask non-functional requirements  (These are very important and can convert entire inteview design in your favor.)
 
   Usually Latency and Scale are most important 
 
-  These are very important and can convert entire inteview in your favor. Example if latency is 1s, then you do not need complex caching architecture if your data transfer is less than 100 MB (100 MBps max bandwidth today)
+   Example if latency is 1s and data transfer is less than 100MB, then you do not need complex caching architecture (1 Gbps which is 100 MBps is the max bandwidth today)
 
   So ask with this format  
     1. Ask about # of users - DAU/MAU
@@ -35,7 +43,7 @@ High level Tips :
           - 1 year ~ 365 * 10 ^ 5s and further ~ 10 ^ 8s
           For sake of time constraints, do not hesitate to round off large amount
     2. Now discuss about Reliability standards / SLA
-        1. Now best thing to ask about : Availability over Consistency 
+        1. Now best thing to ask about : Availability over Consistency with some reasoning why ? example, high consistency means always show updated data 
           - get availability nos
           - consistency levels (low, medium, high)
         2. Latency 
@@ -96,7 +104,7 @@ High level Tips :
             - try to add stateless servers if possible
             - stateful server only for few use cases like socket connections. Make sure you know how to deal with scalability for socket connections.
     
-System design interview framework
+System design thinking framework
   https://www.youtube.com/watch?v=i7twT3x5yv8 
 
 
