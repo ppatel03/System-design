@@ -77,9 +77,10 @@ High level Tips :
               this would help decide the redundancy and reliability - example mostly 99.99% a day means you can compromise 10s (10 ^ 5 * 10 ^ -4).
               of unavailability (its different from being unrelible). 
               With this you can even decide that, your system/part of the sytem could be offline for 10s in a day for reasons like roll out, stateful servers scaling, upgrading the database or even doing DB sync etc. 
-              3 9s -> 1 s
-              4 9s -> 100 ms or less than 1s
-              6 9s -> 1 ms or very high (no downtime)
+              4 9s -> 10s
+              5 9s -> 1 s
+              6 9s -> 100 ms or less than 1s
+              8 9s -> 1 ms or very high (no downtime)
               > 6 ps -> in us or super high (no downtime else SLA violated)
 
             -- Resiliency
