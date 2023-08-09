@@ -103,7 +103,7 @@ System design interview framework
 So How to use non-functional requirements in decison making
    
 
-  Bandwidth (assume to be 1 GBps ~ 100 MBps which means 1 KB = 10us) 
+  Bandwidth (assume to be 1 Gbps ~ 100 MBps which means 1 KB = 10us) 
     - can help reason your latency
     - can help reason your replication or multiple servers
     - can help reason your sharding for database (remember internal data center max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html 
