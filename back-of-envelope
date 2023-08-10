@@ -10,7 +10,7 @@ https://matthewdbill.medium.com/back-of-envelope-calculations-cheat-sheet-d6758d
 https://docs.google.com/document/d/1wUCqhVHydWiDk6FJdFLSMpgigNrGcs4OFZg0Wa7JGEw/edit
 
 
-High level Tips :
+High level Tips on any product design :
 - Ask detailed functional requirements 
     Why ? 
       - first since it helps with API design (example, ability to post tweet, view tweet)
@@ -234,15 +234,15 @@ Distributed Systems estimate
     HW cache : 
       L1 > L2 > L3
       Virtual memory - 
-        maps program address to RAM address  https://www.youtube.com/watch?v=qlH4-oHnBb8
+        maps program address to RAM _ disk address  https://www.youtube.com/watch?v=qlH4-oHnBb8
         is equal to RAM + Disk size
       TLB cache for mapping above -  virtual to physical memory address
       OS level 
         Page cache  - recently used disks blocks in memory
         File cache  - 
-        iNode cache 
-          (https://www.bluematador.com/blog/what-is-an-inode-and-what-are-they-used-for )
-          - speed up file system operations by reducing disk access
+        iNode cache
+          - For context, INode is a file block pointer where filename is stored and looked up. Then using iNode, When we access a local file, we first fetch the metadata in the inode. We then read the file data by following the file block pointers to the actual disk locations.https://bytebytego.com/courses/system-design-interview/s3-like-object-storage   
+          - iNode cache speed up file system operations by reducing disk access because if both iNode and file are in disk, then operation is super slow. (https://www.bluematador.com/blog/what-is-an-inode-and-what-are-they-used-for )
 
     Front-end :
       Browser 
@@ -251,7 +251,7 @@ Distributed Systems estimate
       CDN
         improve delivery of static content by caching it from the origin server
         https://cloud.google.com/cdn/pricing 
-        remember CDN charges for egress (0.02$ per GiB), cache fill (same charge - 0.01$ per GiB) and 0.0075 per 10K req
+        remember CDN charges for egress (0.02$ per GiB - 1.024 GB), cache fill (same charge - 0.01$ per GiB) and 0.0075 per 10K req
       Load balancer cache
         to reduce the load on back-end servers and also improve response time.
       Messaging cache such as Kafka
@@ -346,14 +346,15 @@ Distributed best practices
 
   Symmetric vs Asymmetric encryption
     https://blog.mailfence.com/symmetric-vs-asymmetric-encryption/ 
-    RSA is asymmetric
-    Rest everything is symmetric
+    RSA, DSA, Diffie-Hellman - key exchange is asymmetric
+    AES, DES - is symmetric
     SHA-1 is hash function and not encryption one
     SHA-256 is more secure https://www.keycdn.com/support/sha1-vs-sha256 
 
   Eliminate disk access
     Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. 
     Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
+    It basically just tells the OS to put your requested file in shared memory - https://db.cs.cmu.edu/mmap-cidr2022/#:~:text=Memory%2Dmapped%20(MMAP)%20file,file%20resided%20entirely%20in%20memory.  
 
   Change Data Capture
   CDC is a mechanism that reads data changes from the database and applies the changes to another data system. 
@@ -860,6 +861,17 @@ Distributed best practices
         - first layer : edge server 
         - second layer : API gateway / load balancer
         However, many of them combine both as one ingress service
+    Nginx vs HaProxy 
+      https://blog.gitnux.com/comparison/haproxy-vs-nginx/#:~:text=Haproxy%20and%20Nginx%20are%20both,web%20server%20depending%20on%20configuration.
+      - The main difference between the two is that Haproxy is a proxy server specifically designed to handle high levels of traffic while Nginx can be used as either a proxy or web server depending on configuration. 
+      https://cloudinfrastructureservices.co.uk/haproxy-vs-nginx-whats-the-difference/ 
+      - At the time of HAProxy’s implementation, the processes do not share any memory that affects the configuration parameters and session persistence is not possible.
+      - At the time of NGINX implementation, the processes do share memory.
+      - Nginx is used by Netflix, Atlassian, Dropbox, etc.
+    Cons with Nginx
+      - NGINX does not support exportable metrics (paid edition only)
+      - NGINX supports gRPC, WebSocket, and but only support protocols like HTTP, HTTPS, and Email.
+
 
   Use gRPC as interservice communication between microservices in your cloud
   https://www.youtube.com/watch?v=gnchfOojMk4
@@ -1846,6 +1858,8 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
          - supports secure auth SSL. Also does optimizations with keep alive connection and cache to avoid SSL handshake - https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/ 
          Also a good read https://www.nginx.com/blog/http-keepalives-and-web-performance/
        Nginx supports L7
+
+    
 ================================================================
 
       
