@@ -434,7 +434,7 @@ Distributed best practices
       How to send passwords from client to server
         https://github.dev/ppatel03/System-design/blob/main/back-of-envelope 
         before you send the password from browser, you should know the server is already https which uses TLS encryption. So no need to encrypt on client side code.  
-        - this is why you that client passwords are sent in plaintext from developer tools at application layer (browser) which is layer 7
+        - this is why you observer that client passwords are sent in plaintext from developer tools at application layer (browser) which is layer 7
         - Encryption takes place in between application and transport which could be presentation layer or session layer in OSI or Transport layer in TCP/IP
             (https://community.fs.com/blog/tcpip-vs-osi-whats-the-difference-between-the-two-models.html)
             (https://security.stackexchange.com/questions/19681/where-does-ssl-encryption-take-place)
