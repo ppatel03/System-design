@@ -741,6 +741,10 @@ Distributed best practices
     - CD is hard for database backend clusters or websocket cluster. So deployment process is manual here and needs dedicated platform team
       - CD process : code -> build -> test -> acceptance -> deploy in production
       - CD tools : github actions, jenkins, argoCD for kubernetes 
+    How many companies perform CD today ? 
+      build -> test -> commit -> deploy
+    - with help of github actions, it can build and run tests on the PR. Once commit is merged, it pushes the image in the respository
+    - argoCD detects thid image and deploys on kubernetes using helm charts (yaml file for kubernetes deployment - https://www.youtube.com/watch?v=w51lDVuRWuk&ab_channel=DevOpsJourney) 
 
   How to provison resources in the could
     https://www.youtube.com/watch?v=tomUWcQ0P3k
