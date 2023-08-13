@@ -1309,6 +1309,7 @@ Distributed systems today and Benchmarking on common systems
         Scale: Redis can send up to 1 million messages per second like Kafka
         Persistency: It does not support data persistency, it is an in-memory data store.
         Consumer Capability: It can handle both, one-to-one and one-to-many consumers.
+        Push based system : smart broker, dumb consumer
       
 
 
