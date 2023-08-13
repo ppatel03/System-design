@@ -200,7 +200,8 @@ Distributed Systems estimate
 
     AWS availability ~ 99.9% https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html
     AWS A100 GPU Lambda ~ 1$ per hour https://lambdalabs.com/service/gpu-cloud 
-    AWS memory limit ~ 24 TB RAM
+    AWS memory limit    ~ 24 TB RAM
+    AWS DB (MySQL) limit ~ 64 TB storage
     AWS disk size ~ unlimited via EBS
     Max socket connections : 65,536 https://www.ibm.com/docs/en/zos/2.1.0?topic=domain-maximum-number-sockets 
     Max connections on the server : 
@@ -759,6 +760,7 @@ Distributed best practices
     https://www.youtube.com/watch?v=zt8Cocdy15c
     use hash(password + salt(random string attached))
     salting helps in eliminating rainbow attacks - https://www.beyondidentity.com/glossary/rainbow-table-attack
+    Even if you salt in same DB as password, attacker will never able to guess the actually password since it does not know how salt text is combined with password before hashing.
 
   Bare metal, VMs and containers
     https://www.youtube.com/watch?v=Jz8Gs4UHTO8
@@ -791,12 +793,12 @@ Distributed best practices
           - usually its one pod per application. You only have multiple applications in one pod when its helper to another - example, datadog agent.
           - If pod dies, new ones gets easily created.
           - Since each pod gets IP address, then won't it creates disruption if a pod dies. Example MySQL pod dies ? 
-            - So pod is supported by "service" (may be kube-proxy) sitting in each pod concept which is similar to load balancer and IP address is assigned to a service instead of a pod. It also serves as a load balancer
+            - So pod is supported by "service" (may be kube-proxy) sitting in each pod. This concept which is similar to load balancer and IP address is assigned to a service instead of a pod. It also serves as a load balancer
           Similar video : https://www.youtube.com/watch?v=2vMEQ5zs1ko 
 
   WebSocket - use for bi-directional communication
     Websocket with load balancer or not - debatable 
-      websocket can be supported with load balancing through websocket tunned but suggest not to do it https://www.haproxy.com/documentation/hapee/latest/load-balancing/protocols/websocket/ 
+      websocket can be supported with load balancing through websocket tunnel but suggest not to do it https://www.haproxy.com/documentation/hapee/latest/load-balancing/protocols/websocket/ 
       comparison of websocket vs long polling during scaling up / down  
         - https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o 
       Some systems does support websocket and load balancer https://bytebytego.com/courses/system-design-interview/nearby-friends 
@@ -887,6 +889,16 @@ Distributed best practices
           -it uses protocal buffers as efficiency binary encoding format as compared to json and 
           - http 2.0
     - supports many programming languages
+    So when to use REST vs gRPC ? 
+      Here are use cases for a REST API:
+        Web-based architectures
+        Public-facing APIs for ease of understanding by external users
+        Simple data communications
+      A gRPC API is better for these use cases:
+        High-performance systems
+        High data loads
+        Real-time or streaming applications
+      
 
   Multipart upload when upload file or video
     https://bytebytego.com/courses/system-design-interview/s3-like-object-storage 
@@ -903,18 +915,20 @@ Distributed best practices
   Use GPU for video transcoding 
     Meta uses GPU as ASICs for AI Inference or video transcoding
 
-  Use Snapshot Isolation to handle dirty read, phantom read and is high performant as compared to serializable (pessimistic locking)
+  Use Snapshot Isolation to handle dirty read(even with read commited ), phantom read (non repeatable) and is high performant as compared to serializable (pessimistic locking)
     How snapshot actually works : https://www.youtube.com/watch?v=Tgpa9TrxsfU 
       it just stores all versions of modified rows in WAL and reads from a committed transaction in WAL. So you do not have to worry about someone modify/add the data when you are read (dirty or phantom read) because at transaction x, all rows were in consistent state.
     https://www.geeksforgeeks.org/what-is-snapshot-isolation/
     Dirty read, phantom read
     https://jennyttt.medium.com/dirty-read-non-repeatable-read-and-phantom-read-bd75dd69d03a
     With nice demo - https://techcommunity.microsoft.com/t5/sql-server-blog/serializable-vs-snapshot-isolation-level/ba-p/383281  
-    Cockraoch DB uses snapshot isolation - https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
+    Cockraoch DB uses serializable snapshot isolation by default - https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
     
     Issue with Snapshot Isolation : 
      "write skew anamoly" with this approach https://www.youtube.com/watch?v=eym48yrObhY 
-      it is possible for an SI-based concurrency control to interleave some transactions, where each transaction preserves an integrity constraint when run alone, but where the final state after the interleaved execution does not satisfy the constraint. This occurs when concurrent transactions modify different items that are related by a constraint, and it is called the “Write Skew” anomaly.
+      happens when write in one row affects the contraints of other rows 
+      - example, unique username, atleast one doctor on call, booking meeting rooms based on time 
+      
 
 
   Use CQRS pattern to improve performance
@@ -937,6 +951,16 @@ Distributed best practices
       If there is a delay, this is known as a read-after-write inconsistency.
 
         It’s important to note the consistency only applies to the one performing the write. For example, you may update your profile, but someone else may not see the update for another minute. For most large-scale systems, some amount of delay like this is inevitable, but it’s really important the original writer see their update immediately.
+      
+      So then what are some solutions ? Pg 163 DDIA
+       - always make read from master if its user's own info 
+       - but what if there are many editable fields - maintain the mapping of the info most recently modified and based on that read from leader
+       - have client store timestamp of most recent write
+
+  Monotonic read 
+      Pg 164 DDIA 
+    means user is read the data moving backwards in time. Its possible if one read goes to updated replica and another to outdated replica.
+    This is the reason why always have consistent hashing selection of server based on user id 
 
   Use Parquet column over row format or csv file 
     https://www.upsolver.com/blog/apache-parquet-why-use
@@ -990,7 +1014,39 @@ Distributed best practices
         2. Snapshot isolation / Reapeatable Read: 
           With last committed read, there is still an issue of databasse concurrency issue. If user A has 500$ in account 1 and 2 and transfer 100$ from account 1 to account 2, balance is first updated and committed for account 1 and then on account 2. If before account 2 committed, values are read, then from it may appear that the user have only 900$ (account 1 is now 400$ but account 2 is still 500$).
           This isolation solves this problem by taking the snapshot at particular version (MVCC say using timestamp) and allows reading only from that version. This is used in Oracle 11g and Google Cloud spanner.
-          Issue with snapshot isolation and also read isolation : The read committed and snapshot isolation levels we’ve discussed so far have been primarily about the guarantees of what a read-only transaction can see in the pres‐ ence of concurrent writes. We have mostly ignored the issue of two transactions writing concurrently. The best known of these is the lost update problem, illustrated in Figure 7-1 with the example of two concurrent counter increments.
+
+
+          Issue with snapshot isolation and also read committed isolation : The read committed and snapshot isolation levels we’ve discussed so far have been primarily about the guarantees of what a read-only transaction can see in the pres‐ ence of concurrent writes. We have mostly ignored the issue of two transactions writing concurrently. The best known of these is the lost update problem, illustrated in Figure 7-1 with the example of two concurrent counter increments.
+
+            Concurrent write can cause lost update problem - how to solve it ? 
+              - using atomic writes (locks on DB)
+              - using application locks
+              - using compare-and-set method 
+
+            But what if its a write skew or phantom (where a write in one transaction changes the result of a search query in another transaction, is called a phantom)
+              - use "materialize conflicts" technique by creating rows. Example, creating meeting room time slots records to ensure no two rooms are in one time slot. But this will now work in cases like unique username, you cannot create records of all possible usernames.
+              - Use serializable isolation
+              - To improve performance, you can use Snapshot Serializable solution
+
+            https://efficientcodeblog.wordpress.com/2017/12/25/leaderless-replication-dynamo-style-quorum-consensus-eventual-consistency-high-availability-and-low-latency/ 
+            But what if its distributed -  multileader or leaderless replication ? 
+              - need versioning to resolve conflicts  at DB level or application 
+              - some ways to resolve conflicts at DB level
+                - use read-repair process (resolve conflicts when you read) - DynamoDB
+                - use anti-entropy process (resolve conflicts in background you read) - DynamoDB
+                - use LWW - Cassandra
+            But how to ensure you are consistent values from different DB nodes ? 
+              - Quorum consistency - achieving concensus with R + W > N. Usually N is picked as odd number in DynamoDB
+                    w = r = (n + 1) / 2
+                - Limitations of Quorum consistency 
+                    Higher Latency – Lower Availability
+                    Quorum Consistency can sometimes lead to higher latency and lower availability if proper caution is not taken and there is a network interruption and many replicas become unreachable. This is because, if the number of reachable replicas falls below w or r, the database would become unavailable for writing or reading.
+              - Eventual Consistency
+                From the discussion so far we see that, although quorums appear to guarantee that a read returns the latest written value, in practice it is not so simple. Dynamo-style databases are generally optimized for eventual consistency. The parameters w and r allow us to adjust the probability of stale values being read, but it’s wise to not take them as absolute guarantees.
+                Application - Leaderless replication which can tolerate stale reads and has high availability and low latency
+
+            Lets take a look in details : 
+
             Preventing Lost updates
                 We have mostly ignored the issue of two transactions writing concurrently
                 1. Atomic writes
