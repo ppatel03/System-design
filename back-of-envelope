@@ -1416,6 +1416,14 @@ Distributed systems today and Benchmarking on common systems
 
   SQL DB and benchmarking - Relational
     1. MySQL benchmarking
+          48 cores, single node
+          4 x # of cores ~ 200
+            200 reads ~ 200 us
+            200 writes ~ 1 ms (writes 4x slower)
+          load test
+            10K reads ~ 10 ms 
+            10K writes ~ 50 ms (writes 4x slower)
+
           - Indexed Read
               a. with primary key reads which is already indexed
                 (https://dev.mysql.com/blog-archive/mysql-connection-handling-and-scaling/)
@@ -1423,10 +1431,9 @@ Distributed systems today and Benchmarking on common systems
                 1K requests on 32 will take ~ 1ms for simply select query
           
           - Write
-            7 K writes/s for 48 core http://minervadb.com/wp-content/uploads/2020/10/MySQL-8-Performance-Benchmarking-on-Amazon-EC2.pdf 
+             http://minervadb.com/wp-content/uploads/2020/10/MySQL-8-Performance-Benchmarking-on-Amazon-EC2.pdf 
             impact of write performance on indexing
               4 times slower : https://logicalread.com/impact-of-adding-mysql-indexes-mc12/#.Y__7d-zMLuU 
-              ~1 K writes/s for 48 core
 
           - General benchmarking
             Today, a relational database running on a typical data center node can support a few thousand transactions per second.
@@ -1434,8 +1441,7 @@ Distributed systems today and Benchmarking on common systems
 
           - Max size set by MySQL
             256 TB (https://dev.mysql.com/doc/mysql-reslimits-excerpt/8.0/en/table-size-limit.html#:~:text=You%20are%20using%20a%20MyISAM,2567%20%E2%88%92%201%20bytes)
-            AWS limit : 64 TB
-            According to Amazon Relational Database Service (RDS) [12], you can get a database server with max - 24 TB of RAM.
+            AWS limit : 64 TB storage and 24 TB of RAM
 
           Some facts
           - MySQL client <-> server is socket based connection. Check why ?
@@ -1491,10 +1497,10 @@ Distributed systems today and Benchmarking on common systems
        -  Nice video explaining how concurrency is handle on distributed transactions : https://www.youtube.com/watch?v=iD_Yk5AhNGc 
           1. So atomicity is guaranteed with Raft
             Raft : https://thesecretlivesofdata.com/raft/ 
-              - Raft handles atomic rights and consistent reads
+              - Raft handles atomic writes and consistent reads
               
           How about Isolation 
-          2. Seriazable in distributed databases - how?
+          2. SSI by default in distributed databases - how?
               - MVCC - multiversion concurrency control -  https://youtu.be/iD_Yk5AhNGc?t=1783
                 - uses timestamp as form of versioning but depends on time synchronization which is a challenges in distributed systems. Even with NTP, there is a challenge. 
 
@@ -1504,9 +1510,6 @@ Distributed systems today and Benchmarking on common systems
           - SQL query flexibility
 
         Benchmarking : 
-        AWS
-          https://aws.amazon.com/marketplace/pp/prodview-3zbkzekdohwly  
-          4 vCPU, 150 GB, 1500 IOPS
         Benchmark
         - Single row reads and writes
           https://www.cockroachlabs.com/docs/v22.2/performance.html
@@ -1636,17 +1639,10 @@ Distributed systems today and Benchmarking on common systems
                 1. Data loss or durability challenge : LWW (last write wins) is common issue with multi-leader replication and leaderless databases like Cassandra - Pg 292 DDIA. With Paxos, you can achieve Linearizability but face issue with LWW if clocks are not synchronized.
                 
               Benchmarking
-                - On Cheap heardware https://benchant.com/blog/cassandra-4-performance
-                  m5.large ( 2 core, 8 GB) 
-                  Read : 7 K ops/s
-                  Write : 7 K ops/s
-                  Read Latency : ~10 ms
-                  Write Latency : ~7 ms
-
                 - Expensive hardware https://www.scylladb.com/2021/08/19/cassandra-4-0-vs-cassandra-3-11-comparing-performance/
                   i3.4xlarge (16 vCPUs, 122 GB), 3 node cluster
-                   Read : 30 K ops/s
-                   Write : 20 K ops/s
+                   Read : 100 K ops/s
+                   Write : 100 K ops/s
                    Read Latency : ~10 ms
                    Write Latency : ~10 ms
 
@@ -1667,6 +1663,10 @@ Distributed systems today and Benchmarking on common systems
             So Every global secondary index must have a partition key, and can have an optional sort key. The index key schema can be different from the base table schema. 
 
             DynamoDB splits data across multiple nodes using consistent hashing.
+
+            uses quorum consistency 
+            uses read-repair and anti-entropy
+            supports serializable transactions
 
 
         7. S3
@@ -1850,7 +1850,7 @@ Distributed systems today and Benchmarking on common systems
             3. Aggregation on sharded MySQL needs Application level handling vs Cassandra or HBase(Column) can handle this since they are built on top of distributed systems . Fact and derived above
             4. How MySQL indexing works ? answered above
             5. Cassandra benchmarking ? answered above
-            7. Time taken from master to slave - MySQL, MongoDB ? MySQL ( 200 ms aws)
+            7. Time taken from master to slave - MySQL, MongoDB ? MySQL ( 100 ms aws)
             9. Refer NTP ? answered above
             8. MongoDB benchmarking ?
             6. Study about graphdbs ? 
