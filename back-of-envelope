@@ -1914,6 +1914,9 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
       A load balancer can never be API gateway or reverse proxy.
       
      Always choose Nginx ? Why ?
+      It is powerful due to non-blocking worker threads
+        - Nginx does not create one thread/process per request/connection and wait for response from server or next request from client. Instead it has fixed worker threads which can listen to multiple clients or server responses at a time whichever is ready https://www.nginx.com/blog/inside-nginx-how-we-designed-for-performance-scale/ 
+
        Has triats of load balancing + reverse proxy + API gateway
          - supports load balancing
          - supports request forwarding based on different paths like api gateway
@@ -1924,6 +1927,12 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
          - supports secure auth SSL. Also does optimizations with keep alive connection and cache to avoid SSL handshake - https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/ 
          Also a good read https://www.nginx.com/blog/http-keepalives-and-web-performance/
        Nginx supports L7
+
+       Why Load balancer + API gateway should be consolidated with  Nginx 
+         https://www.nginx.com/blog/consolidating-your-api-gateway-and-load-balancer-with-nginx/
+        1 million QPS, 65K SSL TPS, 70 Gbps throughput 
+        Netflix, Hulu, Airbnb, Pinterest
+
 
     
 ================================================================
