@@ -9,6 +9,30 @@ https://matthewdbill.medium.com/back-of-envelope-calculations-cheat-sheet-d6758d
 
 https://docs.google.com/document/d/1wUCqhVHydWiDk6FJdFLSMpgigNrGcs4OFZg0Wa7JGEw/edit
 
+Framework - 
+  1. List all Functional requirements and assumptions
+    a. types of users 
+    b. are users already auth
+  2. Estimate QPS 
+    a. Estimate Read vs Write QPS
+    a. Estimate bandwidth for read and write QPS
+  3. Estimate Total Storage bytes
+    b. tell why you are estimating. Just a high level conclusion if you need DB sharding which depends on size and bandwidth. 
+  4. Non-Functional Requirements
+    a. Reliability Standards
+      a.1 - Availability vs Consistency 
+          - Availability %
+          - Eventual Consistency (most of the times)
+            - Data freshness SLA if eventual consistency 
+      a.2. Latency 
+      a.3. Fault tolerant + Durability + Resilency
+  5. Metrics monitoring & Alerting for oncall using datadog
+    a. Business success 
+    b. Engagement metrics
+    c. Reliability metrics 
+  6. Best practices if possible in deployment & scaling 
+    a. Stateless services
+     
 
 High level Tips on any product design :
 - Ask detailed functional requirements 
