@@ -15,7 +15,7 @@ Framework -
     b. are users already auth
   2. Estimate QPS 
     a. Estimate Read vs Write QPS
-    a. Estimate bandwidth for read and write QPS
+    b. Estimate bandwidth for read and write QPS
   3. Estimate Total Storage bytes
     b. tell why you are estimating. Just a high level conclusion if you need DB sharding which depends on size and bandwidth. 
   4. Non-Functional Requirements
@@ -33,30 +33,27 @@ Framework -
   6. Best practices if possible in deployment & scaling 
     a. Stateless services
      
+Lets take a look into details : 
 
-High level Tips on any product design :
-- Ask detailed functional requirements 
-    Why ? 
-      - first since it helps with API design (example, ability to post tweet, view tweet)
-- Ask types of users (admin, general) 
-    Why ? 
-      - since it helps with data access patterns and security checks (admin can edit personal info/block users )
-- Ask about interaction points - API, UI 
-    Why ? 
-      - since it helps you think end to end from UX perspective 
-- Ask about devices - Mobile or WEB 
-    (though need reasoning why you asked this question :) . 
-      1. mobile could be low bandwidth network ~ 100 Mbps or 10 MBps) - https://www.quora.com/From-what-maximum-speed-can-a-smartphone-download-or-upload-some-data
-- Ask DAU. If MAU is provided, atleast ask % of concurrent users. 
-- Ask user activity : example read vs write ratio, or number of writes (example, 2 tweets per day)
+1. List all Functional requirements and assumptions
+    - Ask detailed functional requirements 
+        Why ? 
+          - first since it helps with API design (example, ability to post tweet, view tweet)
+    - Ask types of users (admin, general) 
+        Why ? 
+          - since it helps with data access patterns and security checks (admin can edit personal info/block users )
+    - Ask about interaction points - API, UI 
+        Why ? 
+          - since it helps you think end to end from UX perspective 
+    - Ask about devices - Mobile or WEB 
+        (though need reasoning why you asked this question :) . 
+          1. mobile could be low bandwidth network ~ 100 Mbps or 10 MBps) - https://www.quora.com/From-what-maximum-speed-can-a-smartphone-download-or-upload-some-data
+    - Ask if its okay to assume user is authenticated
 
-- Ask non-functional requirements  (These are very important and can convert entire inteview design in your favor.)
+Time to understand scalability, latency aspects
 
-  Usually Latency and Scale are most important 
-
-   Example if latency is 1s and data transfer is less than 100MB, then you do not need complex caching architecture (1 Gbps which is 100 MBps is the max bandwidth today)
-
-  So ask with this format  
+2. Estimate QPS 
+  a. Estimate Read vs Write QPS
     1. Ask about # of users - DAU/MAU
         QPS estimate
           - Read : Write ratio
@@ -66,120 +63,85 @@ High level Tips on any product design :
           - 1 week ~ 7 * 10 ^ 5s and further ~ 10 ^ 6s
           - 1 year ~ 365 * 10 ^ 5s and further ~ 10 ^ 8s
           For sake of time constraints, do not hesitate to round off large amount
-    2. Now discuss about Reliability standards / SLA
-        1. Now best thing to ask about : Availability over Consistency with some reasoning why ? example, high consistency means always show updated data 
-          - get availability nos
-          - consistency levels (low, medium, high)
-        2. Latency 
-        If time permits
-        3. Accuracy (low, medium, high) since its hard to determine
-        Fault tolerant measures
-        4. Durability (no data loss) can be measure in % - eg., 99.9999% for S3
-        5. Resiliency (measures MTTR - mean time to repair)
-        Auth
-        6. Security (low, medium, high) (eg., assumed auth users, VPC)
-    3. Scalability (always assume high scalability)
-    
-    Lets look in detail : 
-    https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ 
-   
-    1. Reliability (Superset of latency -> availability -> consistency -> fault tolerance -> resiliency -> durability) 
-          https://www.pagerduty.com/resources/learn/reliability/ 
+
+  b. Estimate bandwidth for read and write QPS 
+      say 1 KB for 100K QPS ~ 100 MBps
+      - can help reason your latency
+      - can help reason your replication or multiple servers
+      - can help reason your sharding for database (remember internal data center max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html 
+
+3. Estimate Total Storage bytes (a year, 10 years)
+    a. tell why you are estimating. Just a high level conclusion if you need DB sharding which depends on size and bandwidth. 
+      - a year, 10 years 
+    example, to help decide if sharding is need or master-replica model. Example more than 64 TB of storage definitely needs sharding (most AWS DBs or even cache like Redis has max 64 - 128 TB of storage https://aws.amazon.com/about-aws/whats-new/2020/09/amazon-aurora-increases-maximum-storage-size-128tb/ )
+
+4. Non-Functional Requirements (https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ )
+
+    a. Reliability Standards
+      https://www.pagerduty.com/resources/learn/reliability/ 
           Reliability, on the other hand, is a measure of the probability that the system will meet defined performance standards in performing its intended function during a specified interval.  Example of not meeting reliability stands is Twitter was hacked in 2019.
           means you need to meet certain standards. 
-          Example - latency, consistency, accuracy, durability -  error rate, faults, resiliency (self correct)
 
-            Ask specific questions here rather than - ":((sad) how reliable you need the system to be :((sad)" 
-              - availability over consistency ? 
-              - if high availability, then ask availability nos example, 99.999 or 3 9s
-              - if consistency over availability, it means high consitency.
-              - if low - medium consistency, you can ask specific questions
-              - then, data freshness (example, building search engine or yelp)
-                  With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
-              - then, durability - error rate or data loss
-              - with this in mind, it provides as good reasoning about latency 
+      a.1 - Availability vs Consistency 
+        If high availability, then ask availability nos example, 99.999 or 3 9s
+          - Availability %
+            - https://www.pagerduty.com/resources/learn/reliability/ 
+                Availability is a measure of the percentage of time that an IT service or component is in an operable state. Example of not meeting availability is Facebook was down in 2021 for about 3-5 hrs.
+                this would help decide the redundancy and reliability - example mostly 99.99% a day means you can compromise 10s (10 ^ 5 * 10 ^ -4).
+                of unavailability (its different from being unrelible). 
+                With this you can even decide that, your system/part of the sytem could be offline for 10s in a day for reasons like roll out, stateful servers scaling, upgrading the database or even doing DB sync etc. 
+                4 9s -> 10s
+                5 9s -> 1 s
+                6 9s -> 100 ms or less than 1s
+                8 9s -> 1 ms or very high (no downtime)
+                > 6 ps -> in us or super high (no downtime else SLA violated)
+            - if high availability, then ask availability nos example, 99.99 or 4 9s
 
-            -- Latency 
-              this would help decide whether you really need low latency optimizations like cache, or not. 
-              Remember today mosts have 1 Gbps network which has 10 us to transfer 1 KB
+          - Consistency 
+            - if Consistency over availability, it means high consitency.
+            - Eventual Consistency (most of the times)
+              - Data freshness SLA if eventual consistency 
+                - With this in mind, it provides as good reasoning about latency 
+                - Example, building search engine or yelp. With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
+            Strong or Eventual consistency ? How does it help ? 
+            - can help reason for low latency 
+            - can help reason for low replication
+            - can help reason for MySQL if combined with ACID
+                  
+      a.2. Latency 
+        - this would help decide whether you really need low latency optimizations like cache, or not. Remember today mosts have 1 Gbps network which has 10 us to transfer 1 KB
 
-            -- Availability
-              https://www.pagerduty.com/resources/learn/reliability/ 
-              Availability is a measure of the percentage of time that an IT service or component is in an operable state. Example of not meeting availability is Facebook was down in 2021 for about 3-5 hrs.
-              this would help decide the redundancy and reliability - example mostly 99.99% a day means you can compromise 10s (10 ^ 5 * 10 ^ -4).
-              of unavailability (its different from being unrelible). 
-              With this you can even decide that, your system/part of the sytem could be offline for 10s in a day for reasons like roll out, stateful servers scaling, upgrading the database or even doing DB sync etc. 
-              4 9s -> 10s
-              5 9s -> 1 s
-              6 9s -> 100 ms or less than 1s
-              8 9s -> 1 ms or very high (no downtime)
-              > 6 ps -> in us or super high (no downtime else SLA violated)
-
-            -- Resiliency
+      a.3. Fault tolerant + Durability + Resilency
+        - Fault tolerance
+        - Durability 
+            - can help reason how much to replicate. 
+                Example, say 99.999999% (six 9's) durability can be achieved assuming failure rate of one server is  0.01% (say 99.99% guarantee for ec2 on aws). This means you need 2 servers atleast which means 1 replica 
+                  0.0001 ^ 2    = 0.0000001    or  10 ^ -8
+                  1 - 0.0000001 = 0.9999999 or  8 9s  
+                  % * 100       = 99.999999%      or  6 9s 
+            - can help to reason out if you need checksum for data integrity
+            - can help to reason out if you need commit log (WAL) like Cassandra
+        - Resiliency
                 https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ 
                 Resiliency describes the ability of a storage system to self-heal, recover, and continue operating after encountering failure, outage, security incidents, etc. High resiliency doesn’t mean there is high data availability. It just means that the storage infrastructure is equipped enough to overcome disruptions.
-                One indication of resiliency is measuring mean time to repair (MTTR), which captures how long it takes to get the storage infrastructure up and running after a failure. Lower the MTTR, better the resiliency.
+                One indication of resiliency is measuring mean time to repair (MTTR), which captures how long it takes to get the storage infrastructure up and running after a failure. Lower the MTTR, better the resiliency. 
+    
 
-    2. Scalability
-          means ability to scale the system with traffic/data increase. 
-            Needs understand of these factors in order of importance : 
-                # of users, latency (covers consistency compromises), data size, error rate  and last resort called "cost".
-            Tips : 
-            - try to add stateless servers if possible
-            - stateful server only for few use cases like socket connections. Make sure you know how to deal with scalability for socket connections.
+  5. Metrics monitoring & Alerting for oncall using datadog
+    a. Business success 
+    b. Engagement metrics
+    c. Reliability metrics 
+
+  6. Best practices if possible in deployment & scaling 
+    a. Stateless services
+      - try to add stateless servers if possible
+      - stateful server only for few use cases like socket connections. Make sure you know how to deal with scalability for socket connections.
+  
     
 System design thinking framework
   https://www.youtube.com/watch?v=i7twT3x5yv8 
 
-
-So How to use non-functional requirements in decison making
    
-
-  Bandwidth (assume to be 1 Gbps ~ 100 MBps which means 1 KB = 10us) 
-    - can help reason your latency
-    - can help reason your replication or multiple servers
-    - can help reason your sharding for database (remember internal data center max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html 
-
-  Durability  ( avoid data corruption/loss which means ensuring data correctness with techniques like checksum, parity)
-    - can help reason how much to replicate. 
-        Example, say 99.999999% (six 9's) durability can be achieved assuming failure rate of one server is  0.01% (say 99.99% guarantee for ec2 on aws). This means you need 2 servers atleast which means 1 replica 
-          0.0001 ^ 2    = 0.0000001    or  10 ^ -8
-          1 - 0.0000001 = 0.9999999 or  8 9s  
-          % * 100       = 99.999999%      or  6 9s 
-    - can help to reason out if you need checksum for data integrity
-    - can help to reason out if you need commit log (WAL) like Cassandra
-
-  Availability
-    - can help reason how much to replicate. See above since minimum availability aws server can offer is 99.9% (https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html). This means you need extra servers if more than one 9.
-    with 1 aws server : 99.9%
-    with 2 aws server : 99.9999%
-          0.001 ^ 2    = 0.000001         or  10 ^ -6
-          1 - 0.000001 = 0.999999         or  6 9s  
-          % * 100       = 99.9999%        or  4 9s 
-    - can help reason for latency
-        more availability -> more bandwidth split -> less latency 
-
-  Consistency
-    - can help reason for low latency 
-    - can help reason for low replication
-    - can help reason for MySQL if combined with ACID
-
-
-Back of envelope questions : 
-  1. calculate qps first (round this number).  
-      Why ? 
-        - help in estimating bandwidth and reasons out the need for distributed system
-        - helps in estimating storage requirements
-  2. if latency requirement is present, calculate api payload rough estimate say 1 KB for 100K QPS ~ 100 MBps
-      Why ? 
-        - helps in estimating # of servers needed from bandwidth
-  3. calculate storage estimate 
-      Why ? 
-     - to help decide if sharding is need or master-replica model. Example more than 64 TB of storage definitely needs sharding (most AWS DBs or even cache like Redis has max 64 - 128 TB of storage https://aws.amazon.com/about-aws/whats-new/2020/09/amazon-aurora-increases-maximum-storage-size-128tb/ )
-
-
-
-
 
 Distributed Systems estimate
 
