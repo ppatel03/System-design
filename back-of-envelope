@@ -1221,12 +1221,14 @@ Distributed systems today and Benchmarking on common systems
 
     Zookeeper 
     https://www.youtube.com/watch?v=gZj16chk0Ss&t=413s&ab_channel=ddddd
-    - What it does it works ?
+    - What it does  ?
       - which node is the master ? (leader election)
       - what tasks are assigned to which workers ? (distributed store)
       - which workers are available currently ? (service discovery)
 
+    - How does it work ? 
       - it is push-based so that workers gets notified
+
       https://bytebytego.com/courses/system-design-interview/distributed-message-queue
        If you are not familiar with it, Zookeeper is an essential service for distributed systems offering a hierarchical key-value store. It is commonly used to provide a distributed configuration service, synchronization service, and naming registry [2]. 
      - centralized configuration, key value store for state and also co-ordination service like selecting leader/master
