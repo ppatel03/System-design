@@ -1227,7 +1227,7 @@ Distributed systems today and Benchmarking on common systems
       - which workers are available currently ? (service discovery)
 
     - How does it work ? 
-      - it is push-based so that workers gets notified
+      - it is push-based so that workers gets notified of any changes
 
       https://bytebytego.com/courses/system-design-interview/distributed-message-queue
        If you are not familiar with it, Zookeeper is an essential service for distributed systems offering a hierarchical key-value store. It is commonly used to provide a distributed configuration service, synchronization service, and naming registry [2]. 
