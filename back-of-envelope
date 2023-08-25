@@ -1307,6 +1307,7 @@ Distributed systems today and Benchmarking on common systems
         Persistency: It does not support data persistency, it is an in-memory data store.
         Consumer Capability: It can handle both, one-to-one and one-to-many consumers.
         Push based system : smart broker, dumb consumer
+      Redis pub sub needs scaling support with external party like Zookeeper. Refer this awesome video - https://www.youtube.com/watch?v=6G22a5Iooqk&ab_channel=Redis
       
 
 
