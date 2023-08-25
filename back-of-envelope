@@ -27,7 +27,7 @@ Framework -
       a.2. Latency 
       a.3. Fault tolerant + Durability + Resilency
       a.4. Accuracy 
-      a.5. Security : Auth, VPC, Data encryption
+      a.5. Security : Auth, VPC, Data encryption if personal data 
   5. Metrics monitoring & Alerting for oncall using datadog
     a. Business success 
     b. Engagement metrics
