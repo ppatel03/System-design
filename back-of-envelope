@@ -20,7 +20,7 @@ Framework -
     b. tell why you are estimating. Just a high level conclusion if you need DB sharding which depends on size and bandwidth. 
   4. Non-Functional Requirements
     a. Reliability Standards
-      a.1 - Availability vs Consistency 
+      a.1 - Availability vs Consistency based on CAP (since consistency has different context for ACID, )
           - Availability %
           - Eventual Consistency (most of the times)
             - Data freshness SLA if eventual consistency 
