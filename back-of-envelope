@@ -313,6 +313,7 @@ Distributed best practices
       Even when new node is lagging behind or came live, leader in raft sends replication log along with the heartbeat to keep it consistent http://thesecretlivesofdata.com/raft/#replication 
         What is replication log
           https://help.serena.com/doc_center/cm/ver14_2_0_1/admin_console/adminhelp/ddevg_replication_logs/what_is_a_replication_log.htm
+      Raft is used in Kafka, etcd
 
 
   Failure handling algo
