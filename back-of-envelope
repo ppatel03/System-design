@@ -1380,6 +1380,19 @@ Distributed systems today and Benchmarking on common systems
       Block storage vs object storage
         https://aws.amazon.com/what-is/block-storage/ 
         Both storage solutions are beneficial depending on the use case. Block storage provides low latency and high-performance values in various use cases. Its features are primarily useful for structured database storage, VM file system volumes, and high volumes of read and write loads. Object storage is best used for large amounts of unstructured data, especially when durability, unlimited storage, scalability, and complex metadata management are relevant factors for overall performance.
+
+
+        https://www.cloudflare.com/learning/cloud/object-storage-vs-block-storage/#:~:text=Block%20storage%20is%20fast%2C%20and,content%2C%20webpages%2C%20and%20emails. 
+        Capability	                  Block storage	                                                    Object storage
+        Storage capacity	            Limited	                                                            Nearly unlimited
+        Storage method	              Data stored in blocks of fixed size, reassembled on demand	        Unstructured data in non-hierarchical data lake
+        Metadata	                    Limited	                                                            Unlimited and customizable
+        Data retrieval method	        Data lookup table	                                                  Customizable
+        Performance	                  Fast, especially for small files	                                  Depends, but works well with large files
+        Cost	                        Depends on vendor, usually more expensive	                          Depends on vendor, usually less expensive 
+                                                                                                          (aside from egress fees)
+
+
       
 
   Cache benchmarking
