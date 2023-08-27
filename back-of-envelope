@@ -650,6 +650,7 @@ Distributed best practices
   Process delayed events 
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
     One way to mitigate this problem is to use “watermark” (the extended rectangles in Figure 14), which is regarded as an extension of an aggregation window. This improves the accuracy of the aggregation result. By extending an extra 15-second (adjustable) aggregation window, window 1 is able to include event 2, and window 3 is able to include event 5.
+    Remember, this is timestamp based - so it avoids overlap between two windows. Example, window 1 is to accept data which has timestamp from 0 to 10s and window 2 is for 10s to 20s. But packets in window 1 coould be delayed, so wait for extra 2 seconds.
 
   Aggregation window
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
