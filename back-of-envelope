@@ -729,6 +729,7 @@ Distributed best practices
 
   gRPC
     For production systems, inter-service communication often employs a modern and high-performance remote procedure call (RPC) framework like gPRC. There are many benefits to using such frameworks. To learn more about gPRC in particular, check out [3].
+    NOT recommended for browser -> server communication
 
   Avoid Risk of double booking in transaction systems like hotel rooms, payment systems
     There are two common approaches to solve this problem:
@@ -920,6 +921,7 @@ Distributed best practices
         High-performance systems
         High data loads
         Real-time or streaming applications
+        gRPC is NOT recommended for browser -> server communication due to limited support
       
 
   Multipart upload when upload file or video
