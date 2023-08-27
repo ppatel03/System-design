@@ -1351,12 +1351,16 @@ Distributed systems today and Benchmarking on common systems
 
 
     Block storage vs File Storage vs Object storage
-      https://bytebytego.com/courses/system-design-interview/s3-like-object-storage 
+      https://aws.amazon.com/what-is/block-storage/
       Block storage
         Common storage devices like hard disk drives (HDD) and solid-state drives (SSD) that are physically attached to servers are all considered as block storage. Files are split into evenly size blocks of data with each block having its own address. Block storage presents the raw blocks to the server as a volume. This is the most flexible and versatile form of storage. The server can format the raw blocks and use them as a file system, or it can hand control of those blocks to an application.
         - can mount VM to this using iSCSI protocol
         - used in operational systems and databases
         - As per geeksforgeeks, this storage is not accessible via the internet and only for attaching to VMs (https://www.geeksforgeeks.org/difference-between-aws-s3-and-aws-ebs/)
+        - Metadata(location of each block in the file, name,etc) is limited in block storage which makes it faster
+        Granular control
+          Developers gain a high degree of control over storing data on block storage. For example, they can optimize performance by grouping fast-changing data on specific blocks and storing static files on others. This improves system performance as ongoing updates only affect a small number of data blocks instead of an entire file. For example, block storage gives you the flexibility to tier fast-changing data on solid state disk (SSD) for the highest performance, and store warm or cold data on lower cost hard drives (HDD).
+          By contrast, file storage has an extra layer consisting of a file system (NFS, SMB) to process before accessing the data.
 
       File storage
         - built on top of block storage. It provides a higher-level abstraction to make it easier to handle files and directories. Data is stored as files under a hierarchical directory structure. 
@@ -1365,12 +1369,17 @@ Distributed systems today and Benchmarking on common systems
         - used in big data applications, which demand significant node throughput, low-latency file access, and read-after-write operations.
 
       Object storage 
+        https://bytebytego.com/courses/system-design-interview/s3-like-object-storage 
         - low cost, vast scalability and supports binary+unstructured data as compared to block and file. It is low performant though.
         - Object storage stores all data as objects in a flat structure. There is no hierarchical directory structure. Data access is normally provided via a RESTful API.
         - Data lake and big data analytics, Backup and restoration, Reliable disaster recovery and Methodical archiving using S# Glacier
 
       AWS EBS vs EFS vs S3 : https://www.missioncloud.com/blog/resource-amazon-ebs-vs-efs-vs-s3-picking-the-best-aws-storage-option-for-your-business
       EBS vs S3 video - https://www.youtube.com/watch?v=r8bVw0iVvGk 
+
+      Block storage vs object storage
+        https://aws.amazon.com/what-is/block-storage/ 
+        Both storage solutions are beneficial depending on the use case. Block storage provides low latency and high-performance values in various use cases. Its features are primarily useful for structured database storage, VM file system volumes, and high volumes of read and write loads. Object storage is best used for large amounts of unstructured data, especially when durability, unlimited storage, scalability, and complex metadata management are relevant factors for overall performance.
       
 
   Cache benchmarking
