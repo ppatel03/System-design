@@ -110,6 +110,11 @@ Time to understand scalability, latency aspects
             - can help reason for low latency 
             - can help reason for quorum concensus
             - can help reason for MySQL if combined with ACID
+
+            Tips to ensure consistency 
+            - To maintain data consistency between internal services, ensuring exactly-once processing is very important.
+            - To maintain data consistency between the internal service and external service (PSP), we usually rely on idempotency and reconciliation.
+            - For replicas, ensure acknowledge only if all replicas respond to read/write update.
                   
       a.2. Latency 
         - this would help decide whether you really need low latency optimizations like cache, or not. Remember today mosts have 1 Gbps network which has 10 us to transfer 1 KB
@@ -2231,11 +2236,7 @@ Quick read : https://github.com/Jeevan-kumar-Raj/Grokking-System-Design
 
     In a push model, a collection agent is commonly installed on every server being monitored. Aggregation is an effective way to reduce the volume of data sent to the metrics collector. If the push traffic is high and the metrics collector rejects the push with an error, the agent could keep a small buffer of data locally (possibly by storing them locally on disk), and resend them later.
     If a server goes down or cannot handle burst traffic, then you loose the message.
-
-  Tips to ensure consistency 
-    - To maintain data consistency between internal services, ensuring exactly-once processing is very important.
-    - To maintain data consistency between the internal service and external service (PSP), we usually rely on idempotency and reconciliation.
-    - For replicas, ensure acknowledge only if all replicas respond to read/write update. 
+ 
 
     
    
