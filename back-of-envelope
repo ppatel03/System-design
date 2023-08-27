@@ -278,6 +278,17 @@ Distributed Systems estimate
 
 
 Distributed best practices
+  Top 7 distributed design patterns 
+    https://www.youtube.com/watch?v=nH4qjmP2KEE&t=12s&ab_channel=ByteByteGo
+    Ambassador
+      - proxy to handle logging, monitoring, handling retries
+    Circuit Breaker 
+    CQRS
+    Event Sourcing 
+    Leader Election 
+    Pub/Sub
+    Strangler
+    Sharding
 
   Smallest short length required ( say for tiny url )
     The hashValue consists of characters from [0-9, a-z, A-Z], containing 10 + 26 + 26 = 62 possible characters. To figure out the length of hashValue, find the smallest n such that 62^n ≥ 365 billion. 
