@@ -281,13 +281,15 @@ Distributed best practices
   Top 7 distributed design patterns 
     https://www.youtube.com/watch?v=nH4qjmP2KEE&t=12s&ab_channel=ByteByteGo
     Ambassador
-      - proxy to handle logging, monitoring, handling retries
+      - proxy to offload work like handle logging, monitoring, handling retries
+      - example, kubernetes uses envoy proxy to simply communication between services
     Circuit Breaker 
     CQRS
     Event Sourcing 
     Leader Election 
     Pub/Sub
     Strangler
+      - helps in migration esp. monolithic to microservice. It has Strangler Facade which takes the decision whethere this API call should be made to monolithic or microservice. 
     Sharding
 
   Smallest short length required ( say for tiny url )
