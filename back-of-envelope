@@ -1008,7 +1008,7 @@ Distributed best practices
         Atomicity : (overloaded and different from atomic operations in multithreaded programming), here it just means abortability if anything fails
         Consistency : (overloaded due to replica consistency, consistent hashing and in CAP theorem), here it just means invariants in your database must hold true. Example, credits and debits must be balanced. Your application should control this but at times even database can help by integrity constraints (db constraints in hotel reservation system - https://bytebytego.com/courses/system-design-interview/hotel-reservation-system). The letter C does not belong in ACID since its upto the application to handle C
         Isolation : means that concurrently executing transaction are isolated from each other. In textbooks, isolation is formalized as "serializability" which ensures that when all transactions have committed, the result is same as if they all ran serially(one after another) even though they may have run concurrently causing race condition. Oracle 11g offers weak isolation level called Snapshot Isolation
-        Durability : committed transactions are never lost despite of failures like disk, network, outage,etc.
+        Durability : committed transactions are never lost despite of failures like disk, network, outage,etc. Solved using WAL. 
 
         Isolation level pg 234 DDIA
         1. Read committed : can solve the problem of dirty reads and dirty writes. It can be implemented with row level locking.
@@ -1126,6 +1126,7 @@ Distributed best practices
       Consider one attribute at a time and try to maximize or minimize it (as per the requirement) to generate optimized score.
       Introduce weights to each attributes to get optimized weighted scores.
       Combine the weighted scores (of each attribute) to create a final score for an entity (here car).
+      reverse - just use weight * (1 - column %)
 
   Use Virtual Cluster map for placement service (placement service will help to indentify where to place the job or upload the file)
     https://bytebytego.com/courses/system-design-interview/s3-like-object-storage
