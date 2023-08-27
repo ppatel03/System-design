@@ -25,7 +25,7 @@ Framework -
           - Eventual Consistency (most of the times)
             - Data freshness SLA if eventual consistency 
       a.2. Latency 
-      a.3. Fault tolerant + Durability + Resilency
+      a.3. Fault tolerant + Durability (Use pull) + Resilency 
       a.4. Accuracy 
       a.5. Security : Auth, VPC, Data encryption if personal data 
   5. Metrics monitoring & Alerting for oncall using datadog
@@ -122,9 +122,11 @@ Time to understand scalability, latency aspects
                   0.0001 ^ 2    = 0.0000001    or  10 ^ -8
                   1 - 0.0000001 = 0.9999999 or  8 9s  
                   % * 100       = 99.999999%      or  6 9s 
+            - can help to reason using pull architectures
             - can help to reason out if you need erase for data recovery
             - can help to reason out if you need checksum for data integrity
             - can help to reason out if you need commit log (WAL) like Postgresql, MySQL and even Cassandra
+
         - Resiliency
                 https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ 
                 Resiliency describes the ability of a storage system to self-heal, recover, and continue operating after encountering failure, outage, security incidents, etc. High resiliency doesn’t mean there is high data availability. It just means that the storage infrastructure is equipped enough to overcome disruptions.
@@ -741,7 +743,8 @@ Distributed best practices
     - CD is hard for database backend clusters or websocket cluster. So deployment process is manual here and needs dedicated platform team
       - CD process : code -> build -> test -> acceptance -> deploy in production
       - CD tools : github actions, jenkins, argoCD for kubernetes 
-    How many companies perform modern CI/CD today ? 
+
+    How  companies perform modern CI/CD today ? 
           https://levelup.gitconnected.com/gitops-ci-cd-using-github-actions-and-argocd-on-kubernetes-909d85d37746 
       CI : build -> test -> commit -> push image to ECR and update image reference(version) in Helm chart
           - with help of github actions, it can build and run tests on the PR. Once commit is merged, it pushes the image in the respository
