@@ -1379,7 +1379,7 @@ Distributed systems today and Benchmarking on common systems
         Sorted set is used in Rate limiter sliding window design which fetches based on timestamp range and avoids race conditions. 
         Redis cluster also supports sharding with hash slot ( different from consistent hashing)
         Redis cluster uses master-replica model
-        Redis Cluster does not guarantee strong consistency
+        Redis Cluster does not guarantee strong consistency in terms of CAP. But has strict isolation level - seriazable
         Max Size of each redis instance from AWS : 500 GB https://aws.amazon.com/elasticache/pricing/?nc=sn&loc=4 
         Sorted Set - https://redis.io/docs/data-types/sorted-sets/
         How redis works 
@@ -1401,10 +1401,6 @@ Distributed systems today and Benchmarking on common systems
           https://cloud.google.com/cdn/pricing 
           - remember CDN charges for egress (0.02$ per GiB), cache fill (same charge - 0.01$ per GiB) and 0.0075 per 10K req
 
-          https://bytebytego.com/courses/system-design-interview/design-youtube 
-          Let us use Amazon’s CDN CloudFront for cost estimation (Figure 2) [3]. Assume 100% of traffic is served from the United States. The average cost per GB is $0.02. For simplicity, we only calculate the cost of video streaming.
-
-          5 million * 5 videos * 0.3GB * 0.02 = 150,000 per day.
 
       Memcache Vs Redis
         https://www.baeldung.com/memcached-vs-redis#:~:text=Architecture,can%20perform%20better%20than%20Redis. 
