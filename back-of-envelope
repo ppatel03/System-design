@@ -105,9 +105,10 @@ Time to understand scalability, latency aspects
               - Data freshness SLA if eventual consistency 
                 - With this in mind, it provides as good reasoning about latency 
                 - Example, building search engine or yelp. With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
+            - Latency + quorum to replica if high consistency 
             Strong or Eventual consistency ? How does it help ? 
             - can help reason for low latency 
-            - can help reason for low replication
+            - can help reason for quorum concensus
             - can help reason for MySQL if combined with ACID
                   
       a.2. Latency 
@@ -121,8 +122,9 @@ Time to understand scalability, latency aspects
                   0.0001 ^ 2    = 0.0000001    or  10 ^ -8
                   1 - 0.0000001 = 0.9999999 or  8 9s  
                   % * 100       = 99.999999%      or  6 9s 
+            - can help to reason out if you need erase for data recovery
             - can help to reason out if you need checksum for data integrity
-            - can help to reason out if you need commit log (WAL) like Cassandra
+            - can help to reason out if you need commit log (WAL) like Postgresql, MySQL and even Cassandra
         - Resiliency
                 https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ 
                 Resiliency describes the ability of a storage system to self-heal, recover, and continue operating after encountering failure, outage, security incidents, etc. High resiliency doesn’t mean there is high data availability. It just means that the storage infrastructure is equipped enough to overcome disruptions.
@@ -184,7 +186,7 @@ Distributed Systems estimate
       https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html
     Hard disk random seeks 
       https://bytebytego.com/courses/system-design-interview/s3-like-object-storage
-      100 ~ 150 IOPS
+      100 ~ 150 IOPS (per disk seeks ~ 10ms)
 
     AWS availability ~ 99.9% https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html
     AWS A100 GPU Lambda ~ 1$ per hour https://lambdalabs.com/service/gpu-cloud 
@@ -223,7 +225,7 @@ Distributed Systems estimate
     HW cache : 
       L1 > L2 > L3
       Virtual memory - 
-        maps program address to RAM _ disk address  https://www.youtube.com/watch?v=qlH4-oHnBb8
+        maps program address to RAM + disk address  https://www.youtube.com/watch?v=qlH4-oHnBb8
         is equal to RAM + Disk size
       TLB cache for mapping above -  virtual to physical memory address
       OS level 
@@ -252,7 +254,7 @@ Distributed Systems estimate
       Full text search
         Elastic search - does reverse indexing which indexes texts to doc id
       Database cache
-        WAL : data is first written to WAL before being indexed in B tree
+        WAL/binlog : data is first written to WAL before being indexed in B tree. Retention is 30 days for MySQL
         Buffer pool : cache query results
         Materialized views : precompute query results
         replication log : tracks replication state (MySQL uses binlog as its replication log)
@@ -299,6 +301,9 @@ Distributed best practices
 
         Until now we saw that vector clocks can easily detect conflicts. But what happens after detecting one ? The first solution delegates the conflict resolution to the client. The client application receives all conflicted values and it decides how to deal with them (merge, discard, etc.). Another approach is server-based. One of its implementations can be last-write-wins strategy where the most recent value is returned to the client. It's only a short introduction to available solutions that will probably be detailed more in further posts.
 
+        Cassandra use LWW 
+        Dynamo uses Read-Repair (resolve conflicts during read) and anit-entropy
+
   Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems
     - Raft (description below) using used for master-replica model does both detect failures and resolve conflicts
@@ -313,7 +318,7 @@ Distributed best practices
       Even when new node is lagging behind or came live, leader in raft sends replication log along with the heartbeat to keep it consistent http://thesecretlivesofdata.com/raft/#replication 
         What is replication log
           https://help.serena.com/doc_center/cm/ver14_2_0_1/admin_console/adminhelp/ddevg_replication_logs/what_is_a_replication_log.htm
-      Raft is used in Kafka, etcd
+      Raft is used in Kafka, etcd, CockroachDB
 
 
   Failure handling algo
@@ -338,12 +343,15 @@ Distributed best practices
     https://blog.mailfence.com/symmetric-vs-asymmetric-encryption/ 
     RSA, DSA, Diffie-Hellman - key exchange is asymmetric
     AES, DES - is symmetric
+    Hash
     SHA-1 is hash function and not encryption one
     SHA-256 is more secure https://www.keycdn.com/support/sha1-vs-sha256 
+    BCrypt / Scrypt (slow hashes than SHA-256 but more secure)
 
   Eliminate disk access
     Disk accesses can be eliminated using mmap. `mmap(2)` provides a mechanism for high-performance sharing of memory between processes. 
     Modern exchanges take advantage of this to eliminate as much disk access from the critical path as possible. `mmap(2)` is used in the server to implement a message bus over which the components on the critical path communicate. The communication pathway has no network or disk access, and sending a message on this mmap message bus takes sub-microsecond. By leveraging mmap to build an event store, coupled with the event sourcing design paradigm which we will discuss next, modern exchanges can build low-latency microservices inside a server.
+
     It basically just tells the OS to put your requested file in main memory shared by multiple process - https://db.cs.cmu.edu/mmap-cidr2022/#:~:text=Memory%2Dmapped%20(MMAP)%20file,file%20resided%20entirely%20in%20memory.  
 
   Change Data Capture
@@ -362,13 +370,13 @@ Distributed best practices
   Data mirroring with replicas
     https://bytebytego.com/courses/system-design-interview/distributed-message-queue 
     If all the replicas of a partition crash, the data for that partition is lost forever. When choosing the number of replicas and replica locations, there’s a trade-off between data safety, resource cost, and latency. It is safer to distribute replicas across data centers, but this will incur much more latency and cost, to synchronize data between replicas. As a workaround, data mirroring can help to copy data across data centers, but this is out of scope. The reference material [14] covers this topic.
-    Mirroring refers to keeping a backup database server for a master database server. It is not meant for distributed systems like (master(write)->replica(read)) and serves as a DR result. So this is reason why there is always mirroring on replicas
+    Mirroring refers to keeping a backup database server for a master database server. It is not meant for distributed systems like (master(write)->replica(read)) but it morese serves as a DR result. So this is reason why there is always mirroring on replicas
     https://www.tutorialspoint.com/difference-between-mirroring-and-replication 
 
   HTTP Encrpytion, Authentication, Authorization and Security 
         Asymmetric encryption could be used here for payment gateway
           https://www.youtube.com/watch?v=AQDCe585Lnc
-          also used in HTTPS, SSH, Bitcoin, Emails using PGP protocol
+          also used in SSH, Bitcoin, Emails using PGP(Pretty Good Privacy) protocol
 
         How HTTPS works ? How it uses SSL and TLS
           https://www.youtube.com/watch?v=hExRDVZHhig
@@ -377,7 +385,7 @@ Distributed best practices
           Today most websites supports https because of google standards
 
           ByteByteGo : https://www.youtube.com/watch?v=j9QmMEWmcfo
-            Moderm HTTPS uses TLS
+            Moderm HTTPS uses TLS - https://excalidraw.com/#room=6ee4f5d6f525a19d546c,Duz5YdLv0qhwGv9pNSZo_Q 
             1. first establishes TCP handshake at transport (helps in getting the sequence number)
             2. then client sends hello and gets the certificate from server which has public key of server (Asymmetric) 
             3. then client encryptes his/her session key with server's public key and then on server, it gets clients sesssion key by decrypting with server's private key. This is Asymmetric encryption
@@ -431,12 +439,12 @@ Distributed best practices
 
       Difference between Oauth 2.0 vs SAML and OpenID Connect
         https://www.okta.com/identity-101/whats-the-difference-between-oauth-openid-connect-and-saml/
-          OAuth 2.0 is a framework that controls authorization to a protected resource such as an application or a set of files, while OpenID Connect and SAML are both industry standards for federated authentication. That means that OAuth 2.0 is used in fundamentally different situations than the other two standards (examples of which can be seen below), and can be used simultaneously with either OpenID Connect or SAML.
-
-          Using either OpenID Connect or SAML independently, enterprises can achieve user authentication and deploy single sign-on. Though they both deal with logins, they have different strengths and weaknesses.
+          OAuth 2.0 is a framework that controls authorization to a protected resource such as an application or a set of files, while OpenID Connect and SAML are both industry standards for federated authentication.
 
           OpenID Connect is built on the OAuth 2.0 protocol and uses an additional JSON Web Token (JWT), called an ID token, to standardize areas that OAuth 2.0 leaves up to choice, such as scopes and endpoint discovery. It is specifically focused on user authentication and is widely used to enable user logins on consumer websites and mobile apps.
-          SAML is independent of OAuth, relying on an exchange of messages to authenticate in XML SAML format, as opposed to JWT. It is more commonly used to help enterprise users sign in to multiple applications using a single login. 
+          SAML is independent of OAuth, relying on an exchange of messages to authenticate in XML SAML format, as opposed to JWT. It is more commonly used to help enterprise users sign in to multiple applications using a single login.
+
+          Okta uses SAML 
 
       What Is IAM (Identity & Access Management)?
         https://spectralops.io/blog/top-11-identity-access-management-tools/
@@ -447,6 +455,7 @@ Distributed best practices
               Currently, Okta falls short on passwordless solutions, prompting users to change their passwords often. In addition, users also report some technical issues with logins.
             While Auth0 could be integrated with Google / Twitter / FB sign-in (which uses open id connect) - https://www.youtube.com/watch?v=yufqeJLP1rI&ab_channel=Fireship 
 
+      Not important : 
       So what tools usually company use for authorization internally ? 
         https://www.reddit.com/r/sysadmin/comments/k09crr/what_tools_does_your_company_use_for/ 
           SAML and LDAPS would cover most use cases which are standardized authentication protocols
