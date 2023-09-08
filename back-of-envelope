@@ -149,6 +149,16 @@ Time to understand scalability, latency aspects
     a. Stateless services
       - try to add stateless servers if possible
       - stateful server only for few use cases like socket connections. Make sure you know how to deal with scalability for socket connections.
+
+  7. High level design ( super important and help to distinguish broad understanding of the system)
+  Key components in high level design 
+    a. Separate read and write service 
+      - different bandwidth requirements
+      - easier to scale independently
+    b. separate out different components of the system (eg. video recommendation system )
+      - avoids single point of failure 
+      - map-reduce if needs to be sequential 
+
   
     
 System design thinking framework
