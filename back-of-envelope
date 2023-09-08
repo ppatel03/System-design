@@ -157,7 +157,8 @@ Time to understand scalability, latency aspects
       - different bandwidth requirements
       - easier to scale independently
     b. separate out different components of the system (eg. video recommendation system )
-      - avoids single point of failure 
+      - avoids single point of failure
+      - avoids monolithic 
       - map-reduce if needs to be sequential 
     c. data layer (just plot data layer) 
     d. cover all API interactions at high level
