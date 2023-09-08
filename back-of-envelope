@@ -159,7 +159,7 @@ Time to understand scalability, latency aspects
     b. separate out different components of the system (eg. video recommendation system )
       - avoids single point of failure 
       - map-reduce if needs to be sequential 
-    c. data layer (just plat data layer) 
+    c. data layer (just plot data layer) 
     d. cover all API interactions at high level
 
 
