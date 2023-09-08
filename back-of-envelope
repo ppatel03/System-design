@@ -160,7 +160,7 @@ Time to understand scalability, latency aspects
       - avoids single point of failure
       - avoids monolithic 
       - map-reduce if needs to be sequential 
-    c. data layer (just plot data layer) 
+    c. data layer (just add the box data layer) 
     d. cover all API interactions at high level
 
 
