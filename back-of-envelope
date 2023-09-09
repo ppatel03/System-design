@@ -28,6 +28,8 @@ Framework -
             - Data freshness SLA if eventual consistency 
       a.2. Latency 
       a.3. Fault tolerant + Durability (Use pull) + Resilency 
+          - Statelessness (CD)
+          - Replication
       a.4. Accuracy 
       a.5. Security : Auth, VPC, Data encryption if personal data 
   5. Metrics monitoring & Alerting for oncall using datadog
