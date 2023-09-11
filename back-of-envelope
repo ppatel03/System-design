@@ -1304,8 +1304,9 @@ Distributed systems today and Benchmarking on common systems
       https://ramcloud.atlassian.net/wiki/spaces/RAM/pages/6848719/ZooKeeper+Performance 
     - Interesting fact about zookeeper 
       https://stackoverflow.com/questions/37293928/zookeeper-vs-in-memory-data-grid-vs-redis 
-    - Zookeeper avg req latency ~ 20 ms 
-        https://www.manageengine.com/products/applications_manager/zookeeper-monitoring.html 
+    - Zookeeper avg req latency ~ 10 ms 
+        - 2-core 3 node cluster
+        https://ramcloud.atlassian.net/wiki/spaces/RAM/pages/6848719/ZooKeeper+Performance
     
 
     Kafka
