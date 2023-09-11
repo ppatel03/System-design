@@ -37,8 +37,10 @@ Framework -
       a.3. Fault tolerant + Durability (Use pull) + Resilency 
           - Statelessness (CD)
           - Replication
-      a.4. Accuracy 
-      a.5. Security : Auth, VPC, Data encryption if personal data 
+
+      a.4. Secondary stuff : 
+        a.4.1. Accuracy 
+        a.5.1. Security : Auth, VPC, Data encryption if personal data 
   5. Metrics monitoring & Alerting for oncall using datadog
     a. Business success 
     b. Engagement metrics
