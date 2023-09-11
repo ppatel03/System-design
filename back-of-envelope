@@ -16,16 +16,23 @@ Framework -
     a. types of users 
     b. are users already auth
   2. Estimate QPS 
-    a. Estimate Read vs Write QPS
-    b. Estimate bandwidth for read and write QPS
+    a. Estimate Read vs Write QPS 
+    b. Estimate bandwidth per user for read and write QPS 
+    c. Estimate bandwidth in total for read and write QPS
+    tell why you are estimating.
+        High total bandwidth means you need distributed system with replication to spread out the load
+        High user bandwidth say 100 MB/s means latency could be very high 
+
   3. Estimate Total Storage bytes
-    b. tell why you are estimating. Just a high level conclusion if you need DB sharding which depends on size and bandwidth. 
+    tell why you are estimating. 
+        Just a high level conclusion if you need DB sharding which depends on size and bandwidth. 
   4. Non-Functional Requirements
     a. Reliability Standards
       a.1 - Availability vs Consistency based on CAP (since consistency has different context for ACID, )
           - Availability %
           - Eventual Consistency (most of the times)
-            - Data freshness SLA if eventual consistency 
+            - Data freshness SLA if eventual consistency
+          - CAN PUT Strong consistency for few APIs like offline alerting, billing info
       a.2. Latency 
       a.3. Fault tolerant + Durability (Use pull) + Resilency 
           - Statelessness (CD)
