@@ -161,6 +161,12 @@ Time to understand scalability, latency aspects
       - stateful server only for few use cases like socket connections. Make sure you know how to deal with scalability for socket connections.
 
   7. High level design ( super important and help in broad understanding of the system)
+
+  Conclude at high level from Back of envelope
+    - High availability, bandwidth, large storage
+      - multiple instances 
+      - sharded storage with replicas 
+    
   Key components in high level design 
 
     a. Separate read and write service 
@@ -172,6 +178,10 @@ Time to understand scalability, latency aspects
       - map-reduce if needs to be sequential 
     c. data layer (just add the box data layer) 
     d. cover all API interactions at high level
+
+    In-depth
+      a. think about data model 
+      b. Queue to avoid synchronous processing and support fault tolerant, durability 
 
 
   
