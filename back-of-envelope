@@ -1381,7 +1381,7 @@ Distributed systems today and Benchmarking on common systems
       https://www.engati.com/blog/redis-kafka-rabbitmq
       Use it when you need lightening fast queueing service without persisting message.
         Scale: Redis can send up to 1 million messages per second like Kafka
-        Persistency: It does not support data persistency, it is an in-memory data store.
+        Persistency: It does not support data persistency, it is an in-memory data store. However, you can configure to be persistent ~ 1 min snapshotting https://redis.io/docs/management/persistence/
         Consumer Capability: It can handle both, one-to-one and one-to-many consumers.
         Push based system : smart broker, dumb consumer
       Redis pub sub needs scaling support with external party like Zookeeper. Refer this awesome video - https://www.youtube.com/watch?v=6G22a5Iooqk&ab_channel=Redis
@@ -1465,6 +1465,9 @@ Distributed systems today and Benchmarking on common systems
         How redis works 
           https://www.youtube.com/watch?v=5TRFpFBccQM
         Redis is single threaded and supports serializability isolation level (serial execution), epi pg. 253
+        Persistence 
+
+          - you can configure to be persistent ~ 1 min snapshotting https://redis.io/docs/management/persistence/
 
     CDN
         https://www.youtube.com/watch?v=RI9np1LWzqw
