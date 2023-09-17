@@ -882,6 +882,20 @@ Distributed best practices
         It is worth noting that effective auto-scaling of stateful servers is the job of a good load balancer. Most cloud load balancers handle this job very well.
         So Suggest to use least-connection load balancer so that it can route new request to Web socket servers with least connections
 
+    SSE (Server side events) - used for server -> client connection 
+      https://stackoverflow.com/questions/5195452/websockets-vs-server-sent-events-eventsource 
+      - single direction from server -> client 
+      Ideal use cases of SSE:
+        Stock ticker streaming
+        twitter feed updating
+        Notifications to browser
+      SSE gotchas:
+        No binary support
+        Maximum open connections limit
+      Advantages of Websockets over SSE:
+          Real time, two directional communication.
+          Native support in more browsers
+
     IOT devices
       https://www.youtube.com/watch?v=6mBO2vqLv38
       - all devices are connected to IOT gateway through MQTT or HTTP
