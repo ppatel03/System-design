@@ -1263,6 +1263,15 @@ Distributed systems today and Benchmarking on common systems
         - persistent data like sql
         - use GameAnalytics
 
+    Design Live commenting system 
+      https://leetcode.com/discuss/interview-question/583184/FBInstagram-'Live-Comments'-System-design/918003 
+      - Same as proxity service in byte byte go
+        - client <-> server websocket connection
+        - redis pub sub 
+        - DB for persistence 
+      - My try : https://leetcode.com/discuss/interview-question/583184/FBInstagram-'Live-Comments'-System-design/918003 
+      - Facebook's  --> Write locally, Read globally technique
+
     Design search engine
       https://medium.com/double-pointer/system-design-interview-search-engine-edb66b64fd5e 
         Web -> Crawler -> Indexer -> Retiever <-> Web Browser or Mobile
