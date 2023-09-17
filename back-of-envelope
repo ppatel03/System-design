@@ -1190,6 +1190,9 @@ Distributed best practices
                 The rate of aborts significantly affects the overall performance of SSI. For example, a transaction that reads and writes data over a long period of time is likely to run into conflicts and abort, so SSI requires that read-write transactions be fairly short
 
     Consistency and Concensus with distributed databases  Pg 321
+
+    What is Linearizability vs Serializability
+        - Linearizability is the recency guarantee while Serializability is the ordering guarantee
          
 
   How to design ranking system based on multile criteria (used in multiple designs like google ranking, FB ranking)
