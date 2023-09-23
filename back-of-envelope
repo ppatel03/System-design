@@ -1264,6 +1264,29 @@ Distributed systems today and Benchmarking on common systems
         Why not UDP for live streamer? 
           - you will loose packets on source itself
 
+        Live Streaming system design in detail 
+          https://www.youtube.com/watch?v=S8aSoSQJ4G8&t=1079s&ab_channel=System-DesignByVinayakSangar
+            - Avoid UDP at source : UDS is fast but lossy which means it can loose resolution at source itself. So use TCP at source and protocol used is RTMP which is based on TCP.
+
+
+        Resolution vs FPS vs bitrate
+          https://www.youtube.com/watch?v=_XzGhc9mPVk&ab_channel=JamesArcher
+          Resolution - no of pixels both lengthwise and breadthwise 
+            - 4K Ultra HD : 3840 X 2160 px
+            - Full HD : 1920 X 1080 px 
+            - HD : 1280 X 720 px
+
+            For each pixel, it has color depth which is usually 8-bit. More the color depth better is the video. 
+
+          Frames rate - no of frames per second 
+            - 24 fps : cinematic like Netflix 
+            - 60 fps : gaming which gives immersive experience. Avoid more fps in movie though 
+
+          Bit rate - amount of data per second ( Resolution * color depth * frame rate )
+            - Compression can help condense the data 
+
+      
+
     Video conferencing app like Zoom
       https://medium.com/@himanishaik48/zoom-system-design-most-frequently-asked-question-in-interview-f60f6fe8d198 
  
