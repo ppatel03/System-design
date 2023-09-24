@@ -1242,8 +1242,14 @@ Distributed systems today and Benchmarking on common systems
       https://www.youtube.com/watch?v=7AMRfNKwuYo
       - streamer device(encoder) --> PoPs --> transcoding(different resolutions and bitrate) --> packaging (hls, dash format) --> PoPs --> receiving device (decoder)
             1. streamer starts his stream wired up to an encoder (software in browser, webcam, mobile ) which packages the video stream and send it in a transport protocol that the live streaming platform can recieve for further processing.
-            2. transcoding is divided into smaller video called segmentations which is then processed in parallel which needs lots of CPU.
-            3. then packaged to support most common live streaming format - HLS, DASH (.mp4)
+            2. Transcoding : convert video into different resolutions, frame rate and bit rates which is called "adaptive bit rate streaming". 
+              a. Segmentation : transcoded stream is divided into smaller video of 1s called segments
+              b. Conversion : Then it converts video into different resolution and bit rates
+               Both steps requires massive computation and done in parallel which needs lots of CPU. That's why DAG is used here.
+            3. Then Transcoded segments are packaged to support most common live streaming format - HLS, DASH (.mp4). 
+                Both of these format consist of the manifest file  and the series of video chunks where each chunk contains video of few seconds. 
+                This manifest file is like a directory to tell the client video player what all output formats are, where to load the video chunks over HTTP.
+                Both manisfest file and video chunks are usually cached in CDN for faster streaming  
 
       * Video transcoding is also called video encoding
         Many types of encoding formats are available; however, most of them contain two parts:
