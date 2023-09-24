@@ -1261,6 +1261,7 @@ Distributed systems today and Benchmarking on common systems
               2. OR use push updates to the cache
             - How to avoid thundering herd ? 
               - USE PROMISE CACHE. 
+                  - basically if say 1 M clients requests for same item and there is cache miss. So instead of forwarding all requests to DB, only one request is made to DB to populate the cache. Rest all the requests are given promises.
 
             Questions are answered below
       - Live Streaming system design in detail 
@@ -1544,7 +1545,7 @@ Distributed systems today and Benchmarking on common systems
         Persistence 
           - you can configure to be persistent ~ 1 min snapshotting https://redis.io/docs/management/persistence/
 
-        Promise Cache to resolve thundering herd
+        Promise Cache to resolve thundering herd - VERY IMPORTANT
           https://redis.com/blog/caches-promises-locks/
           - basically if say 1 M clients requests for same item and there is cache miss. So instead of forwarding all requests to DB, only one request is made to DB to populate the cache. Rest all the requests are given promises. 
           - With redis, you can create the lock:my_value using NX option. This option ensures only one request will be able to set the key. 
