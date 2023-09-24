@@ -1249,7 +1249,23 @@ Distributed systems today and Benchmarking on common systems
             3. Then Transcoded segments are packaged to support most common live streaming format - HLS, DASH (.mp4). 
                 Both of these format consist of the manifest file  and the series of video chunks where each chunk contains video of few seconds. 
                 This manifest file is like a directory to tell the client video player what all output formats are, where to load the video chunks over HTTP.
-                Both manisfest file and video chunks are usually cached in CDN for faster streaming  
+                Both manisfest file and video chunks are usually cached in CDN for faster streaming.
+
+                Just right click on any youtube video and view network call, it requests manifest file periodically ( 5 s)
+
+          Open questions 
+            - Why not UDP at streamers device
+            - Why PoP
+            - If CDN is used at receivers device, how updates on manifest file and video is published
+              1. use TTL. when cache reaches TTL 
+              2. OR use push updates to the cache
+            - How to avoid thundering herd ? 
+              - USE PROMISE CACHE. 
+
+            Questions are answered below
+      - Live Streaming system design in detail 
+          https://www.youtube.com/watch?v=S8aSoSQJ4G8&t=1079s&ab_channel=System-DesignByVinayakSangar
+            - Avoid UDP at source : UDS is fast but lossy which means it can loose resolution at source itself. So use TCP at source and protocol used is RTMP which is based on TCP.  
 
       * Video transcoding is also called video encoding
         Many types of encoding formats are available; however, most of them contain two parts:
@@ -1270,9 +1286,7 @@ Distributed systems today and Benchmarking on common systems
         Why not UDP for live streamer? 
           - you will loose packets on source itself
 
-        Live Streaming system design in detail 
-          https://www.youtube.com/watch?v=S8aSoSQJ4G8&t=1079s&ab_channel=System-DesignByVinayakSangar
-            - Avoid UDP at source : UDS is fast but lossy which means it can loose resolution at source itself. So use TCP at source and protocol used is RTMP which is based on TCP.
+        
 
 
         Resolution vs FPS vs bitrate
