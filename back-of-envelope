@@ -836,7 +836,10 @@ Distributed best practices
   Kubernetes
     https://www.youtube.com/watch?v=TlHvYWVUZyc
     - container orchestration system
-    - use it when you need self-healing (downtime), horizontal scaling and automated rollbacks (deployment)
+    - use it when you need 
+      - self-healing (downtime), 
+      - horizontal scaling and 
+      - VERY IMPORTANT : automated rollbacks (deployment)
     - due to its complexity, do not use it if your org is small enough
     https://www.youtube.com/watch?v=VnvRFRk_51k&t=78s
       use master-worker architecture. 
