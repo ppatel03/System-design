@@ -153,7 +153,7 @@ Time to understand scalability, latency aspects
             - can help to reason using pull architectures
             - can help to reason out if you need erase for data recovery
             - can help to reason out if you need checksum for data integrity
-            - can help to reason out if you need commit log (WAL) like Postgresql, MySQL and even Cassandra
+            - can help to reason out if you need commit log (WAL) like Postgresql, (Row based log called binLog) MySQL and even Cassandra
 
         - Resiliency
                 https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ 
