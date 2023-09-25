@@ -176,7 +176,8 @@ Time to understand scalability, latency aspects
   Conclude at high level from Back of envelope
     - High availability, bandwidth, large storage
       - multiple instances 
-      - sharded storage with replicas 
+      - sharded storage 
+      - replicas 
     
   Key components in high level design 
 
