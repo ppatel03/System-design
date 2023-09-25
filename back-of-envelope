@@ -404,7 +404,7 @@ Distributed best practices
 
           Once the network interruption is fixed, any writes are sent to the appropriate "home" nodes (hinted handoff).
 
-          Sloppy quorums are useful for increasing write availability: as long as any w nodes are available, the database can accept writes. This also means that you cannot be sure to read the latest value for a key, because it may have been temporarily written to some nodes outside of n.
+          Sloppy quorums are useful for increasing write availability: as long as any w nodes are available, the database can accept writes. This also means that you cannot be sure to read the latest value for a key, because it may have been temporarily written to some nodes outside of n
 
 
         
@@ -417,6 +417,16 @@ Distributed best practices
                 Step 3: Create a single hash node per bucket (Figure 15).
                 Step 4: Build the tree upwards till root by calculating hashes of children (Figure 16).
           https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
+
+  Merging concurrently written values
+    https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#sloppy-quorums-and-hinted-handoff
+    No data is silently dropped. It requires clients do some extra work, they have to clean up afterward by merging the concurrently written values. Riak calls these concurrent values siblings.
+
+    Merging sibling values is the same problem as conflict resolution in multi-leader replication. A simple approach is to just pick one of the values on a version number or timestamp (last write wins). You may need to do something more intelligent in application code to avoid losing data.
+
+    If you want to allow people to remove things, union of siblings may not yield the right result. An item cannot simply be deleted from the database when it is removed, the system must leave a marker with an appropriate version number to indicate that the item has been removed when merging siblings (tombstone).
+
+    Merging siblings in application code is complex and error-prone, there are efforts to design data structures that can perform this merging automatically (CRDTs).
 
   Directed acyclic graph (DAG) model
         To support different video processing pipelines and maintain high parallelism, it is important to add some level of abstraction and let client programmers define what tasks to execute. For example, Facebook’s streaming video engine uses a directed acyclic graph (DAG) programming model, which defines tasks in stages so they can be executed sequentially or parallelly [8]. In our design, we adopt a similar DAG model to achieve flexibility and parallelism. Figure 8 represents a DAG for video transcoding.
@@ -1146,6 +1156,11 @@ Distributed best practices
               - Eventual Consistency
                 From the discussion so far we see that, although quorums appear to guarantee that a read returns the latest written value, in practice it is not so simple. Dynamo-style databases are generally optimized for eventual consistency. The parameters w and r allow us to adjust the probability of stale values being read, but it’s wise to not take them as absolute guarantees.
                 Application - Leaderless replication which can tolerate stale reads and has high availability and low latency
+              - Sloppy quorums and hinted handoff 
+                  https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#sloppy-quorums-and-hinted-handoff
+                    Sloppy quorums are useful for increasing write availability: as long as any w nodes are available, the database can accept writes. This also means that you cannot be sure to read the latest value for a key, because it may have been temporarily written to some nodes outside of n.
+              - Multi-datacenter operation
+                Each write from a client is sent to all replicas, regardless of datacenter, but the client usually only waits for acknowledgement from a quorum of nodes within its local datacenter so that it is unaffected by delays and interruptions on cross-datacenter link. 
 
             Lets take a look in details : 
 
