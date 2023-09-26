@@ -350,8 +350,8 @@ Distributed best practices
         1. TCP is connection-oriented so you can get an ack (like success 200 OK in HTTP over TCP) while UDP is connectionless
         So UDP protocol is NOT suitable for sending electronic mail, viewing a web page, or downloading a file. However, it is preferred mainly for real-time applications like broadcasting or multitasking network traffic.
 
-        Then why TCP is a still good choice on reciever of live streaming protocols like HLS, DASH ? 
-          - because TCP has flow control mechanism to calibrate the pace of data transmission. Depending on the recipient host, TCP can adjust the speed at which data packets travel and avoid overwhelming the recipient. 
+        Then why TCP is a still good choice on sender of live streaming protocols like HLS, DASH ? 
+          - because UDP is lossy and you should not loose data on sender's side since you need it for transcoding (converting to different resolutions, color depth, bitrate). 
 
         Then what are the scenarios where UDP is recommended ? 
           Video calling (app like Zoom): UDP can support video 30 frames per second refresh rates (frame is single image in the video - https://darvideo.tv/dictionary/frame/ and min is 24 fps and max is 60 fps even better). The data transmission is so fast that a few dropped packets do not affect the user experience. 
