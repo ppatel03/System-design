@@ -64,17 +64,21 @@ Lets take a look into details :
           - first since it helps with API design (example, ability to post tweet, view tweet)
   
     Assumptions
-    - Ask types of users (admin, general) 
-        Why ? 
-          - since it helps with data access patterns and security checks (admin can edit personal info/block users )
-    - Ask about interaction points - API, UI 
-        Why ? 
-          - since it helps you think end to end from UX perspective 
-    - Ask about devices - Mobile or WEB 
-        (though need reasoning why you asked this question :) . 
-          1. mobile could be low bandwidth network ~ 100 Mbps or 10 MBps) -   https://www.quora.com/From-what-maximum-speed-can-a-smartphone-download-or-upload-some-data
-          2. Consistency between devices ( example, chats read)
     - if its okay to assume user is authenticated
+    - Ask about interaction points - API / UI or both
+
+    If there is time, then 
+      - Ask about devices - Mobile or WEB 
+          (though need reasoning why you asked this question :) . 
+            1. Consistency between devices ( example, chats read) 
+            2. mobile could be low bandwidth network ~ 100 Mbps or 10 MBps -   https://www.quora.com/From-what-maximum-speed-can-a-smartphone-download-or-upload-some-data
+
+      - Ask types of users (admin, general) 
+          Why ? 
+            - since it helps with data access patterns and security checks (admin can edit personal info/block users )
+          Why ? 
+            - since it helps you think end to end from UX perspective 
+     
 
 Time to understand scalability, latency aspects
 
@@ -113,8 +117,6 @@ Time to understand scalability, latency aspects
           - Availability %
             - https://www.pagerduty.com/resources/learn/reliability/ 
                 Availability is a measure of the percentage of time that an IT service or component is in an operable state. Example of not meeting availability is Facebook was down in 2021 for about 3-5 hrs.
-                this would help decide the redundancy and reliability - example mostly 99.99% a day means you can compromise 10s (10 ^ 5 * 10 ^ -4).
-                of unavailability (its different from being unrelible). 
                 With this you can even decide that, your system/part of the sytem could be offline for 10s in a day for reasons like roll out, stateful servers scaling, upgrading the database or even doing DB sync etc. 
                 4 9s -> 10s
                 5 9s -> 1 s
@@ -127,15 +129,14 @@ Time to understand scalability, latency aspects
             - if Consistency over availability, it means high consitency.
             - Eventual Consistency (most of the times)
               - Data freshness SLA if eventual consistency 
-                - With this in mind, it provides as good reasoning about latency 
-                - Example, building search engine or yelp. With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
+                - With this in mind, it provides as good idea about time to resolve conflicts with concurrent writes  
+                    - Example, building search engine or yelp. With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
             - Latency + quorum to replica if high consistency 
-            Strong or Eventual consistency ? How does it help ? 
-            - can help reason for low latency 
-            - can help reason for quorum concensus
-            - can help reason for MySQL if combined with ACID
+            - If Strong consistency or Quorum consistency (for NoSQL like Cassandra)
+              - check with latency compromise due to replication and building concensus
+              - if also needed strong isolation, then can help reason for SQL databases due to isolation level support
 
-            Tips to ensure consistency 
+            Tips to ensure consistency with non-database services 
             - To maintain data consistency between internal services, ensuring exactly-once processing is very important.
             - To maintain data consistency between the internal service and external service (PSP), we usually rely on idempotency and reconciliation.
             - For replicas, ensure acknowledge only if all replicas respond to read/write update.
@@ -151,15 +152,16 @@ Time to understand scalability, latency aspects
                   0.0001 ^ 2    = 0.0000001    or  10 ^ -8
                   1 - 0.0000001 = 0.9999999 or  8 9s  
                   % * 100       = 99.999999%      or  6 9s 
-            - can help to reason using pull architectures
-            - can help to reason out if you need erase for data recovery
+            - can help to reason using pull architectures with persistence
+            - can help to reason out if you need erasure coding for data recovery
             - can help to reason out if you need checksum for data integrity
-            - can help to reason out if you need commit log (WAL) like Postgresql, (Row based log called binLog) MySQL and even Cassandra
+            - can help to reason out if you need commit log (WAL) like Postgresql, Binlog (Row based log) MySQL and LSM tree even Cassandra
 
         - Resiliency
                 https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ 
                 Resiliency describes the ability of a storage system to self-heal, recover, and continue operating after encountering failure, outage, security incidents, etc. High resiliency doesn’t mean there is high data availability. It just means that the storage infrastructure is equipped enough to overcome disruptions.
                 One indication of resiliency is measuring mean time to repair (MTTR), which captures how long it takes to get the storage infrastructure up and running after a failure. Lower the MTTR, better the resiliency. 
+                Example, kubernetes cluster spuns up new pod on failure
     
 
   5. Metrics monitoring & Alerting for oncall using datadog
@@ -167,7 +169,7 @@ Time to understand scalability, latency aspects
     b. Engagement metrics
     c. Reliability metrics 
 
-  6. Best practices if possible in deployment & scaling 
+  6. CI/CD Best practices if possible in deployment & scaling 
     a. Stateless services
       - try to add stateless servers if possible
       - stateful server only for few use cases like socket connections. Make sure you know how to deal with scalability for socket connections.
@@ -175,14 +177,15 @@ Time to understand scalability, latency aspects
   7. High level design ( super important and help in broad understanding of the system)
 
   Conclude at high level from Back of envelope
-    - High availability, bandwidth, large storage
+    - High availability, 
       - multiple instances 
+    - High bandwidth, large storage (you can even bring this in data storage discussion)
       - sharded storage 
       - replicas 
     
   Key components in high level design 
 
-    a. Separate read and write service 
+    a. Separate read and write service (CQRS)
       - different bandwidth requirements
       - easier to scale independently
     b. separate out different components of the system (eg. video recommendation system )
