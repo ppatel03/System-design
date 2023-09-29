@@ -313,7 +313,7 @@ Distributed Systems estimate
         WAL/binlog : data is first written to WAL before being indexed in B tree. Retention is 30 days for MySQL
         Buffer pool : cache query results
         Materialized views : precompute query results
-        replication log : tracks replication state (MySQL uses binlog as its replication log)
+        replication log : tracks replication state (MySQL uses binlog as its replication log). Retention is 30 days for MySQL
           What is replication log
           https://help.serena.com/doc_center/cm/ver14_2_0_1/admin_console/adminhelp/ddevg_replication_logs/what_is_a_replication_log.htm
 
@@ -453,7 +453,7 @@ Distributed best practices
     -  One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10].
     - Another is Kafka Connect (pg 457)
   Pg 455 - DDIA 
-    Rather than database triggers, Parsing replication log can be a more robust approach. Example Debezium uses MySQL binlog (same as replication log for MYSQL).
+    Rather than database triggers, Parsing replication log can be a more robust approach. Example Debezium uses MySQL binlog (same as replication log for MYSQL). Retention is 30 days for MySQL.
     Along with this you also need "Initial snapshot" since replication log cannot carry entire DB changes.
 
   In-sync replicas
