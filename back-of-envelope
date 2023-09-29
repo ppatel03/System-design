@@ -51,8 +51,9 @@ Framework -
 
   From above, Conclude at high level from Back of envelope
    Example, High availability, bandwidth, large storage
-        - multiple instances 
-        - sharded storage with replicas  
+        - needs multiple instances 
+        - needs sharded storage 
+        - needs replicated storage  
   
      
 Lets take a look into details : 
