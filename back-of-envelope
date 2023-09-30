@@ -198,6 +198,8 @@ Time to understand scalability, latency aspects
     In-depth
       a. think about data model 
       b. Queue to avoid synchronous processing and support fault tolerant, durability 
+      c. Think about edge cases for product
+      d. T
 
 
   
