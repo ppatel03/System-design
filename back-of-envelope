@@ -377,7 +377,11 @@ Distributed best practices
         Until now we saw that vector clocks can easily detect conflicts. But what happens after detecting one ? The first solution delegates the conflict resolution to the client. The client application receives all conflicted values and it decides how to deal with them (merge, discard, etc.). Another approach is server-based. One of its implementations can be last-write-wins strategy where the most recent value is returned to the client. It's only a short introduction to available solutions that will probably be detailed more in further posts.
 
         Cassandra use LWW 
-        Dynamo uses Read-Repair (resolve conflicts during read) and anit-entropy
+        Dynamo uses Read-Repair (resolve conflicts during read) and anit-entropy 
+
+        Pg 191, DDIA 
+        Even though vector clocks can resolve conflicts, there are two notable downsides. First, vector clocks add complexity to the client because it needs to implement conflict resolution logic.
+        Second, the [server: version] pairs in the vector clock could grow rapidly. To fix this problem, we set a threshold for the length, and if it exceeds the limit, the oldest pairs are removed. This can lead to inefficiencies in reconciliation because the descendant relationship cannot be determined accurately. However, based on Dynamo paper [4], Amazon has not yet encountered this problem in production; therefore, it is probably an acceptable solution for most companies.
 
   Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems
