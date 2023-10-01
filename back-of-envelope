@@ -210,19 +210,26 @@ Time to understand scalability, latency aspects
             For fault tolerance(operable) - enough replicas 
             For resilient (auto-repair) - Retry with circuit breaker, autoscale
             For durability(no data loss):  Commit log, Snapshotting/checkpointing, use Kafka 
-        7. Accuracy in form of consistency & isolation esp. critical for payment systems  : 
-                Use snapshot serialization with strict quorum consensus for both leader and leaderless replication. 
-                Trade-offs : latency & availability
-        8. Discuss Isolations if needed : 
-            - Read committed by default to guarantee no dirty reads and writes.
-            - Check if you need Snapshot isolation to guarantee non-repeatable reads OR 
-            - Serializable snapshot isolation for phantoms where you cannot reserve locks on returned rows and write in one transaction saw row X,Y affects the other say row A,B (eg., check unique username or atleast one oncall or no meetings for that room at time X)
-        9. Concensus esp. for consistency on distributed leaderless DBs like Cassandra
-        10. Distributed transactions if it involves multiple DB nodes 
-            - 2PC or TCC(Try + confirm/cancel)  
+        7. For Accuracy 
+                
+          a. Discuss Isolations if needed : 
+              - Read committed by default to guarantee no dirty reads and writes.
+              - Check if you need Snapshot isolation to guarantee non-repeatable reads OR 
+              - Serializable snapshot isolation for phantoms where you cannot reserve locks on returned rows and write in one transaction saw row X,Y affects the other say row A,B (eg., check unique username or atleast one oncall or no meetings for that room at time X)
+          b. Concensus esp. for consistency on distributed leaderless DBs like Cassandra
+
+          Trade-offs with strict isolation and concensus : latency & availability 
+
+        9. Distributed transactions if it involves multiple DB nodes 
+            - 2PC or TCC(Try + confirm/cancel) or Saga
             Example balance transfer or secondary indexes / column families in Cassandra
-        11. Zookeeper : Service discovery + Concensus + leader election + failure detection + subscribe to config change updates 
-        12. Storing Personal Data : encrtyped form 
+        10. Zookeeper for any of the operations : 
+              - Service discovery + 
+              - Concensus + 
+              - leader election + 
+              - failure detection + 
+              - subscribe to config change updates 
+        11. Storing Personal Data : encrtyped form 
 
 
 
