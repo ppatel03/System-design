@@ -310,7 +310,10 @@ Distributed Systems estimate
   ROM 
   Hard drive
   SSD
-  NVMe - high performance interface for SSDs thats connects to CPU via PCIe
+  NVMe 
+    - high performance interface for SSDs thats connects to CPU via PCIe 
+    - NVMe (Non-Volatile Memory Express) is a protocol that uses the PCI Express (PCIe) bus to connect SSD (solid-state drive) storage to servers or CPUs.
+
 
   Types of Cache
   https://www.youtube.com/watch?v=dGAgxozNWFE
@@ -343,11 +346,11 @@ Distributed Systems estimate
         allows consumer to consume at their own pace
       Distributed caches
         Redis : in-memory db
-        RocksDB : LSM tree to leverage disk 
+        RocksDB : LSM tree to leverage memory + SSD 
       Full text search
         Elastic search - does reverse indexing which indexes texts to doc id
       Database cache
-        WAL/binlog : data is first written to WAL before being indexed in B tree. Retention is 30 days for MySQL
+        WAL (sequence of bytes)/binlog (row level log) : data is first written to WAL before being indexed in B tree. Retention is 30 days for MySQL
         Buffer pool : cache query results
         Materialized views : precompute query results
         replication log : tracks replication state (MySQL uses binlog as its replication log). Retention is 30 days for MySQL
