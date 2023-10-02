@@ -1713,8 +1713,8 @@ Distributed systems today and Benchmarking on common systems
             200 reads ~ 200 us
             200 writes ~ 1 ms (writes 4x slower)
           load test
-            10K reads ~ 10 ms 
-            10K writes ~ 50 ms (writes 4x slower)
+            10K reads ~ 10-20 ms 
+            10K writes ~ 100 ms (writes 4x slower)
 
           - Indexed Read
               a. with primary key reads which is already indexed
