@@ -1205,6 +1205,7 @@ Distributed best practices
                 - use read-repair process (resolve conflicts when you read) - DynamoDB
                 - use anti-entropy process (resolve conflicts in background you read) - DynamoDB
                 - use LWW - Cassandra
+                - use CRDT supported DBs
             But how to ensure you are consistent values from different DB nodes ? 
               - Quorum consistency - achieving concensus with R + W > N. Usually N is picked as odd number in DynamoDB
                     w = r = (n + 1) / 2
