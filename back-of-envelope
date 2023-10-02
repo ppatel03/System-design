@@ -695,7 +695,7 @@ Distributed best practices
     Alerting
       - datadog
     Continuous integration
-        develop -> commit -> build -> test ->  deploy
+        develop -> PR -> build -> test ->  merge (commit) -> deploy
       https://blog.inedo.com/continuous-integration-performance-testing-best-practices
 
   Failure/Error handling to make fault tolerant and recover it making it resilient
