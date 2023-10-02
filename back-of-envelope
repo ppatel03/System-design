@@ -1659,7 +1659,7 @@ Distributed systems today and Benchmarking on common systems
           https://redis.com/blog/caches-promises-locks/
           - basically if say 1 M clients requests for same item and there is cache miss. So instead of forwarding all requests to DB, only one request is made to DB to populate the cache. Rest all the requests are given promises. 
           - With redis, you can create the lock:my_value using NX option. This option ensures only one request will be able to set the key. 
-          - So if a request is able to get the this lock - lock:my_value, then its your job to fetch the value from SOT and set in DB. Once you set the key, you can notify on the pub/sub channel for lock:my_value
+          - So if a request is able to get the this lock - lock:my_value, then its your job to fetch the value from SOT(source of truth) and set in DB. Once you set the key, you can notify on the pub/sub channel for lock:my_value
           - All other requests which  are not able to get this lock, they subscribe to notif:foo pub sub channel and gets notified about the requested value.
 
     CDN
