@@ -358,6 +358,8 @@ Distributed Systems estimate
         replication log : tracks replication state (MySQL uses binlog as its replication log). Retention is 30 days for MySQL
           What is replication log
           https://help.serena.com/doc_center/cm/ver14_2_0_1/admin_console/adminhelp/ddevg_replication_logs/what_is_a_replication_log.htm
+      Promise cache
+        Cache which provides the promise that it will get the value from source DB and avoids forwarding all request to DB for that value. It helps reduce load on the DB asking for the same value
 
 
 
