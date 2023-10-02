@@ -769,7 +769,7 @@ Distributed best practices
       Configure the number of partitions based on throughput requirements.
       Partition metrics data by metric names, so consumers can aggregate data by metrics names.
       Further partition metrics data with tags/labels.
-      Categorize and prioritize metrics so that important metrics can be processed first - possible with kafa
+      Categorize and prioritize metrics so that important metrics can be processed first - possible with kafka
 
   Scale map reduce operations 
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation 
