@@ -1045,6 +1045,7 @@ Distributed best practices
       https://cloudinfrastructureservices.co.uk/haproxy-vs-nginx-whats-the-difference/ 
       - At the time of HAProxy’s implementation, the processes do not share any memory that affects the configuration parameters and session persistence is not possible.
       - At the time of NGINX implementation, the processes do share memory.
+      - Nginx uses Async IO which makes it memory efficiency and faster.
       - Nginx is used by Netflix, Atlassian, Dropbox, etc.
     Cons with Nginx
       - NGINX does not support exportable metrics (paid edition only)
