@@ -1490,6 +1490,7 @@ Distributed systems today and Benchmarking on common systems
       Why fast :
       - sequential access from the disk with append-omly log 
       - zero copy principle ( copy path from disk -> os buffer -> application buffer -> socket buffer -> nic buffer TO  disk -> os buffer  -> socket buffer )
+        - visual in ( Bytebytego Sessions, Tokens, JWT, SSO, and OAuth in One Diagram)
       How to guarantee "exactly-once" processing ? 
         1. https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/
             From producer to broker
