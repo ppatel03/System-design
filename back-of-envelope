@@ -1483,6 +1483,7 @@ Distributed systems today and Benchmarking on common systems
       - which node is the master ? (leader election)
       - what tasks are assigned to which workers ? (distributed store)
       - which workers are available currently ? (service discovery)
+      - is the lock owned ? (lock ownership)
 
     - How does it work ? 
       - it is push-based so that workers gets notified of any changes
