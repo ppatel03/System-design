@@ -695,14 +695,16 @@ Distributed best practices
     Alerting
       - datadog
     Continuous integration
-        develop -> PR -> build -> test ->  merge (commit) -> deploy
+        develop (-> PR -> build -> test optional as best practices)  merge (commit) -> build -> test -> deploy
       https://blog.inedo.com/continuous-integration-performance-testing-best-practices
 
-  Failure/Error handling to make fault tolerant and recover it making it resilient
+  Failure/Error handling to make fault tolerant and recover it making it resilient and durable
     - Common techniques are retry the processing for queue consumer or offload to another server 
     - try maintaining the commit log (checkpointing)
     - explore event sourcing technique since events are immutable and you can generate the desired state (CQRS)
-    - Exponential backoff [14] might be a good retry strategy (https://bytebytego.com/courses/system-design-interview/distributed-email-service)
+    - Avoid frequent retries
+        Exponential backoff [14] might be a good retry strategy (https://bytebytego.com/courses/system-design-interview/distributed-email-service)
+        Use Circuit breaker
     - Using Kafka Queue which can persist messages even when downstream services are down
      
 
