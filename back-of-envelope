@@ -207,9 +207,9 @@ Time to understand scalability, latency aspects
         4. NTP if relying on timestamps
         5. Map-Reduce scaling, hot keys, priority pre-emption if streaming
         6. Verify Fault tolerence, Resiliency and durability
-            For fault tolerance(operable) - enough replicas 
+            For fault tolerance(operable) - enough replicas, data mirroring 
             For resilient (auto-repair) - Retry with circuit breaker, autoscale
-            For durability(no data loss):  Commit log, Snapshotting/checkpointing, use Kafka 
+            For durability(no data loss):  data mirroring , Commit log, Snapshotting/checkpointing, use Kafka 
         7. For Accuracy 
                 
           a. Discuss Isolations if needed : 
@@ -269,6 +269,8 @@ Distributed Systems estimate
     Between two availability zones : 5 ms
     Send packet CA (California) ->Netherlands->CA	= 150 ms 
     Disk seek	= 10 ms
+    Human brain to process an object = 10-20 ms
+    NTP error delay = 30-50 ms
     DNS response time ranges : 10ms to 200ms.
     Replication lag guarantee for AWS RDS : < 100 ms 
       https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
