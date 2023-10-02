@@ -708,6 +708,8 @@ Distributed best practices
         Exponential backoff [14] might be a good retry strategy (https://bytebytego.com/courses/system-design-interview/distributed-email-service)
         Use Circuit breaker
     - Using Kafka Queue which can persist messages even when downstream services are down
+    - retry logic by storing last online state in S3 / KV store (checkpointing)
+    - save computational work in snapshots storage for low latency (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
      
 
 
@@ -800,10 +802,7 @@ Distributed best practices
     According to the “Designing data-intensive applications” book by Martin Kleppmann [16], there are four types of window functions: tumbling (also called fixed) window, hopping window, sliding window, and session window. We will discuss the tumbling window and sliding window as they are most relevant to our system.
       - In the tumbling window (highlighted in Figure 15), time is partitioned into same-length, non-overlapping chunks. The tumbling window is a good fit for aggregating ad click events every minute (use case 1).
       - In the sliding window (highlighted in Figure 16), events are grouped within a window that slides across the data stream, according to a specified interval. A sliding window can be an overlapping one. This is a good strategy to satisfy our second use case; to get the top N most clicked ads during the last M minutes.
-
-  Fault tolerance systems
-    - retry logic by storing last online state in S3 / KV store (checkpointing)
-    - save computational work in snapshots storage for low latency (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
+    
 
   Monitoring metrics
     total Latency and also at each stage
@@ -877,7 +876,7 @@ Distributed best practices
   CI/CD practices
     https://www.youtube.com/watch?v=42UP1fxi2SY
     - CI stands for continuous integration and is more common. Its the practice of using automation to enable teams to merge code changes in shared repository. Each commit triggers an automated workflow on the CI server that builds and runs series of tests to make sure commit is safe to merge into main branch.
-      - CI process : code -> build -> test -> release
+      - CI process : code -> build -> test -> merge/commit 
       - tools for CI - github
       - tools to manage CI process: code (github), build (gradle, webpack, github actions), test (jest), release (jenkins, buildkite)
 
@@ -888,11 +887,17 @@ Distributed best practices
 
     How  companies perform modern CI/CD today ? 
           https://levelup.gitconnected.com/gitops-ci-cd-using-github-actions-and-argocd-on-kubernetes-909d85d37746 
-      CI : build -> test -> commit -> push image to ECR and update image reference(version) in Helm chart
+      CI : code -> build -> test -> merge/commit -> push image to ECR and update image reference(version) in Helm chart (yaml file for kubernetes)
           - with help of github actions, it can build and run tests on the PR. Once commit is merged, it pushes the image in the respository
 
+          ECR vs S3 for images - ECR is just an optimization on top of S3 for images
+            https://www.reddit.com/r/aws/comments/eftq6u/difference_between_aws_s3_vs_aws_ecr/
+            ECR basically operates as a proxy in front of S3 to facilitate container build-operations. Same as DockerHub or Docker Registry, this can reduce the amount of stored data by storing each layer of a container image and not duplicating the same layer over and over again (saves you storage space).
+            If you were to just store a container image (say .tar or .jar) and directly upload to S3 you'll quickly surpass the amount of storage you'd have used in ECR due to the lack of layer de-duplication that would be occurring when using ECR. 
+                Example: you build version 1 of a container image for your app, total size is 50MB. Then you make an update to you image that only affects the last RUN statement in your Dockerfile (only one layer of the image is changed)... that one layer is 2MB, so when you push that new version ECR will upload the 2MB layer, not the other 48MB that hasn't changed. If direct was used, this would have amount to 100MB of storage.
+
       CD : argoCD polls Helm chart and deploys to Kubernetes (AWS EKS)
-          - argoCD detects thid image via polling and deploys on kubernetes using helm charts (yaml file for kubernetes deployment - https://www.youtube.com/watch?v=w51lDVuRWuk&ab_channel=DevOpsJourney) 
+          - argoCD detects this image via polling and deploys on kubernetes using helm charts (yaml file for kubernetes deployment - https://www.youtube.com/watch?v=w51lDVuRWuk&ab_channel=DevOpsJourney) 
   
 
   How to provison resources in the could
