@@ -1385,10 +1385,10 @@ Distributed systems today and Benchmarking on common systems
       Why RTMP for live streamer and HLS/DASH for receiver/consumer
         https://linuxhit.com/rtmp-vs-hls-vs-dash-streaming-protocols/#0-rtmp-vs-hls-vs-dash-streaming-protocols 
         RTMP vs HLS vs DASH – Which one should I use?
-          If you are producing live video content then you probably want to publish your stream to a streaming server via RTMP. It is possible to allow consumption of the stream via RTMP. But you probably don’t want to do that. HLS has widespread support on client devices that consume your video. Additionally you can leverage CDNs and not need to worry about firewalls. So you will want to broadcast with HLS.
+          If you are producing live video content then you probably want to publish your stream to a streaming server via RTMP. It is possible to allow consumption of the stream via RTMP. But you probably don’t want to do that. HLS has widespread support on client devices that consume your video. Additionally you can leverage CDNs and not need to worry about firewalls.
 
       - Protocols
-        - the most popular transport protocol is RTMP which is TCP based but moving towards SRT which is UDP based
+        - the most popular transport protocol on streamer side is RTMP which is TCP based but moving towards SRT which is UDP based
         - remember hls, dash formats are different from streaming protocol - hls, dash.
         - RTMP is a TCP-based protocol that is widely used because it offers persistent connections and low-latency streaming. On the other hand, HLS is an HTTP-based protocol for adaptive bitrate streaming of live and on-demand content. It is often better than RTMP because it has a lower latency. https://castr.com/blog/rtmp-vs-hls/ 
 
