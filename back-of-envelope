@@ -666,7 +666,8 @@ Distributed best practices
 
     Anycast 
       https://www.youtube.com/watch?v=vOYjcOs1dUU
-      multiple servers with same IP address so that nearest one can serve. Example, CDN or multiple load balancers
+      multiple servers with same IP address so that nearest one can serve. Example, CDN or multiple load balancers.
+      It also helps in security to avoid DDOS attacks
 
   API design for websocket connection
     https://bytebytego.com/courses/system-design-interview/nearby-friends
