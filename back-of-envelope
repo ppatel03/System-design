@@ -1034,9 +1034,9 @@ Distributed best practices
          Also a good read https://www.nginx.com/blog/http-keepalives-and-web-performance/
     - Nginx supports L7 (application level load balancer) and also L4 ? 
     - For modern websites, Nginx in form of reverse proxy is set up at multiple layers 
-        - first layer : edge server 
+        - first layer : edge server (caching or TLS connection)
         - second layer : API gateway / load balancer
-        However, many of them combine both as one ingress service
+        However, many of them combine both as one ingress service in Nginx+
     Nginx vs HaProxy 
       https://blog.gitnux.com/comparison/haproxy-vs-nginx/#:~:text=Haproxy%20and%20Nginx%20are%20both,web%20server%20depending%20on%20configuration.
       - The main difference between the two is that Haproxy is a proxy server specifically designed to handle high levels of traffic while Nginx can be used as either a proxy or web server depending on configuration. 
