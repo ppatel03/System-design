@@ -1987,7 +1987,7 @@ Distributed systems today and Benchmarking on common systems
            - Vs Batch processing, it processes the events immediately locally storing the state
            https://www.youtube.com/watch?v=_G-hQfT02BA 
            - Achive fault tolerant with periodic snapshots to S3/HDFS storage which serve as a checkpoint. 
-           - Also guarantees exactly-once processing
+           - Also guarantees exactly-once processing with checkpoint markers 
 
           https://www.openlogic.com/blog/apache-flink-vs-kafka-streams# 
            It was the first open source framework that could deliver on throughput at scale (up to tens of millions of events per second), sub-second latency as low as 10s of milliseconds, and accurate results.
