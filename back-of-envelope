@@ -230,6 +230,11 @@ Time to understand scalability, latency aspects
               - failure detection + 
               - subscribe to config change updates 
         11. Storing Personal Data : encrtyped form 
+        12. Save Storage 
+            - move infrequent data to Amazon S3 glacier
+            - avoid short-term checkpoints
+            - retention
+            - compression - RLE 
 
 
 
