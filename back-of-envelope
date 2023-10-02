@@ -1643,7 +1643,7 @@ Distributed systems today and Benchmarking on common systems
         Redis QPS - 50K https://redis.io/docs/management/optimization/benchmarks/
         1 million TPS - https://bytebytego.com/courses/system-design-interview/digital-wallet 
         Redis also privides sorted set data structure. Our leaderboard use case maps perfectly to sorted sets. Internally, a sorted set is implemented by two data structures: a hash table and a skip list [1]. The hash table maps users to scores and the skip list maps scores to users. In sorted sets, users are sorted by scores. (https://bytebytego.com/courses/system-design-interview/real-time-gaming-leaderboard)
-        Sorted set is used in Rate limiter sliding window design which fetches based on timestamp range and avoids race conditions. 
+        Sorted set is used in Rate limiter sliding window design which fetches based on timestamp range and avoids race conditions since redis sis single threaded.
         Redis cluster also supports sharding with hash slot ( different from consistent hashing)
         Redis cluster uses master-replica model
         Redis Cluster does not guarantee strong consistency in terms of CAP. But has strict isolation level - seriazable
