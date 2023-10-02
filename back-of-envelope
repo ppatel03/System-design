@@ -787,7 +787,7 @@ Distributed best practices
   Combine batch processing and streaming with one service 
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
     For a system that contains two processing paths (batch and streaming) simultaneously, this architecture is called lambda [14]. A disadvantage of lambda architecture is that you have two processing paths, meaning there are two codebases to maintain. Kappa architecture [15], which combines the batch and streaming in one processing path, solves the problem. The key idea is to handle both real-time data processing and continuous data reprocessing using a single stream processing engine. 
-    Why Kappa - no need to maintain two codebases for stream processing and batch processing
+    Why Kappa - no need to maintain two codebases for stream processing and batch processing. Application is Apache Flink
       https://www.oreilly.com/radar/questioning-the-lambda-architecture/
 
   Process delayed events 
