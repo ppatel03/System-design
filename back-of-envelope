@@ -1929,7 +1929,7 @@ Distributed systems today and Benchmarking on common systems
 
               Challenges with Cassandra
                 1. Data loss or durability challenge : LWW (last write wins) is common issue with multi-leader replication and leaderless databases like Cassandra - Pg 292 DDIA. With Paxos, you can achieve Linearizability but face issue with LWW if clocks are not synchronized.
-                2. Cassandra uses consistent hashing and 
+                2. Cassandra uses consistent hashing and so not good for range queries
                 
               Benchmarking
                 - Expensive hardware https://www.scylladb.com/2021/08/19/cassandra-4-0-vs-cassandra-3-11-comparing-performance/
