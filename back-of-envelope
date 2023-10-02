@@ -913,7 +913,7 @@ Distributed best practices
 
   Bare metal, VMs and containers
     https://www.youtube.com/watch?v=Jz8Gs4UHTO8
-    VMs have hypervisor to run the guest OSes
+    VMs is on top of hypervisor. VM will have guest OS with applications to run. 
     Containers have container agent (eg., docker) instead of hypervisor to run the application in its own environment but uses instance/host OS to operate and have faster operations and more flexibility but suffers from security sharing common instance/host OS. To achieve security, you can have a container inside the VM but it looses flexibility now. 
     A bare metal server can host more containers than VMs
 
