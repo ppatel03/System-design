@@ -544,8 +544,7 @@ Distributed best practices
                 - uses XML 
                 - uses public key encryption 
               Open id connect
-                - uses json web token (JWT) 
-                - which uses token
+                - built on top of OAuth 2.0 which uses json web token (JWT) as access token
         
         What is SAML ? 
           https://www.youtube.com/watch?v=7RrFhC-e8QA&pp=ygUEU0FNTA%3D%3D&ab_channel=JumpCloud
@@ -610,6 +609,7 @@ Distributed best practices
   Network/s / Networking
     OSI model
       https://www.youtube.com/watch?v=0y6FtKsg6J4
+      better to recap in https://excalidraw.com/#room=6ee4f5d6f525a19d546c,Duz5YdLv0qhwGv9pNSZo_Q 
 
     TCP/IP model
       https://www.techtarget.com/searchnetworking/definition/TCP-IP 
@@ -617,7 +617,7 @@ Distributed best practices
 
     HTTP over TCP/IP 
       https://www.goanywhere.com/blog/http-vs-tcp-whats-the-difference
-      In the case of HTTP which applies at layer 7, before a client and server can exchange an HTTP request/response, they must establish a TCP connection first. Therefore, HTTP relies on the TCP standard in order to successfully do its job.
+      In the case of HTTP which applies at layer 7, before a client and server can exchange an HTTP request/response, they must establish a TCP connection first to exchange sequence numbers and port number and acknowlegement mechanism. Therefore, HTTP relies on the TCP standard in order to successfully do its job.
 
       HTTP 1.0, 1.1 and 2.0
         https://www.youtube.com/watch?v=a-sBfyiXysI
