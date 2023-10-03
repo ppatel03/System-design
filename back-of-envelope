@@ -1310,6 +1310,7 @@ Distributed best practices
       Combine the weighted scores (of each attribute) to create a final score for an entity (here car).
       for reverse criteria - just use weight * (1 - column %)
 
+
   Use Virtual Cluster map for placement service/resource manager (placement service will help to indentify where to place the job or upload the file)
     https://bytebytego.com/courses/system-design-interview/s3-like-object-storage
     The placement service determines which data nodes (primary and replicas) should be chosen to store an object. It maintains a virtual cluster map, which provides the physical topology of the cluster. The virtual cluster map contains location information for each data node which the placement service uses to make sure the replicas are physically separated. This separation is key to high durability. See the “Durability” section below for details.
@@ -1454,6 +1455,30 @@ Distributed systems today and Benchmarking on common systems
           Since search query have multiple words, two types : 
             Conjunctive Search which is AND based 
             Disjunctive Search which is OR based
+
+    How to design document retreival
+      https://www.youtube.com/watch?v=fcIzAg63WyI&ab_channel=Codetuber
+      - using tf * idf like in elastic search 
+        https://medium.com/analytics-vidhya/tf-idf-term-frequency-technique-easiest-explanation-for-text-classification-in-nlp-with-code-8ca3912e58c3
+        - tf for term t   = # of term t in doc / total terms 
+        - idf for term t  = log ( total docs / # of docs containing term t ) -> basically how common the term is. Example, is, the, a are very common
+        - relevance of doc d for term t = tf * idf 
+
+        - Elastic search doc retrieval ranking in 2.0 (https://www.elastic.co/guide/en/elasticsearch/guide/current/practical-scoring-function.html)
+          - using tf/idf = sum of scores based on each term's tf * idf 
+              - score(q,d)  =  
+                queryNorm(q)  
+              · coord(q,d)    
+              · ∑ (           
+                    tf(t in d)   
+                  · idf(t)²      
+                  · t.getBoost() 
+                  · norm(t,d)    
+                ) (t in q)    
+
+        - Elastic search doc retrieval ranking in 8.10
+          - using Practical Scoring Function (BM25) by default 
+            https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables 
 
     Types of database indexes
       https://medium.com/must-know-computer-science/system-design-indexes-f6ad3de9925d 
