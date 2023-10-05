@@ -492,7 +492,14 @@ Distributed best practices
     AES, DES - is symmetric
     Hash
     SHA-1 is hash function and not encryption one
-    SHA-256 is more secure https://www.keycdn.com/support/sha1-vs-sha256 
+        https://stackoverflow.com/questions/31532498/is-sha-1-length-always-40-symbols
+        SHA-1 produces a 160-bit (20-byte) hash value known as a message digest. A SHA-1 hash value is typically rendered as a hexadecimal number, 40 digits long.
+
+
+    SHA-256 is more secure https://www.keycdn.com/support/sha1-vs-sha256
+          A sha256 is 256 bits long -- as its name indicates.
+          Since sha256 returns a hexadecimal representation, 4 bits are enough to encode each character (instead of 8, like for ASCII), so 256 bits would represent 64 hex characters, therefore you need a varchar(64), or even a char(64), as the length is always the same, not varying at all. (https://stackoverflow.com/questions/2240973/how-long-is-the-sha256-hash)
+ 
     BCrypt / Scrypt (slow hashes than SHA-256 but more secure)
 
   Eliminate disk access
