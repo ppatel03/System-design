@@ -236,7 +236,14 @@ Time to understand scalability, latency aspects
             - move infrequent data to Amazon S3 glacier
             - avoid short-term checkpoints
             - retention
-            - compression - RLE 
+            - compression - RLE
+        13. Latency 
+            - caching 
+                - distributed cache, CDN 
+            - bloom filter
+            - materialized views 
+
+  
 
 
 
