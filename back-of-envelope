@@ -229,7 +229,9 @@ Time to understand scalability, latency aspects
               - leader election + 
               - failure detection + 
               - subscribe to config change updates 
-        11. Storing Personal Data : encrtyped form 
+        11. Security : 
+              - Storing Personal Data : encrtyped form 
+              - Rate limiter to avoid DDOS
         12. Save Storage 
             - move infrequent data to Amazon S3 glacier
             - avoid short-term checkpoints
