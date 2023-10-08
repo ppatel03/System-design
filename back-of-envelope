@@ -404,7 +404,7 @@ Distributed best practices
 
   Estimation of length based on no of bits 
     For 64 bit unique id generator, 
-      -> 32 decimal long (base 10 since 0-9 can accomodate 3 bits)
+      -> 21 decimal long (base 10 since 0-9 can accomodate 3 bits)
       -> 16 hex long (base 16 since 0-15 can accomodate 4 bits)
       -> 8 chars long (base 256 since 0-255 can accomodate 8 bits)
 
