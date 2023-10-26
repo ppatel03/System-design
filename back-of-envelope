@@ -404,8 +404,8 @@ Distributed best practices
 
   Estimation of length based on no of bits 
     For 64 bit unique id generator, 
-      -> 21 decimal long (base 10 since 0-9 can accomodate 3 bits)
-      -> 16 hex long (base 16 since 0-15 can accomodate 4 bits)
+      -> 16 decimal long (base 10 since 0-9 (9 is 1001) can accomodate 4 bits)
+      -> 16 hex long (base 16 since 0-15 (15 is 1111) can accomodate 4 bits)
       -> 8 chars long (base 256 since 0-255 can accomodate 8 bits)
 
     So SHA-1 which is 160 bits long can be 40 hex chars long and SHA-256 which is 256 bits long can be 64 hex chars long
