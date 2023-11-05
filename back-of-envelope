@@ -242,6 +242,10 @@ Time to understand scalability, latency aspects
                 - distributed cache, CDN 
             - bloom filter
             - materialized views 
+        14. Hot shard 
+            - spread the load across additional loads 
+              - more replicas like for cassandra (https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#partitioning-and-replication)
+              - more reducers for Map-Reduce framework pg 408 DDIA 
 
   
 
@@ -2071,6 +2075,7 @@ Distributed systems today and Benchmarking on common systems
     Hive
       https://www.youtube.com/watch?v=taTfW2kXSoE 
       - Hive creates SQL query layer which in turn uses map reduce to query big tables stored in HDFS. This helps SQL experts query big data in HDFS directly in SQL and does not need complicated logic of map reduce.
+      - Hive can also use Spark as its engine instead of Map Reduce
       - Hive is not a database
 
       Hive architecture - https://www.youtube.com/watch?v=rr17cbPGWGA&t=270s
