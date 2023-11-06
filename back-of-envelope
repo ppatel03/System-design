@@ -246,6 +246,9 @@ Time to understand scalability, latency aspects
             - spread the load across additional loads 
               - more replicas like for cassandra (https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#partitioning-and-replication)
               - more reducers for Map-Reduce framework pg 408 DDIA 
+        15. output from mapreduce is Write once, Read everywhere strategy.
+            - use B tree then (Pg 413 DDIA)
+            - but if bulk writes, then use LSM tree 
 
   
 
@@ -2093,11 +2096,16 @@ Distributed systems today and Benchmarking on common systems
       How twitter uses presto
         https://www.youtube.com/watch?v=WaooVcS75xA
 
+    Dataflow engines - Spark, Flink pg 421 
+      - does not have to perform strict map-reduce operations
+
     Spark
       https://www.ibm.com/cloud/blog/hadoop-vs-spark
         Spark is a Hadoop enhancement to MapReduce. The primary difference between Spark and MapReduce is that Spark processes and retains data in memory for subsequent steps, whereas MapReduce processes data on disk. As a result, for smaller workloads, Spark’s data processing speeds are up to 100x faster than MapReduce.
 
         Furthermore, as opposed to the two-stage execution process in MapReduce, Spark creates a Directed Acyclic Graph (DAG) to schedule tasks and the orchestration of nodes across the Hadoop cluster. This task-tracking process enables fault tolerance, which reapplies recorded operations to data from a previous state.
+
+        Also optimizes the allocation of task to operators based on data locality - pg 422 DDIA
 
         Working of DAG Optimizer in Spark
         https://data-flair.training/blogs/dag-in-apache-spark/
