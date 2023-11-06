@@ -536,6 +536,7 @@ Distributed best practices
   CDC is a mechanism that reads data changes from the database and applies the changes to another data system. 
     -  One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10].
     - Another is Kafka Connect (pg 457)
+    - Walmart's CDC solution from Cassandra (https://medium.com/walmartglobaltech/walmarts-cassandra-cdc-solution-6fc650031a3 )
   Pg 455 - DDIA 
     Rather than database triggers, Parsing replication log can be a more robust approach. Example Debezium uses MySQL binlog (same as replication log for MYSQL). Retention is 30 days for MySQL.
     Along with this you also need "Initial snapshot" since replication log cannot carry entire DB changes.
