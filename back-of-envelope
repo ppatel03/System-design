@@ -262,6 +262,9 @@ Time to understand scalability, latency aspects
               Google Cloud Dataflow, Storm, Kafka is going to support this but only with homogeneous systems - like 2 tables in database
         19. how will ensure idempotency with stream process (same result when applied multiple times) - Pg 478
             - like above, checkpoint markers will solve this for the stream but for downstream like DBs -> you can store the offset along with the DB update. This offset will tell if this message was already stored in DB or not. 
+        20. Whats the best way to support CDC ? 
+            - DB changes -> log based message passing (kakfa) -> different sources like Search index, Database, materialized views
+            Kafka already log compaction to avoid storing outdated data in its partition
            
 
   
