@@ -249,6 +249,19 @@ Time to understand scalability, latency aspects
         15. output from mapreduce is Write once, Read everywhere strategy.
             - use B tree then (Pg 413 DDIA)
             - but if bulk writes, then use LSM tree 
+        16. if a client owns the lock from zookeeper to access the data but goes on GC pause. This will starve other client
+            - use fencing (lease only for sometime) - Pg 303 DDIA
+        17. How to ensure consistency with Queue + DB pipeline (event passed but the DB read still does not have it due to evenutal consistency)
+           1. linearizable using total order broadcast. - Pg 351
+              - if you know latest position of log message, then your read can wait for that position. 
+              Q. But what if those events belong to different partitions in the queue ? - Pg 462 DDIA
+        18. How will you ensure exactly once processing for stream processing 
+          1. using checkpoint barries like in Flink - Pg 477 
+            Q. But what about downstream changes in database. if you retry the stream, then the database state will be incorrect - how will you ensure atomicity then ?
+              1. This is hard since it needs atomic commit (XA - standard for 2PC). Also further hard to ensure atomic commit on heterogeneous systems (example, between Queue and DB)
+              Google Cloud Dataflow, Storm, Kafka is going to support this but only with homogeneous systems - like 2 tables in database
+            Q. how will ensure idempotency with stream process (same result when applied multiple times) - Pg 478
+           
 
   
 
