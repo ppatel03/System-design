@@ -260,7 +260,8 @@ Time to understand scalability, latency aspects
             Q. But what about downstream changes in database. if you retry the stream, then the database state will be incorrect - how will you ensure atomicity then ?
               1. This is hard since it needs atomic commit (XA - standard for 2PC). Also further hard to ensure atomic commit on heterogeneous systems (example, between Queue and DB)
               Google Cloud Dataflow, Storm, Kafka is going to support this but only with homogeneous systems - like 2 tables in database
-            Q. how will ensure idempotency with stream process (same result when applied multiple times) - Pg 478
+        19. how will ensure idempotency with stream process (same result when applied multiple times) - Pg 478
+            - like above, checkpoint markers will solve this for the stream but for downstream like DBs -> you can store the offset along with the DB update. This offset will tell if this message was already stored in DB or not. 
            
 
   
