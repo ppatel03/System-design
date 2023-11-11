@@ -202,7 +202,8 @@ Time to understand scalability, latency aspects
       c. Think about edge cases for product
       d. Some well-known challenges 
         1. Exactly once if queue is used. 
-        2. Reconciliation always with CQRS(sep read and write systems) or payment system
+        2. Consistency always with CQRS(sep read and write systems) or 
+        3. Reconciallation for stream + batch DBs or payment system
         3. Idempotency for retry systems
         4. NTP if relying on timestamps
         5. Map-Reduce scaling, hot keys, priority pre-emption if streaming
