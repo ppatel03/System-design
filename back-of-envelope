@@ -1010,7 +1010,33 @@ Distributed best practices
           - If pod dies, new ones gets easily created.
           - Since each pod gets IP address, then won't it creates disruption if a pod dies. Example MySQL pod dies ? 
             - So pod is supported by "service" (may be kube-proxy) sitting in each pod. This concept which is similar to load balancer and IP address is assigned to a service instead of a pod. It also serves as a load balancer
-          Similar video : https://www.youtube.com/watch?v=2vMEQ5zs1ko 
+          Similar video : https://www.youtube.com/watch?v=2vMEQ5zs1ko
+          
+           
+   What is Istio ? 
+      https://www.youtube.com/watch?v=16fgzklcF7Y&t=197s&ab_channel=TechWorldwithNana 
+      - First understand what is service mesh ? 
+        - with microservices, there are other problems on service-to-service communication, security, retry, metrics and tracing. So service mesh has a control plane which automatically deploys a sidecar proxy besides our main application (likely within the pod) and thus services can talk to each other through those proxies and the network layer for service to service communication along with control plane is called service mesh. This can sidecar proxy is responsible for performing all these tasks. This way developers can only focus on main business logic.
+        - It also helps in traffic splitting during Canary deployment. 
+        - It also helps in 
+        - Service mesh is a paradigm and Istio is one of its implementation. Istio uses open source proxy called Envoy proxy.  
+      - Istio ? 
+        - Architecture consists of control plane called Istiod and envoy proxies each hosted besides each application in the pod 
+        - To configure, 
+          - you DO NOT HAVE TO ADJUST DEPLOYMENT OR CONFIG FILES (YAML) within each microservice. 
+          - ALL THE CONFIGURATIONS FOR ISTIO COMPONENTS WILL BE DONE IN ISTIO ITSELF. 
+          - Istio can be configured using the syntax of kubernetes yaml files by using CRD (custom component in kubernetes which allows using third party technologies like istio, prometheus). Now to deploy, you can easily apply them using kubectl (command line tools for kubernets) commands. So no need to learn new configuration language syntax.
+          - for each CRD (using VirtualService and Desination Rules)
+            - configure traffic routing  
+            - configure traffic split 
+            - retry rules
+            - time outs 
+            - In Skillz, I have also seen folks adding service specific configurations like feature flags inside istio configurations.
+        - During deployment, Istiod converts these high level routing rules in CRDs into envoy specific configurations. So we configure just Istio control plane rather than configuring proxies  
+        - Istiod also has helps with service discovery component using service registery
+        - Istiod also helps with CA (symmetric encryption like TLS) 
+        - gather telemetry data - (metrics and tracing) from envoy proxies which can be consumed later by monitoring services like Prometheus or tracing servers, etc. 
+        - Istio also has another component called Istio ingress gateway (alternative to Nginx ingress controller). So it is hosted in the pod and it accepts the traffic from outside world and help redirect to your internal microservices using VirtualService rules in "gateway" CRD. 
 
   WebSocket - use for bi-directional communication
     Websocket with load balancer or not - debatable 
@@ -1731,29 +1757,7 @@ Distributed systems today and Benchmarking on common systems
         Cost	                        Depends on vendor, usually more expensive	                          Depends on vendor, usually less expensive 
                                                                                                           (aside from egress fees)
 
-    What is Istio ? 
-      https://www.youtube.com/watch?v=16fgzklcF7Y&t=197s&ab_channel=TechWorldwithNana 
-      - First understand what is service mesh ? 
-        - with microservices, there are other problems on service-to-service communication, security, retry, metrics and tracing. So service mesh has a control plane which automatically deploys a sidecar proxy besides our main application (likely within the pod) and thus services can talk to each other through those proxies and the network layer for service to service communication along with control plane is called service mesh. This can sidecar proxy is responsible for performing all these tasks. This way developers can only focus on main business logic.
-        - It also helps in traffic splitting during Canary deployment. 
-        - It also helps in 
-        - Service mesh is a paradigm and Istio is one of its implementation. Istio uses open source proxy called Envoy proxy.  
-      - Istio ? 
-        - Architecture consists of control plane called Istiod and envoy proxies each hosted besides each application in the pod 
-        - To configure, 
-          - you DO NOT HAVE TO ADJUST DEPLOYMENT OR CONFIG FILES (YAML) within each microservice. 
-          - ALL THE CONFIGURATIONS FOR ISTIO COMPONENTS WILL BE DONE IN ISTIO ITSELF. 
-          - Istio can be configured using the syntax of kubernetes yaml files by using CRD (custom component in kubernetes which allows using third party technologies like istio, prometheus). Now to deploy, you can easily apply them using kubectl (command line tools for kubernets) commands. So no need to learn new configuration language syntax.
-          - for each CRD (using VirtualService and Desination Rules)
-            - configure traffic routing  
-            - configure traffic split 
-            - retry rules
-            - time outs 
-        - During deployment, Istiod converts these high level routing rules in CRDs into envoy specific configurations. So we configure just Istio control plane rather than configuring proxies  
-        - Istiod also has helps with service discovery component using service registery
-        - Istiod also helps with CA (symmetric encryption like TLS) 
-        - gather telemetry data - (metrics and tracing) from envoy proxies which can be consumed later by monitoring services like Prometheus or tracing servers, etc. 
-        - Istio also has another component called Istio ingress gateway (alternative to Nginx ingress controller). So it is hosted in the pod and it accepts the traffic from outside world and help redirect to your internal microservices using VirtualService rules in "gateway" CRD. 
+   
 
       
 
