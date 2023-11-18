@@ -1733,7 +1733,7 @@ Distributed systems today and Benchmarking on common systems
     What is Istio ? 
       https://www.youtube.com/watch?v=16fgzklcF7Y&t=197s&ab_channel=TechWorldwithNana 
       - First understand what is service mesh ? 
-        - with microservices, there are other problems on service-to-service communication, security, retry, metrics and tracing. So we need service mesh which deploys a sidecar proxy besides these applications (within the pod) 
+        - with microservices, there are other problems on service-to-service communication, security, retry, metrics and tracing. So service mesh deploys a sidecar proxy besides our main application (likely within the pod) and this sidecar proxy is responsible for performing all these tasks. It also helps in traffic splitting during Canary deployment. This way developers can only focus on main business logic.
 
       
 
