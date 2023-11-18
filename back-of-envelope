@@ -1389,6 +1389,8 @@ Distributed best practices
     https://www.youtube.com/watch?v=4KHiSt0oLJ0&ab_channel=Fireship
     by default, browser does not allow requests to another domain on your website. To allow this, you need to send "Access-Control-Allow-Origin" header in the response.
 
+  
+
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
@@ -1511,6 +1513,9 @@ Distributed systems today and Benchmarking on common systems
           Since search query have multiple words, two types : 
             Conjunctive Search which is AND based 
             Disjunctive Search which is OR based
+    
+    Design recommendation system 
+      https://www.youtube.com/watch?v=ZAIBFf8KpgI&ab_channel=Jordanhasnolife 
 
     How to design document retreival
       https://www.youtube.com/watch?v=fcIzAg63WyI&ab_channel=Codetuber
@@ -1713,7 +1718,7 @@ Distributed systems today and Benchmarking on common systems
         Cost	                        Depends on vendor, usually more expensive	                          Depends on vendor, usually less expensive 
                                                                                                           (aside from egress fees)
 
-
+    What is Istio 
       
 
   Cache benchmarking
