@@ -1753,7 +1753,7 @@ Distributed systems today and Benchmarking on common systems
         - Istiod also has helps with service discovery component using service registery
         - Istiod also helps with CA (symmetric encryption like TLS) 
         - gather telemetry data - (metrics and tracing) from envoy proxies which can be consumed later by monitoring services like Prometheus or tracing servers, etc. 
-        - Istio also has another component called Istio ingress gateway (similar to Nginx ingress controller). So it accepts the traffic from outside world and help redirect to your microservices using VirtualService. 
+        - Istio also has another component called Istio ingress gateway (alternative to Nginx ingress controller). So it is hosted in the pod and it accepts the traffic from outside world and help redirect to your internal microservices using VirtualService in "gateway" CRD. 
 
       
 
