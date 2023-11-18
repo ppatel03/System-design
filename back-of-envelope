@@ -1517,6 +1517,11 @@ Distributed systems today and Benchmarking on common systems
     Design recommendation system 
       https://www.youtube.com/watch?v=ZAIBFf8KpgI&ab_channel=Jordanhasnolife 
       These days preference is more on building online recommendation system rather than offline since offline / batch recommendation stops us from building real-time searches and esp. on viral videos 
+      - online recommendation needs retrieval and ranking 
+        - retrieval using embedding model (embedding is ML-friendly version of original input. learn more in first 8 mins video https://www.youtube.com/watch?v=yfHHvmaMkcA&ab_channel=freeCodeCamp.org )
+        - ranking using distributed ranking service 
+      - place the embedding model on our retrieval services 
+      - place the ranking algo on distributed rabking services
 
     How to design document retreival
       https://www.youtube.com/watch?v=fcIzAg63WyI&ab_channel=Codetuber
