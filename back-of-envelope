@@ -1516,6 +1516,7 @@ Distributed systems today and Benchmarking on common systems
     
     Design recommendation system 
       https://www.youtube.com/watch?v=ZAIBFf8KpgI&ab_channel=Jordanhasnolife 
+      These days preference is more on building online recommendation system rather than offline since offline / batch recommendation stops us from building real-time searches and esp. on viral videos 
 
     How to design document retreival
       https://www.youtube.com/watch?v=fcIzAg63WyI&ab_channel=Codetuber
