@@ -1730,7 +1730,11 @@ Distributed systems today and Benchmarking on common systems
         Cost	                        Depends on vendor, usually more expensive	                          Depends on vendor, usually less expensive 
                                                                                                           (aside from egress fees)
 
-    What is Istio 
+    What is Istio ? 
+      https://www.youtube.com/watch?v=16fgzklcF7Y&t=197s&ab_channel=TechWorldwithNana 
+      - First understand what is service mesh ? 
+        - with microservices, there are other problems on service-to-service communication, security, retry, metrics and tracing. So we need service mesh which deploys a sidecar proxy besides these applications (within the pod) 
+
       
 
   Cache benchmarking
