@@ -1743,13 +1743,17 @@ Distributed systems today and Benchmarking on common systems
         - To configure, 
           - you DO NOT HAVE TO ADJUST DEPLOYMENT OR CONFIG FILES (YAML) within each microservice. 
           - ALL THE CONFIGURATIONS FOR ISTIO COMPONENTS WILL BE DONE IN ISTIO ITSELF. 
-          - Istio can be configured with kubernetes yaml files by using CRD (custom component in kubernetes which allows using third party technologies like istio, prometheus). Now to deploy, you can easily apply them using kubectl (command line tools for kubernets) commands
+          - Istio can be configured using the syntax of kubernetes yaml files by using CRD (custom component in kubernetes which allows using third party technologies like istio, prometheus). Now to deploy, you can easily apply them using kubectl (command line tools for kubernets) commands. So no need to learn new configuration language syntax.
           - for each CRD (using VirtualService and Desination Rules)
             - configure traffic routing  
             - configure traffic split 
             - retry rules
             - time outs 
-            - secure 
+        - During deployment, Istiod converts these high level routing rules in CRDs into envoy specific configurations. So we configure just Istio control plane rather than configuring proxies  
+        - Istiod also has helps with service discovery component using service registery
+        - Istiod also helps with CA (symmetric encryption like TLS) 
+        - gather telemetry data - (metrics and tracing) from envoy proxies which can be consumed later by monitoring services like Prometheus or tracing servers, etc. 
+        - Istio also has another component called Istio ingress gateway (similar to Nginx ingress controller). So it accepts the traffic from outside world and help redirect to your microservices using VirtualService. 
 
       
 
