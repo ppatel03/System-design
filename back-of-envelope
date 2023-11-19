@@ -1815,6 +1815,7 @@ Distributed systems today and Benchmarking on common systems
       - Application tracing - BPF tracing, Strobelight, Pytorch Profiler, Kineto, Demand level tracing like QPS
       - Unified dataset which combines host level and application tracing, has optimization opportunities from bad patterns, regressions
       - UI Dashboarding
+      One major challenge of AI observability comes from the heterogeneity of the fleet. As the computational demand increases with the complexity of AI workloads, the heterogeneity of the fleet increases with the deployment of various application-specific integrated circuits (ASICs), including the Meta Training and Inference Accelerator (MTIA), third-party vendor ASICs such as GPU, inference accelerators, and video encoder/transcoders. To address the challenge, the Dynolog collector module generalizes the metric collection and configuration through LibAsicMon, a platform agnostic observability system for AI accelerators.
 
     BPF(Berkely packet filtering) profiling libraries to check performance bottleneck 
       nice video - https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity
