@@ -1599,6 +1599,8 @@ Distributed systems today and Benchmarking on common systems
         - Elastic search doc retrieval ranking in 8.10
           - using Practical Scoring Function (BM25) by default 
             https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables 
+      Difference between retrieval and classification
+        Major difference between classification and retrieval: Classification needs labels for training data, retrieval does not. Retrieval is a purely distance-based approach. 
 
     Types of database indexes
       https://medium.com/must-know-computer-science/system-design-indexes-f6ad3de9925d 
@@ -1810,12 +1812,19 @@ Distributed systems today and Benchmarking on common systems
       Example of Meta stack - https://atscaleconference.com/systemscale-ai-observability/
       - host level / bare metal telemetry
       - Application tracing - BPF tracing 
+      - Demand level tracing like QPS
+
     BPF(Berkely packet filtering) profiling libraries to check performance bottleneck 
       nice video - https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity
       - top commands : 
         (1. execsnoop - anything periodic running 2. opensnoop - any misconfigurations or file not found 3. tcplife - any unexpected TCP sessions, 4. ext4slower - any filesystem I/O slower than 10ms 5. biosnoop - Any unusual disk access patterns or outliers ) 
          - example of performance bottleneck as a perl process detected on Cassandra DB using biosnoop rather than iostat command https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity 
       - Its future is nice GUI. Example Netflix - ![Alt text](<Screenshot 2023-11-18 at 5.56.00 PM.png>)
+
+    eBPF - https://www.youtube.com/watch?v=45h6iqtorZQ&ab_channel=CodingTech 
+      - language and runtime to extend operating systems
+      - used for L4 LB (Facebook), AWS / Google uses EKS which uses eBPF, Smartphones 
+      - Grafana will soon be integrated with eBPF for observability 
 
 
     Examples of 
@@ -1834,7 +1843,24 @@ Distributed systems today and Benchmarking on common systems
         - replace new hardware based on bottlneck resource
         - avoid double occupancy
 
-    Regression detection algorithms  
+    Regression detection algorithms 
+      - Linear regression 
+        https://www.youtube.com/watch?v=CtsRRUddV2s 
+        - y = mx + c  
+      - CUSUM
+        For performance regression of software, Facebook's FBDetect uses CUSUM algorithm for funcation, endpoint level regression (https://scontent-sjc3-1.xx.fbcdn.net/v/t39.8562-6/240834238_864881024149380_9006597177607274562_n.pdf?_nc_cat=102&ccb=1-7&_nc_sid=e280be&_nc_ohc=BdBe3qV_7l4AX8fnuxL&_nc_ht=scontent-sjc3-1.xx&oh=00_AfBf-ilwsWINjklZzowIBAvQLW_6NHIc0pH-aW7I11gNLg&oe=655F2806)
+        along with there are other challenges 
+          - seasonaility (peak hour)
+            - Fourier regression can help remove the seasonality 
+          - spiky
+            - Use butterworth lowpass filter to help with smoothing 
+          - code pushes 
+          - deduplicates
+            - change points that are close in time and connected via call stack are grouped together
+            - also nodes (functions) with largest number of exclusive stack traces are removed in greedy fashion (usually common function) and magnitude (samples) of remaining are again evualted till samples fall below the threshold
+          - cost shift 
+            - check the parent cost till the congifurable level - example depth of 3. However, also use the large stack trace removal in dedup #2 explained above. 
+                example common parent function have large stack trace - example 10^10 / 10^12 ~ 1 % cpu. Then its hardly going to change if the child regresses.
        
 
       
