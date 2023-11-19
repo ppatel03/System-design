@@ -1833,6 +1833,10 @@ Distributed systems today and Benchmarking on common systems
           perf record -g --call-graph dwarf -p $your_process_id 
       - example, Facebook's xenon -> https://github.com/facebook/hhvm/wiki/Profiling
 
+    How to collect CPU instructions - MIPS 
+      https://stackoverflow.com/questions/50019857/benchmarking-how-to-count-number-of-instructions-sent-to-cpu-to-find-consumed 
+      perf stat --all-user ./my_program 
+
 
     Examples of 
       - Demand efficiency 
