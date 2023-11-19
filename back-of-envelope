@@ -1920,6 +1920,27 @@ Distributed systems today and Benchmarking on common systems
             - 5xx error limit 
             - latency (most online systems have upper limit of 500 ms). It does not apply to offline systems
 
+      Example of performance wins 
+        - Hulu
+          - Convert Java microservices to Go 
+        - Meta 
+          - Demand efficiency 
+            - through memoization
+            - long tail but impactful - unused GKs, unused DBs and their jobs, infrequent query 
+          - Software efficiency 
+            - using folly libraries 
+            - using BPF insights
+          - Utilization efficiency
+            - load testing + capacity automation due to 
+                - lack of understand of bottleneck metrics
+                - sharded services 
+                - DR buffer 
+                - organic growth
+                - spike buffer 
+                - (tough) statefulness
+                - (tough) 
+              - load testing to determine throug
+
           
        
 
