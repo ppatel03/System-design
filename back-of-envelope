@@ -1831,7 +1831,9 @@ Distributed systems today and Benchmarking on common systems
         - unused host 
       - HW efficiency
         - replace new hardware based on bottlneck resource
-        - avoid double occupancy 
+        - avoid double occupancy
+
+    Regression detection algorithms  
        
 
       
