@@ -1867,8 +1867,11 @@ Distributed systems today and Benchmarking on common systems
         - using throughput and stopper metrics
           Throughput 
             - find the increasing metrics increasing with load. Its in fixed set (instructions, QPS)
+            - detected using linear regression 
           Stopper
             - find the metrics increasing and impacting the throughput above. It has wide ranges (CPU and Mem utilization, Mem bandwidth, disk I/O, network I/O, error rate, latency, revenue)
+            - detected using linear regression 
+
           In both settings, the limit of a machine detoriating is 
             - health check 
             - 5xx error limit 
