@@ -1810,6 +1810,7 @@ Distributed systems today and Benchmarking on common systems
         This command in Linux is used to report and monitor system input/output (I/O) device statistics, including information about disk utilization and performance.
     Performance monitoring needs to be done at different levels 
       Example of Meta stack - https://atscaleconference.com/systemscale-ai-observability/
+      ![Alt text](image-1.png)
       - host level / bare metal telemetry
       - Application tracing - BPF tracing 
       - Demand level tracing like QPS
