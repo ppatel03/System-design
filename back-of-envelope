@@ -1848,6 +1848,8 @@ Distributed systems today and Benchmarking on common systems
         https://www.youtube.com/watch?v=CtsRRUddV2s 
         - y = mx + c  
       - CUSUM
+        cumulative sum of differences (say the threshold is +/- 1% CPU) 
+          - if timeseries is [ 2 2.5 4 5 5], then CUSUM is [0 0.5 2 3 3 ] which means its a regression
         For performance regression of software, Facebook's FBDetect uses CUSUM algorithm for funcation, endpoint level regression (https://scontent-sjc3-1.xx.fbcdn.net/v/t39.8562-6/240834238_864881024149380_9006597177607274562_n.pdf?_nc_cat=102&ccb=1-7&_nc_sid=e280be&_nc_ohc=BdBe3qV_7l4AX8fnuxL&_nc_ht=scontent-sjc3-1.xx&oh=00_AfBf-ilwsWINjklZzowIBAvQLW_6NHIc0pH-aW7I11gNLg&oe=655F2806)
         along with there are other challenges 
           - seasonaility (peak hour)
