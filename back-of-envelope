@@ -1781,6 +1781,13 @@ Distributed systems today and Benchmarking on common systems
   Observability systems today - top ones are Datadog and Prometheus 
     https://www.squadcast.com/compare/prometheus-vs-datadog-a-comparative-overview
     ![Alt text](image.png)
+    Datadog vs Prometheus
+    Pull vs Push
+      Prometheus' pull-based model collects metrics from instrumented services at regular intervals and stores the collected information in its own time series database (Prometheus's own TSDB) for efficient querying and analysis, while Datadog offers both pull-based and push-based models, providing flexibility in data collection; its scalable distributed storage system (Datadog's own database) also makes it suitable for large scale deployments.
+    Open source vs Paid
+      Prometheus is an open-source tool and does not incur licensing costs, although costs associated with running Prometheus at scale like computing, storage or networking costs may incur. There are paid Prometheus as a service (PaaS) offerings from providers like Amazon, Google, Microsoft etc. which would cost you anywhere between $0.03 - $0.06 per Prometheus node per hour. 
+      Datadog follows a subscription-based pricing model. The cost depends on the number of hosts and features required; while this comes at a cost, using Datadog provides dedicated support, regular updates, and managed infrastructure management - making your life simpler in many ways!
+
       
 
   Cache benchmarking
