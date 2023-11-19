@@ -1810,7 +1810,7 @@ Distributed systems today and Benchmarking on common systems
       Example of Meta stack - https://atscaleconference.com/systemscale-ai-observability/
       - host level / bare metal telemetry
       - Application tracing - BPF tracing 
-    BPF profiling libraries to check performance bottleneck 
+    BPF(Berkely packet filtering) profiling libraries to check performance bottleneck 
       nice video - https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity
       - top commands : 
         (1. execsnoop - anything periodic running 2. opensnoop - any misconfigurations or file not found 3. tcplife - any unexpected TCP sessions, 4. ext4slower - any filesystem I/O slower than 10ms 5. biosnoop - Any unusual disk access patterns or outliers ) 
