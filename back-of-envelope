@@ -1815,7 +1815,21 @@ Distributed systems today and Benchmarking on common systems
       - Application tracing - BPF tracing, Strobelight, Pytorch Profiler, Kineto, Demand level tracing like QPS
       - Unified dataset which combines host level and application tracing, has optimization opportunities from bad patterns, regressions
       - UI Dashboarding
+      Host level / bare metal telemetry 
+        Meta uses Dynalog for this 
+          -distributed telemetry daemon running on all Meta’s hosts. It fulfills several important roles:
+            It collects system telemetry at the host/process level.
+            It collects workload metadata and conducts resource accounting to the proper workload owner.
+            It functions as a server for real-time telemetry queries to support use cases such as load balancing and autoscaling.
+            It serves as the moderator of the telemetry tools on the host to interact with remote on-demand user requests.
+          ![Alt text](image-3.png)
+
       One major challenge of AI observability comes from the heterogeneity of the fleet. As the computational demand increases with the complexity of AI workloads, the heterogeneity of the fleet increases with the deployment of various application-specific integrated circuits (ASICs), including the Meta Training and Inference Accelerator (MTIA), third-party vendor ASICs such as GPU, inference accelerators, and video encoder/transcoders. To address the challenge, the Dynolog collector module generalizes the metric collection and configuration through LibAsicMon, a platform agnostic observability system for AI accelerators.
+      END-TO-END PROFILING
+        System performance is the result of interaction across different layers of the stack. At Meta we use various tools to understand the performance and interactions across these layers.
+
+        For example, a workflow might make a call over the network to get some data, do some processing on the host (CPU), and call a Kernel on the device (GPU). To get a holistic view of system performance, we want to understand the time spent in the network call, CPU processing, queuing the call on the device, and the actual execution start and end times on the device. Using this data we can identify bottlenecks, understand inefficiencies, and identify opportunities for improvement.
+        ![Alt text](image-2.png)
 
     BPF(Berkely packet filtering) profiling libraries to check performance bottleneck 
       nice video - https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity
