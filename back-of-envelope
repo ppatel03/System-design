@@ -1811,9 +1811,10 @@ Distributed systems today and Benchmarking on common systems
     Performance monitoring needs to be done at different levels 
       Example of Meta stack - https://atscaleconference.com/systemscale-ai-observability/
       ![Alt text](image-1.png)
-      - host level / bare metal telemetry
-      - Application tracing - BPF tracing 
-      - Demand level tracing like QPS
+      - Host level / bare metal telemetry
+      - Application tracing - BPF tracing, Strobelight, Pytorch Profiler, Kineto, Demand level tracing like QPS
+      - Unified dataset which combines host level and application tracing, has optimization opportunities from bad patterns, regressions
+      - UI Dashboarding
 
     BPF(Berkely packet filtering) profiling libraries to check performance bottleneck 
       nice video - https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity
