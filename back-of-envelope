@@ -1938,8 +1938,31 @@ Distributed systems today and Benchmarking on common systems
                 - organic growth
                 - spike buffer 
                 - (tough) statefulness
-                - (tough) 
-              - load testing to determine throug
+                - (tough) regional fluidity
+            Solution 
+              - load testing every 4 (config) hours to help determine throughput and stopper metrics 
+                - use throughput metrics to get total instructions at peak hour for the service at lowest granalarity - region level + machine type
+                - calculate throughput for DR bufer, organic growth and spike buffer from throughput metric 
+                - get the estimate of # of machines needed
+                - submit this data to autoscaling job 
+                How load testing is done ? 
+                  - runs every 4 hours by default but runs more frequently if the stopper metrics vary 
+                  - tags the selected hosts on every region at machine type 
+                  - tags the service router to gradually route the traffic to those selected hosts gradually based on configurable load
+                  - marks the selected hosts to do advanced profiling 
+                  - waits for machine to drain 
+                    - health check
+                    - error rate
+                    - response time for online services. 
+                How autoscaling is done ? 
+                  - while scaling down, 
+                    - it prioritized 
+                      - low to high machine type and 
+                      - regions low in demand
+                      - hosts with lot of room for throuphput metrics  
+                    - first tags the service router to not route traffic to selected hosts (machine per 1% of throughput)
+                    - checks the impact on throughput and stopper metrics 
+                    - decomission the hosts 
 
           
        
