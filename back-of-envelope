@@ -1816,20 +1816,31 @@ Distributed systems today and Benchmarking on common systems
       - Unified dataset which combines host level and application tracing, has optimization opportunities from bad patterns, regressions
       - UI Dashboarding
       Host level / bare metal telemetry 
-        Meta uses Dynalog for this 
-          -distributed telemetry daemon running on all Meta’s hosts. It fulfills several important roles:
+          Meta uses Dynalog for this - distributed telemetry daemon running on all Meta’s hosts. It fulfills several important roles:
             It collects system telemetry at the host/process level.
             It collects workload metadata and conducts resource accounting to the proper workload owner.
             It functions as a server for real-time telemetry queries to support use cases such as load balancing and autoscaling.
             It serves as the moderator of the telemetry tools on the host to interact with remote on-demand user requests.
           ![Alt text](image-3.png)
+        One major challenge of AI observability comes from the heterogeneity of the fleet. As the computational demand increases with the complexity of AI workloads, the heterogeneity of the fleet increases with the deployment of various application-specific integrated circuits (ASICs), including the Meta Training and Inference Accelerator (MTIA), third-party vendor ASICs such as GPU, inference accelerators, and video encoder/transcoders. To address the challenge, the Dynolog collector module generalizes the metric collection and configuration through LibAsicMon, a platform agnostic observability system for AI accelerators.
 
-      One major challenge of AI observability comes from the heterogeneity of the fleet. As the computational demand increases with the complexity of AI workloads, the heterogeneity of the fleet increases with the deployment of various application-specific integrated circuits (ASICs), including the Meta Training and Inference Accelerator (MTIA), third-party vendor ASICs such as GPU, inference accelerators, and video encoder/transcoders. To address the challenge, the Dynolog collector module generalizes the metric collection and configuration through LibAsicMon, a platform agnostic observability system for AI accelerators.
-      END-TO-END PROFILING
-        System performance is the result of interaction across different layers of the stack. At Meta we use various tools to understand the performance and interactions across these layers.
+      Application tracing - Kineto, Pytorch, Strobelight
+        end-to-end PROFILING
+          System performance is the result of interaction across different layers of the stack. At Meta we use various tools to understand the performance and interactions across these layers.
 
-        For example, a workflow might make a call over the network to get some data, do some processing on the host (CPU), and call a Kernel on the device (GPU). To get a holistic view of system performance, we want to understand the time spent in the network call, CPU processing, queuing the call on the device, and the actual execution start and end times on the device. Using this data we can identify bottlenecks, understand inefficiencies, and identify opportunities for improvement.
-        ![Alt text](image-2.png)
+          For example, a workflow might make a call over the network to get some data, do some processing on the host (CPU), and call a Kernel on the device (GPU). To get a holistic view of system performance, we want to understand the time spent in the network call, CPU processing, queuing the call on the device, and the actual execution start and end times on the device. Using this data we can identify bottlenecks, understand inefficiencies, and identify opportunities for improvement.
+          ![Alt text](image-2.png)
+        KINETO
+          Kineto is a CPU+GPU profiling library that provides access to timeline traces and hardware performance counters. It is built on top of Nvidia’s CUPTI. We rely on Kineto for information on kernel executions, memory operations, and utilization metrics for various hardware units. Kineto is open sourced and integrated into PyTorch Profiler. 
+        PYTORCH PROFILER
+          PyTorch Profiler is another tool we rely on for profiling our workload performance. PyTorch Profiler allows the collection of performance metrics during training and inference.
+        STROBELIGHT
+          Strobelight is a daemon that runs on all of Meta’s fleet hosts and acts as both a profiler and a profiler orchestration tool. Profiling can be triggered by certain events (such as an OOM event), runs on a pre-configured schedule or on-demand. Strobelight relies on eBPF (or simply BPF)  for many of its sub-profilers.  And we have recently added a BPF-based CPU -> GPU profiler to Strobelight’s profiler suite. 
+        BPF 
+          In a nutshell, BPF is Linux kernel technology that can run sandboxed programs in a privileged context such as the operating system kernel.
+          GPUSNOOP
+            Gpusnoop is a BPF-based profiler suite that Strobelight supports. It can hook into a variety of interesting GPU events such as cuda kernel launches, cuda sync events, and cuda memory events. It also supports profiling PyTorch memory events.
+        
 
     BPF(Berkely packet filtering) profiling libraries to check performance bottleneck 
       nice video - https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity
