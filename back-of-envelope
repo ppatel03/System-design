@@ -1011,8 +1011,8 @@ Distributed best practices
           - Since each pod gets IP address, then won't it creates disruption if a pod dies. Example MySQL pod dies ? 
             - So pod is supported by "service" (may be kube-proxy) sitting in each pod. This concept which is similar to load balancer and IP address is assigned to a service instead of a pod. It also serves as a load balancer
           Similar video : https://www.youtube.com/watch?v=2vMEQ5zs1ko
-          
-           
+
+
    What is Istio ? 
       https://www.youtube.com/watch?v=16fgzklcF7Y&t=197s&ab_channel=TechWorldwithNana 
       - First understand what is service mesh ? 
@@ -1428,6 +1428,26 @@ Distributed best practices
 =========================================================================================================================
 =========================================================================================================================
 =========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
+=========================================================================================================================
 
 
 Distributed systems today and Benchmarking on common systems
@@ -1758,7 +1778,9 @@ Distributed systems today and Benchmarking on common systems
                                                                                                           (aside from egress fees)
 
    
-
+  Observability systems today - top ones are Datadog and Prometheus 
+    https://www.squadcast.com/compare/prometheus-vs-datadog-a-comparative-overview
+    ![Alt text](image.png)
       
 
   Cache benchmarking
@@ -1960,8 +1982,21 @@ Distributed systems today and Benchmarking on common systems
                   - private and non open source
                   - uses push based model
                   
-                Prometheus 
+                Prometheus (also used in metrics monitoring)
                   - uses pull based model and thus samples heavily. May not be ideal for monitoring based on revenue but good for system stats.
+
+                Datadog (also used in metrics monitoring)
+                  - free+paid version 
+                  - offers both pull-based and push-based models for data collection. 
+                  - Datadog pulls data for monitoring by: 
+                    Running a customizable Agent check
+                    Scrubbing available endpoints
+                    Looking for exposed metrics
+
+                  - Datadog also pulls in: 
+                    CloudWatch metrics and events
+                    Tags from your cloud provider
+
 
                 Timescale DB based on Postgres
                   - built on top of postgres so that you can run MySQL
