@@ -1788,6 +1788,52 @@ Distributed systems today and Benchmarking on common systems
       Prometheus is an open-source tool and does not incur licensing costs, although costs associated with running Prometheus at scale like computing, storage or networking costs may incur. There are paid Prometheus as a service (PaaS) offerings from providers like Amazon, Google, Microsoft etc. which would cost you anywhere between $0.03 - $0.06 per Prometheus node per hour. 
       Datadog follows a subscription-based pricing model. The cost depends on the number of hosts and features required; while this comes at a cost, using Datadog provides dedicated support, regular updates, and managed infrastructure management - making your life simpler in many ways!
 
+  Performance engineering 
+    Linux commands 
+      Cgroup
+        https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/resource_management_guide/ch01 
+        Control groups (cgroups) are a feature of the Linux kernel that allows administrators to monitor and limit the resources used by groups of processes. Cgroups can limit the following resources: CPU usage, Memory usage, Block IO, Network IO, Access to device nodes. 
+        Cgroups can also allocate resources to groups of processes. These resources include: CPU time, System memory, Network bandwidth. 
+        For example, cgroups can limit a Google Chrome process to 30% total CPU usage or 1 GB of RAM. 
+        Cgroup was used in Facebook to isolate allocation of resources of WDBs + WDL from main application. This provides resource guarantee of your application
+      Top
+        https://medium.com/@TheAnshuman/linux-commands-to-check-cpu-utilization-memory-and-disk-c9daf8a53be8 
+        Host level metrics and also per process metrics 
+        It provides real-time information about system performance, including CPU and memory utilization.
+        Top/hTOP DOES NOT SUPPORT CGROUPS 
+        FACEBOOK RELEASED BELOW as an interactive resource monitoring tool - https://www.youtube.com/watch?v=4PB-RaUt2OY&ab_channel=MetaOpenSource 
+      Iostat
+        https://www.atlantic.net/vps-hosting/how-to-check-linux-cpu-usage-or-utilization/ 
+        Host level metrics and also per process metrics 
+        This command in Linux is used to report and monitor system input/output (I/O) device statistics, including information about disk utilization and performance.
+    Performance monitoring needs to be done at different levels 
+      Example of Meta stack - https://atscaleconference.com/systemscale-ai-observability/
+      - host level / bare metal telemetry
+      - Application tracing - BPF tracing 
+    BPF profiling libraries to check performance bottleneck 
+      nice video - https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity
+      top commands : 
+        (1. execsnoop - anything periodic running 2. opensnoop - any misconfigurations or file not found 3. tcplife - any unexpected TCP sessions, 4. ext4slower - any filesystem I/O slower than 10ms 5. biosnoop - Any unusual disk access patterns or outliers ) 
+         - example of performance bottleneck as a perl process detected on Cassandra DB using biosnoop rather than iostat command https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity 
+
+
+    Examples of 
+      - Demand efficiency 
+        - adding cache at function level like "Memoize" by simply tracing amount of function calls on a request
+        - removing GKs 
+        - removing dead ifs 
+        - removing old frameworks (simple pattern matching)
+      - Software efficiency
+        - For horizontal software written in C, using Folly libraries rather than traditional ones (in memory json manipulation or string-formatting)
+        - using BPF (say biosnoop command )
+      - Utilization efficiency 
+        - Autoscaling 
+        - unused host 
+      - HW efficiency
+        - replace new hardware based on bottlneck resource
+        - avoid double occupancy 
+       
+
       
 
   Cache benchmarking
