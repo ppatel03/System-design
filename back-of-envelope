@@ -1826,6 +1826,11 @@ Distributed systems today and Benchmarking on common systems
       - used for L4 LB (Facebook), AWS / Google uses EKS which uses eBPF, Smartphones 
       - Grafana will soon be integrated with eBPF for observability 
 
+    How to collect a Function level stack trace 
+      - using linux perf tool which is included in linux kernel  
+          perf record -g --call-graph dwarf -p $your_process_id 
+      - example, Facebook's xenon -> https://github.com/facebook/hhvm/wiki/Profiling
+
 
     Examples of 
       - Demand efficiency 
