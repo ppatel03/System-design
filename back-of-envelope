@@ -1847,6 +1847,15 @@ Distributed systems today and Benchmarking on common systems
           In a nutshell, BPF is Linux kernel technology that can run sandboxed programs in a privileged context such as the operating system kernel.
           GPUSNOOP
             Gpusnoop is a BPF-based profiler suite that Strobelight supports. It can hook into a variety of interesting GPU events such as cuda kernel launches, cuda sync events, and cuda memory events. It also supports profiling PyTorch memory events.
+        python profiler
+          pstats / line profiler - not good for production though
+          event based vs statistical profiler 
+            event based 
+              - based on some event - exception, functional. Example cprofile, line_profiler above 
+            statistical 
+              - probe(search) call stack periodically. Example vmprof
+            
+
       EXAMPLE FEATURES
         - AUTO-PROFILING AND ON-DEMAND PROFILING  
         
