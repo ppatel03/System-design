@@ -1900,7 +1900,7 @@ Distributed systems today and Benchmarking on common systems
         - removing GKs 
         - removing dead ifs 
         - removing old frameworks (simple pattern matching)
-        - unsued tables in MySQL, Dataware houses
+        - unsued tables in MySQL, Dataware houses and their pipelines/models 
         - Inefficiency or infrequent DB queries 
       - Software efficiency
         - For horizontal software written in C, using Folly libraries rather than traditional ones (in memory json manipulation or string-formatting)
