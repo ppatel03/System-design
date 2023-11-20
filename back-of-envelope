@@ -276,8 +276,9 @@ Time to understand scalability, latency aspects
               - version vectors can check if 2 operations are concurrent or causally dependent on one other. Riak 2.0 uses version vectors - Pg 184 
         22. How to ensure good Job placement for a Job manager / resource manager ? 
           https://medium.com/pinterest-engineering/tuning-flink-clusters-for-stability-and-efficiency-50d3d50384ed 
-            - place it with resource awareness (CPU aware) , machine type awareness based on bottleneck resources  
-            - place soft limits on jobs using Cgroups and some proportion reserved for burst capacity (each job needs during start up)     
+            - place it with resource awareness (CPU aware) , 
+            - place it with machine type awareness based on bottleneck resources (cpu-instance hardware vs memory instances) 
+            - place soft limits on jobs using Cgroups and some proportion reserved for burst capacity (each job needs during start up). However, also look for ways to avoid internal fragmentation / banding.     
             - place consecutive subtasks belong to same job on same hosts  (it also reduces network bandwidth)
             - For demand efficiency, identify bottlenecks for jobs which does overfetching 
 
