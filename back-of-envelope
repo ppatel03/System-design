@@ -287,9 +287,9 @@ Time to understand scalability, latency aspects
             - writes/reads of a particular user/session go to same datacenter
             - for conflicts, use different strategies
               - LWW based on timestamp
-              - Calls custom conflict resolution logic (some DBs support this). Example Dynamo's read repair and anti-entropy
+              - Calls custom conflict resolution logic (some DBs support this). Example Dynamo's read repair and anti-entropy OR Azure CosmosDB 
               - use version vectors - (also helps with ordering)
-                - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis)
+                - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
               - use lamport timestamp - recency guarantee (just incrementing version to get latest versions)
 
   
