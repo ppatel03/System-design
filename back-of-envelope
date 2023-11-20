@@ -233,7 +233,7 @@ Time to understand scalability, latency aspects
         11. Security : 
               - Storing Personal Data : encrtyped form 
               - Rate limiter to avoid DDOS
-        12. Save Storage 
+        12. Reduce Storage Size
             - move infrequent data to Amazon S3 glacier
             - avoid short-term checkpoints
             - retention
