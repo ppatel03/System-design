@@ -1946,6 +1946,7 @@ Distributed systems today and Benchmarking on common systems
                 - get the estimate of # of machines needed
                 - submit this data to autoscaling job 
                 How load testing is done ? 
+                Initially, it runs for a week (configurable) or ends early if peek hour or steady traffic is determined. After that it runs every 4 hours and submit its stats to autoscaling.
                   - runs every 4 hours by default but runs more frequently if the stopper metrics vary 
                   - tags the selected hosts on every region at machine type 
                   - tags the service router to gradually route the traffic to those selected hosts gradually based on configurable load
@@ -1955,6 +1956,7 @@ Distributed systems today and Benchmarking on common systems
                     - error rate
                     - response time for online services. 
                 How autoscaling is done ? 
+              
                   - while scaling down, 
                     - it prioritized 
                       - low to high machine type and 
