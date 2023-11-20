@@ -281,6 +281,16 @@ Time to understand scalability, latency aspects
             - place soft limits on jobs using Cgroups and some proportion reserved for burst capacity (each job needs during start up). However, also look for ways to avoid internal fragmentation / banding.     
             - place consecutive subtasks belong to same job on same hosts  (it also reduces network bandwidth)
             - For demand efficiency, identify bottlenecks for jobs which does overfetching 
+        23. How to effectively do multi-leader replication ? 
+            - the common use case is multi-datacenter need where there is a leader in each datacenter
+            - make sure there is atleast quorum consistency to strong consistency in each datacenter
+            - writes/reads of a particular user/session go to same datacenter
+            - for conflicts, use different strategies
+              - LWW based on timestamp
+              - Calls custom conflict resolution logic (some DBs support this). Example Dynamo's read repair and anti-entropy
+              - use version vectors - (also helps with ordering)
+                - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis)
+              - use lamport timestamp - recency guarantee (just incrementing version to get latest versions)
 
   
 
