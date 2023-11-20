@@ -288,7 +288,7 @@ Time to understand scalability, latency aspects
             - for conflicts, use different strategies
               - LWW based on timestamp
               - Calls custom conflict resolution logic (some DBs support this). Example Dynamo's read repair and anti-entropy OR Azure CosmosDB 
-              - use version vectors - (also helps with ordering)
+              - use version vectors - (also helps with ordering) - RiakDB
                 - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
               - use lamport timestamp - recency guarantee (just incrementing version to get latest versions)
 
