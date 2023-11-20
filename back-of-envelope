@@ -1937,7 +1937,7 @@ Distributed systems today and Benchmarking on common systems
       Load testing algorithms
         - using throughput and stopper metrics
           Throughput 
-            - find the increasing metrics increasing with load. Its in fixed set (instructions, QPS)
+            - find the increasing metrics increasing with load. Its in fixed set (instructions, QPS, GPU hours, ALM)
             - detected using linear regression 
           Stopper
             - find the metrics increasing and impacting the throughput above. It has wide ranges (CPU and Mem utilization, Mem bandwidth, disk I/O, network I/O, error rate, latency, revenue)
