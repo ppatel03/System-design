@@ -1910,8 +1910,10 @@ Distributed systems today and Benchmarking on common systems
             - change points that are close in time and connected via call stack are grouped together
             - also nodes (functions) with largest number of exclusive stack traces are removed in greedy fashion (usually common function) and magnitude (samples) of remaining are again evualted till samples fall below the threshold
           - cost shift 
-            - check the parent cost till the congifurable level - example depth of 3. However, also use the large stack trace removal in dedup #2 explained above. 
+            - check the parent cost till the congifurable level - example depth of 3. However, also use the large stack trace removal in dedup #2
+             explained above. 
                 example common parent function have large stack trace - example 10^10 / 10^12 ~ 1 % cpu. Then its hardly going to change if the child regresses.
+            - check if there shift in demand from one endpoint to another
 
       Load testing algorithms
         - using throughput and stopper metrics
