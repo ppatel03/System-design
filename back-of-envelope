@@ -271,7 +271,7 @@ Time to understand scalability, latency aspects
             - DB changes -> log based message passing (kakfa) -> different sources like Search index, Database, materialized views
             Kafka already log compaction to avoid storing outdated data in its partition
         21. How to ensure recency guarantee ? 
-            - using Lamport timestamp (just the counter to record to indicate whats more updated ) - Pg 346
+            - using Lamport timestamp (just the counter to record to indicate whats more updated ) - Pg 346 - MongoDB, Dynamo, Cockroach DB uses vector clock
             - It is confused with version vectors 
               - version vectors can check if 2 operations are concurrent or causally dependent on one other. Riak 2.0 uses version vectors - Pg 184 
         22. How to ensure good Job placement for a Job manager / resource manager ? 
