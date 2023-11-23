@@ -131,7 +131,7 @@ Time to understand scalability, latency aspects
               - Data freshness SLA if eventual consistency 
                 - With this in mind, it provides as good idea about time to resolve conflicts with concurrent writes  
                     - Example, building search engine or yelp. With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
-            - Latency + quorum to replica if high consistency 
+            - Latency + quorum to replica if Quorum consistency 
             - If Strong consistency or Quorum consistency (for NoSQL like Cassandra)
               - check with latency compromise due to replication and building concensus
               - if also needed strong isolation, then can help reason for SQL databases due to isolation level support
