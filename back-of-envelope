@@ -202,6 +202,8 @@ Time to understand scalability, latency aspects
       c. Think about edge cases for product
       d. Some well-known challenges 
         1. Exactly once if queue is used. 
+            - retry on producer end 
+            - idempotency on consumer end (use rolling bloom filter for checking which does garbage collection based on watermarked time. https://cloud.google.com/dataflow/docs/concepts/exactly-once#latency )
         2. Consistency always with CQRS(sep read and write systems) or 
         3. Reconciallation for stream + batch DBs or payment system
         3. Idempotency for retry systems
@@ -291,6 +293,10 @@ Time to understand scalability, latency aspects
               - use version vectors - (also helps with ordering) - RiakDB
                 - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
               - use lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
+        24. How to maintain data consistency between databasesm internal services, internal service + third party ? 
+              - To maintain data consistency between replicas, use strong consistency or quorum consistency or eventual consistency.
+              - To maintain data consistency between internal services, ensuring exactly-once processing is very important.
+              - To maintain data consistency between the internal service and external service (PSP), we usually rely on idempotency and reconciliation.
 
   
 
