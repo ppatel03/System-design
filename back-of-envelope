@@ -504,7 +504,7 @@ Distributed best practices
         Second, the [server: version] pairs in the vector clock could grow rapidly. To fix this problem, we set a threshold for the length, and if it exceeds the limit, the oldest pairs are removed. This can lead to inefficiencies in reconciliation because the descendant relationship cannot be determined accurately. However, based on Dynamo paper [4], Amazon has not yet encountered this problem in production; therefore, it is probably an acceptable solution for most companies.
 
   Failure detection algo 
-    - gossip prototocol to detect availability failures in distributed systems
+    - gossip prototocol to detect availability failures in distributed systems (Cassandra)
     - Raft (description below) using used for master-replica model does both detect failures and resolve conflicts
       
 
