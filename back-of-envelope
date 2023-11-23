@@ -678,6 +678,7 @@ Distributed best practices
           Okta uses SAML 
 
       What Is IAM (Identity & Access Management)?
+        GREAT VIDEO HOW AWS HANDLES IAM (policy, roles, users and groups) - https://www.youtube.com/watch?v=VclOgMtBXN4
         https://spectralops.io/blog/top-11-identity-access-management-tools/
           Identity and Access Management (IAM) tools are designed to manage identities (users) and access (authentication and authorization). The goal of IAM tools is to streamline the management of user accounts and privileges from all aspects.
           In most cases, an IAM solution will let you define a policy. This policy will, in turn, determine the roles of users. Each role defined will have permissions set. These permissions allow access to specific resources. 
