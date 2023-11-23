@@ -401,7 +401,7 @@ Distributed Systems estimate
       TLB cache for mapping above -  virtual to physical memory address
       OS level 
         Page cache  - recently used disks blocks in memory
-        File cache  - 
+        File cache  - recently used file data in memory
         iNode cache
           - For context, INode is a file block pointer where filename is stored and looked up. Then using iNode, When we access a local file, we first fetch the metadata in the inode. We then read the file data by following the file block pointers to the actual disk locations.https://bytebytego.com/courses/system-design-interview/s3-like-object-storage   
           - iNode cache speed up file system operations by reducing disk access because if both iNode and file are in disk, then operation is super slow. (https://www.bluematador.com/blog/what-is-an-inode-and-what-are-they-used-for )
