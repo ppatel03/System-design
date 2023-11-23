@@ -420,7 +420,8 @@ Distributed Systems estimate
         caches on disk using sequential IO (pretty fast)
         allows consumer to consume at their own pace
       Distributed caches
-        Redis : in-memory db
+        Redis : in-memory single threaded with lot of other features(sorted set, geohash, CRDT, atomic) and can be attached to persistance storage.
+        Memcache : in-memory multi threaded for larger datasets but cannot be attached to persistence storage 
         RocksDB : LSM tree to leverage memory + SSD 
       Full text search
         Elastic search - does reverse indexing which indexes texts to doc id
