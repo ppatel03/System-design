@@ -483,7 +483,7 @@ Distributed best practices
           Video calling (app like Zoom): UDP can support video 30 frames per second refresh rates (frame is single image in the video - https://darvideo.tv/dictionary/frame/ and min is 24 fps and max is 60 fps even better). The data transmission is so fast that a few dropped packets do not affect the user experience. 
           Online gaming: TCP’s many checklists and balances will significantly impact gaming experiences. Without perfect network conditions, frames will frequently freeze, and connections will restart if using TCP. That is why UDP is recommended. 
 
-  Remove inconsistency caused by writes through multiple servers - versioning using vector clocks
+  Remove inconsistency caused by writes through multiple servers - versioning using vector clocks (supported by Riak 2.0)
     https://bytebytego.com/courses/system-design-interview/design-a-key-value-store
     This is very applicable for leaderless replication like Cassandra
     Vector clocks
