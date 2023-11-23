@@ -424,9 +424,9 @@ Distributed Systems estimate
         Memcache : in-memory multi threaded for larger datasets but cannot be attached to persistence storage 
         RocksDB : LSM tree to leverage memory + SSD 
       Full text search
-        Elastic search - does reverse indexing which indexes texts to doc id
+        Elastic search - does reverse indexing which indexes terms to doc id
       Database cache
-        WAL (sequence of bytes)/binlog (row level log) : data is first written to WAL before being indexed in B tree. Retention is 30 days for MySQL
+        WAL (sequence of bytes in Postgresql, Oracle)/binlog (row level log in MySQL) : data is first written to WAL before being indexed in B tree. Retention is 30 days for MySQL
         Buffer pool : cache query results
         Materialized views : precompute query results
         replication log : tracks replication state (MySQL uses binlog as its replication log). Retention is 30 days for MySQL
