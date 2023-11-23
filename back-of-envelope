@@ -132,7 +132,7 @@ Time to understand scalability, latency aspects
                 - With this in mind, it provides as good idea about time to resolve conflicts with concurrent writes  
                     - Example, building search engine or yelp. With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
             - Latency + quorum to replica if Quorum consistency 
-            - If Strong consistency or Quorum consistency (for NoSQL like Cassandra)
+            - If Strong consistency ( Quorum consistency)  (for NoSQL like Cassandra)
               - check with latency compromise due to replication and building concensus
               - if also needed strong isolation, then can help reason for SQL databases due to isolation level support
 
@@ -287,7 +287,7 @@ Time to understand scalability, latency aspects
             - For demand efficiency, identify bottlenecks for jobs which does overfetching 
         23. How to effectively do multi-leader replication ? 
             - the common use case is multi-datacenter need where there is a leader in each datacenter
-            - make sure there is atleast quorum consistency to strong consistency in each datacenter
+            - make sure there is atleast quorum consistency ( strong ) consistency in each datacenter
             - writes/reads of a particular user/session go to same datacenter
             - for conflicts, use different strategies
               - LWW based on timestamp
@@ -296,7 +296,7 @@ Time to understand scalability, latency aspects
                 - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
               - use lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
         24. How to maintain data consistency between databasesm internal services, internal service + third party ? 
-              - To maintain data consistency between replicas, use strong consistency or quorum consistency or eventual consistency.
+              - To maintain data consistency between replicas, use strong consistency ( quorum consistency) or eventual consistency.
               - To maintain data consistency between internal services, ensuring exactly-once processing is very important.
                   - retry on producer end 
                   - idempotency on consumer end (use rolling bloom filter for checking which does garbage collection based on watermarked time. https://cloud.google.com/dataflow/docs/concepts/exactly-once#latency )
@@ -1323,7 +1323,7 @@ Distributed best practices
                 - use LWW - Cassandra
                 - use CRDT supported DBs
             But how to ensure you are consistent values from different DB nodes ? 
-              - Quorum consistency - achieving concensus with R + W > N. Usually N is picked as odd number in DynamoDB
+              - Quorum consistency (strong) - achieving concensus with R + W > N. Usually N is picked as odd number in DynamoDB
                     w = r = (n + 1) / 2
                 - Limitations of Quorum consistency 
                     Higher Latency – Lower Availability
@@ -2353,7 +2353,7 @@ Distributed systems today and Benchmarking on common systems
 
             DynamoDB splits data across multiple nodes using consistent hashing.
 
-            uses quorum consistency 
+            uses quorum consistency (type of strong consistency)
             uses read-repair and anti-entropy
             supports serializable transactions
 
