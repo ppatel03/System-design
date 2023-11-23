@@ -276,7 +276,7 @@ Time to understand scalability, latency aspects
         21. How to ensure recency guarantee ? - Linerazeability
             - using Lamport timestamp (just the counter to record to indicate whats more updated ) - Pg 346 - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
             - using quorum consistency (R+W > N) like Dynamo or strong consistency
-            - It is confused with version vectors 
+            - Lamport timestamp or vector clocks are often confused with version vectors 
               - version vectors can check if 2 operations are concurrent or causally dependent on one other. Riak 2.0 uses version vectors - Pg 184 
         22. How to ensure good Job placement for a Job manager / resource manager ? 
           https://medium.com/pinterest-engineering/tuning-flink-clusters-for-stability-and-efficiency-50d3d50384ed 
