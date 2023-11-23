@@ -356,7 +356,7 @@ Distributed Systems estimate
       https://bytebytego.com/courses/system-design-interview/s3-like-object-storage
       100 ~ 150 IOPS (per disk seeks ~ 10ms)
 
-    AWS availability ~ 99.9% https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html
+    AWS availability ~ 99.99% https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html
     AWS A100 GPU Lambda ~ 1$ per hour https://lambdalabs.com/service/gpu-cloud 
     AWS memory limit    ~ 24 TB RAM
     AWS DB (MySQL) limit ~ 64 TB storage
