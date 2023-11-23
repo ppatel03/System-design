@@ -142,7 +142,7 @@ Time to understand scalability, latency aspects
             - For replicas, ensure acknowledge only if all replicas respond to read/write update.
                   
       a.2. Latency 
-        - this would help decide whether you really need low latency optimizations like cache, or not. Remember today mosts have 1 Gbps network which has 10 us to transfer 1 KB
+        - this would help decide whether you really need low latency optimizations like cache, or not. Remember today mosts have 1 Gbps network and internal datacenter is 25 Gbps ~ 2.5 GBps
 
       a.3. Fault tolerant + Durability + Resilency
         - Fault tolerance
