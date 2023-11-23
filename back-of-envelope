@@ -260,8 +260,8 @@ Time to understand scalability, latency aspects
             - use fencing (lease only for sometime) - Pg 303 DDIA
         17. How to ensure consistency with Queue + DB pipeline (event passed but the DB read still does not have it due to evenutal consistency)
            1. linearizable using total order broadcast. - Pg 351
-              - if you know latest position of log message, then your read can wait for that position. 
-              - another technique is post dummy message to the queue, then wait for the message to appear in consumer and then you can start reading the values.
+              - if you know latest position of log message, then your read can wait for that position. (example Zookeeper sync() operation works similarly)
+              - another technique is post dummy message to the queue, then wait for the message to appear in consumer and then you can start reading the values.(examle quorum reads in etc work similar)
               Q. But what if those events belong to different partitions in the queue ? - Pg 462 DDIA
         18. How will you ensure exactly once processing for stream processing 
           1. using checkpoint barries like in Flink - Pg 477 
