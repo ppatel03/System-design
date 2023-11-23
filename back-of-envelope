@@ -592,7 +592,7 @@ Distributed best practices
     - Walmart's CDC solution from Cassandra (https://medium.com/walmartglobaltech/walmarts-cassandra-cdc-solution-6fc650031a3 )
   Pg 455 - DDIA 
     Rather than database triggers, Parsing replication log can be a more robust approach. Example Debezium uses MySQL binlog (same as replication log for MYSQL). Retention is 30 days for MySQL.
-    Along with this you also need "Initial snapshot" since replication log cannot carry entire DB changes.
+    Along with this you also need "Initial snapshot" since replication log cannot carry entire DB changes.(30 day retention)
 
   In-sync replicas
     https://bytebytego.com/courses/system-design-interview/distributed-message-queue
