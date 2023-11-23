@@ -118,7 +118,7 @@ Time to understand scalability, latency aspects
             - https://www.pagerduty.com/resources/learn/reliability/ 
                 Availability is a measure of the percentage of time that an IT service or component is in an operable state. Example of not meeting availability is Facebook was down in 2021 for about 3-5 hrs.
                 With this you can even decide that, your system/part of the sytem could be offline for 10s in a day for reasons like roll out, stateful servers scaling, upgrading the database or even doing DB sync etc. 
-                4 9s -> 10s
+                4 9s -> 10s  - which is 300s a month which is 60-120s of AWS failover time. This is also AWS ec2 instance/ EKS and Azure's AKS availability percentage  
                 5 9s -> 1 s
                 6 9s -> 100 ms or less than 1s
                 8 9s -> 1 ms or very high (no downtime)
