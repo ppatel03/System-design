@@ -449,7 +449,7 @@ Distributed best practices
     https://www.youtube.com/watch?v=nH4qjmP2KEE&t=12s&ab_channel=ByteByteGo
     Ambassador
       - proxy to offload work like handle logging, monitoring, handling retries
-      - example, kubernetes uses envoy proxy to simply communication between services
+      - example, kubernetes uses envoy proxy to simply communication between services. You can upgrade this feature with Istio which uses service mesh (network layer between control plane and envoy proxy in each pod )
     Circuit Breaker 
     CQRS
     Event Sourcing 
