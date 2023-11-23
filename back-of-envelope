@@ -228,10 +228,11 @@ Time to understand scalability, latency aspects
             Example balance transfer 
         10. Zookeeper for any of the operations : 
               - Service discovery + 
-              - Concensus + 
+              - Concensus + (vs Raft - https://stackoverflow.com/questions/47760448/what-is-the-difference-between-zookeeper-and-raft )
               - leader election + 
               - failure detection + 
               - subscribe to config change updates 
+            Zookeeper is best deployed for small pieces of state where linearizability and high availability is critical. (https://aphyr.com/posts/291-call-me-maybe-zookeeper)
         11. Security : 
               - Storing Personal Data : encrtyped form 
               - Rate limiter to avoid DDOS
@@ -239,7 +240,7 @@ Time to understand scalability, latency aspects
             - move infrequent data to Amazon S3 glacier
             - avoid short-term checkpoints
             - retention
-            - compression - RLE
+            - compression - RLE, Delta compression for timeseries
         13. Latency 
             - caching 
                 - distributed cache, CDN 
