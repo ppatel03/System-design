@@ -1063,8 +1063,7 @@ Distributed best practices
       - First understand what is service mesh ? 
         - with microservices, there are other problems on service-to-service communication, security, retry, metrics and tracing. So service mesh has a control plane which automatically deploys a sidecar proxy besides our main application (likely within the pod) and thus services can talk to each other through those proxies and the network layer for service to service communication along with control plane is called service mesh. This can sidecar proxy is responsible for performing all these tasks. This way developers can only focus on main business logic.
         - It also helps in traffic splitting during Canary deployment. 
-        - It also helps in 
-        - Service mesh is a paradigm and Istio is one of its implementation. Istio uses open source proxy called Envoy proxy.  
+        - Service mesh is a paradigm (model) and Istio is one of its implementation. Istio uses open source proxy called Envoy proxy.  
       - Istio ? 
         - Architecture consists of control plane called Istiod and envoy proxies each hosted besides each application in the pod 
         - To configure, 
