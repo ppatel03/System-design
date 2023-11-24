@@ -437,6 +437,9 @@ Distributed Systems estimate
         -> ~1-10ms
     - Flink
         -> as low as 10 ms
+    - Ngnix
+      -> Scale upto 1 million QPS (1 million QPS, 65K SSL TPS, 70 Gbps throughput for Netflix, Hulu, Airbnb, Pinterest)
+      -> ~ 100us
 
 
 
