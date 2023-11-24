@@ -795,7 +795,7 @@ Distributed best practices
 
   Logging (errors), Metrics Monitoring (system level, business) and automated Deployment
     Logging (errors)
-      - datadog
+      - datadog or with help of 
       - logging errors to trigger alerts, sev
     Metrics Monitoring (system level, business)
       - datadog, 
