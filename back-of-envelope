@@ -1160,7 +1160,7 @@ Distributed best practices
   Use Nginx 
     - Has triats of load balancing + reverse proxy + API gateway
          - supports load balancing
-         - supports request forwarding based on different paths like api gateway
+         - supports API gateway : request forwarding based on different paths like api gateway
          - supports reverse proxy 
          - supports rate limiting
          - supports caching
@@ -1222,7 +1222,7 @@ Distributed best practices
     How snapshot actually works : https://www.youtube.com/watch?v=Tgpa9TrxsfU 
       it just stores all versions of modified rows in WAL and reads from a committed transaction in WAL. So you do not have to worry about someone modify/add the data when you are read (dirty or phantom read) because at transaction x, all rows were in consistent state.
     https://www.geeksforgeeks.org/what-is-snapshot-isolation/
-    Dirty read, phantom read
+    Solves Dirty read, phantom read aka non repeatable read 
     https://jennyttt.medium.com/dirty-read-non-repeatable-read-and-phantom-read-bd75dd69d03a
     With nice demo - https://techcommunity.microsoft.com/t5/sql-server-blog/serializable-vs-snapshot-isolation-level/ba-p/383281  
     Cockraoch DB uses serializable snapshot isolation by default - https://github.com/cockroachdb/cockroach/blob/master/docs/design.md 
@@ -1324,7 +1324,7 @@ Distributed best practices
             Concurrent write can cause lost update problem - how to solve it ? 
               - using atomic writes (locks on DB)
               - using application locks
-              - using compare-and-set method 
+              - using compare-and-set method (update something where something)
 
             But what if its a write skew or phantom (where a write in one transaction changes the result of a search query in another transaction, is called a phantom)
               - use "materialize conflicts" technique by creating rows. Example, creating meeting room time slots records to ensure no two rooms are in one time slot. But this will not work in cases like unique username or atleast one oncall, you cannot create records of all possible usernames.
@@ -1333,12 +1333,19 @@ Distributed best practices
 
             https://efficientcodeblog.wordpress.com/2017/12/25/leaderless-replication-dynamo-style-quorum-consensus-eventual-consistency-high-availability-and-low-latency/ 
             But what if its distributed -  multileader or leaderless replication ? 
+              - if multileader, make sure there is atleast quorum consistency ( strong ) consistency in each datacenter
+              - first make sure there is atleast quorum consistency ( strong ) consistency in each datacenter or server(leaderless)
               - need versioning to resolve conflicts  at DB level or application 
               - some ways to resolve conflicts at DB level
-                - use read-repair process (resolve conflicts when you read) - DynamoDB
-                - use anti-entropy process (resolve conflicts in background you read) - DynamoDB
-                - use LWW - Cassandra
-                - use CRDT supported DBs
+                - now for conflicts, use different strategies
+                  1. LWW based on timestamp
+                  2. Calls custom conflict resolution logic (some DBs support this). Examples
+                    - Dynamo
+                    - Azure CosmosDB 
+                  3. use version vectors - (also helps with ordering) - RiakDB
+                    - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
+                  4. use lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
+                    - Dynamo's read repair(resolve conficts when reading) and anti-entropy(resolve conflicts when writing)  
             But how to ensure you are consistent values from different DB nodes ? 
               - Quorum consistency (strong) - achieving concensus with R + W > N. Usually N is picked as odd number in DynamoDB
                     w = r = (n + 1) / 2
