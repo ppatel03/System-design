@@ -771,6 +771,16 @@ Distributed best practices
       1. Initiated by Client : Request and Response
       2. Initiated by Server : Data sent 
 
+  REST API naming conventions 
+    https://restfulapi.net/resource-naming/ 
+    - use nouns
+    - avoid verbs 
+    - do not use CRUD in naming since it would be obvious with HTTP methods - GET, POST , PUT , DELETE
+    - use plural for accessing the collection
+        /customers - gets all customers
+    - use {} for accessing by id 
+        /customers/{id} - gets customer by id 
+
   Physical cores, Virtual cores and Logical cores
     https://www.youtube.com/watch?v=O2g6381An_k 
     Example, i7 has 4 physical cores and Each core can have ability to run 2 threads simultaneously. So 4 virtual cores. So 8 logical cores
