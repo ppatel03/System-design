@@ -1039,7 +1039,7 @@ Distributed best practices
     - due to its complexity, do not use it if your org is small enough
     https://www.youtube.com/watch?v=VnvRFRk_51k&t=78s
       use master-worker architecture. 
-        Master - 
+        Control plane - 
           - contains API server which can accept configuration about your application through YAML file
           - controller managers to keep track of what's happening in the cluster
           - scheduler ensures pod placement on workers
@@ -1047,10 +1047,14 @@ Distributed best practices
           - has another master as secondary to avoid SPOF 
         Workers 
           - deploys your application into pods which is a wrapper for containers. So one pod can have many containers.
-          - usually its one pod per application. You only have multiple applications in one pod when its helper to another - example, datadog agent.
+          - usually its one pod per application. You only have multiple applications in one pod when its helper to another - example, envoy proxy or datadog agent.
+          - kubelet - communications with control plane
+          - container runtime deploys the container by polling the images from registry, start/stop container
+          - kube-proxy : helps route to correct pods and load balancing for the pods.
           - If pod dies, new ones gets easily created.
           - Since each pod gets IP address, then won't it creates disruption if a pod dies. Example MySQL pod dies ? 
-            - So pod is supported by "service" (may be kube-proxy) sitting in each pod. This concept which is similar to load balancer and IP address is assigned to a service instead of a pod. It also serves as a load balancer
+            - So pod is supported by "service" (may be kube-proxy) sitting in each pod. This concept which is similar to load balancer and IP address is assigned to a service instead of a pod. It also serves as a load balancer. 
+            - ANOTHER GREAT ALTERNATIVE OPTION IS ISTIO SERVICE MESH ABSTRACTION
           Similar video : https://www.youtube.com/watch?v=2vMEQ5zs1ko
 
 
