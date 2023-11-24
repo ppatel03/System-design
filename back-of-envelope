@@ -1613,7 +1613,7 @@ Distributed systems today and Benchmarking on common systems
 
     Design search engine
       https://medium.com/double-pointer/system-design-interview-search-engine-edb66b64fd5e 
-        Web -> Crawler -> Indexer -> Retiever <-> Web Browser or Mobile
+        Web -> Crawler -> Indexer -> Retiever -> Ranking <-> Web Browser or Mobile
 
         Crawler : crawls from robots.txt, uses some seed URLs, uses priority Q, adds links in priority Q to crawl next
         Indexer : pre-process (remove stop words), indexes usually inverted index as word -> doc ids
