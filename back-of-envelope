@@ -1439,11 +1439,17 @@ Distributed best practices
          
 
   How to design ranking system based on multile criteria (used in multiple designs like google ranking, FB ranking)
-    https://towardsdatascience.com/ranking-algorithms-know-your-multi-criteria-decision-solving-techniques-20949198f23e
+    Simple algorithm
+      https://towardsdatascience.com/ranking-algorithms-know-your-multi-criteria-decision-solving-techniques-20949198f23e
       Consider one attribute at a time and try to maximize or minimize it (as per the requirement) to generate optimized score.
       Introduce weights to each attributes to get optimized weighted scores.
       Combine the weighted scores (of each attribute) to create a final score for an entity (here car).
       for reverse criteria - just use weight * (1 - column %)
+    ML algorithm
+      https://www.youtube.com/watch?v=lh9CNRDqKBk&t=1168s&ab_channel=MLOps.community 
+      Today most systems uses ML for real time ranking. Ranking is always preceded by "Retrieval"
+      - Retrieval is performed with embedding model + ANN (nearest neighbour fetch)
+      - Ranking is done by adding feature set and using ranking model
 
 
   Use Virtual Cluster map for placement service/resource manager (placement service will help to indentify where to place the job or upload the file)
