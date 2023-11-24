@@ -1777,7 +1777,7 @@ Distributed systems today and Benchmarking on common systems
       - does not guarantee atomicity
       Use case - 
         Use it when you need push-based model,  do not need to persist message and play smart broker role (complex routing) - https://www.engati.com/blog/redis-kafka-rabbitmq
-        - Applications that need to support legacy protocols, such as STOMP, MQTT, AMQP, 0-9-1.
+        - Applications that need to support legacy protocols, such as STOMP, MQTT (a messaging protocol for the Internet of Things (IoT).), AMQP, 0-9-1.
         - Granular control over consistency/set of guarantees on a per-message basis
         - (Smart broker) - Complex routing to consumers
         - Applications that need a variety of publish/subscribe, point-to-point request/reply messaging capabilities.
