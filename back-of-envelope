@@ -301,6 +301,9 @@ Time to understand scalability, latency aspects
                   - retry on producer end 
                   - idempotency on consumer end (use rolling bloom filter for checking which does garbage collection based on watermarked time. https://cloud.google.com/dataflow/docs/concepts/exactly-once#latency )
               - To maintain data consistency between the internal service and external service (PSP), we usually rely on idempotency and reconciliation.
+        25. How to handle spiky load ? 
+          - always reserve SPIKE buffer
+          - use rate limiter
 
   
 
