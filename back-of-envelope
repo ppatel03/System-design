@@ -216,9 +216,9 @@ Time to understand scalability, latency aspects
         7. For Accuracy 
                 
           a. Discuss Isolations if needed : 
-              - Read committed by default to guarantee no dirty reads and writes.
-              - Check if you need Snapshot isolation to avoid non-repeatable reads OR 
-              - Serializable snapshot isolation for phantoms where you cannot reserve locks on returned rows and write in one transaction say row X,Y affects the other say row A,B (eg., check unique username or atleast one oncall or no meetings for that room at time X)
+              - Read committed by default to guarantee no dirty reads and writes. (default MySQL, Postgresql)
+              - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle 11g does have this support)
+              - Serializable snapshot isolation (CockroachDB for distributed and Postgresql for single node) for phantoms where you cannot reserve locks on returned rows and write in one transaction say row X,Y affects the other say row A,B (eg., check unique username or atleast one oncall or no meetings for that room at time X)
           b. Concensus esp. for consistency on distributed leaderless DBs like Cassandra
 
           Trade-offs with strict isolation and concensus : latency & availability 
