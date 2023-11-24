@@ -382,6 +382,17 @@ Distributed Systems estimate
       - 10 Gbps vs 1 Gbps
       - https://www.cablewholesale.com/blog/index.php/2020/09/16/fiber-optic-vs-copper-ethernet-cables-the-difference/#:~:text=A%20more%20modern%20take%20on,much%20faster%20than%20copper%20cables.
 
+    Common Systems : 
+    - Zookeeper avg req latency ~ 10 ms 
+        - 2-core 3 node cluster
+        https://ramcloud.atlassian.net/wiki/spaces/RAM/pages/6848719/ZooKeeper+Performance
+    - Kafka
+        5 ms
+        600 MB/s on 25 Gbps network on AWS 
+        1 million messages per second
+        i3en.2xlarge instance type (with 8 vCores, 64 GB RAM, 2 x 2,500 GB NVMe SSDs)
+
+
   Types of Memory
   https://www.youtube.com/watch?v=lX4CrbXMsNQ
   RAM
