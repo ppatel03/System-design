@@ -1763,6 +1763,10 @@ Distributed systems today and Benchmarking on common systems
           Scale: Apache Kafka can scale up to send a million messages every second.
           Persistency: It supports data persistency.
           Consumer Capability: Kafka only supports one-to-many consumers
+        - Kafka does not natively support delayed messages. However, there are a few ways to delay Kafka messages
+            Sleep function: Pause processing for a set amount of time. This is a simple approach, but it can lead to long execution times.
+            Karafka: Use Karafka's built-in partition pausing mechanism. This is an efficient and reliable way to process delayed messages.
+            Kafka Stream: Use a custom MessageChooser to poll the message.
 
     RabbitMQ
       https://www.upsolver.com/blog/kafka-versus-rabbitmq-architecture-performance-use-case
@@ -1790,7 +1794,7 @@ Distributed systems today and Benchmarking on common systems
         Scale: Redis can send up to 1 million messages per second like Kafka
         Persistency: It does not support data persistency, it is an in-memory data store. However, you can configure to be persistent ~ 1 min snapshotting https://redis.io/docs/management/persistence/
         Consumer Capability: It can handle both, one-to-one and one-to-many consumers.
-      Redis pub sub needs scaling support with external party like Zookeeper. Refer this awesome video - https://www.youtube.com/watch?v=6G22a5Iooqk&ab_channel=Redis
+      Redis pub sub needs scaling support with external party like Zookeeper to discover the right node/shard holding the channel. Refer this awesome video - https://www.youtube.com/watch?v=6G22a5Iooqk&ab_channel=Redis
       
 
 
@@ -1814,7 +1818,7 @@ Distributed systems today and Benchmarking on common systems
       Block storage
         Common storage devices like hard disk drives (HDD) and solid-state drives (SSD) that are physically attached to servers are all considered as block storage. Files are split into evenly size blocks of data with each block having its own address. Block storage presents the raw blocks to the server as a volume. This is the most flexible and versatile form of storage. The server can format the raw blocks and use them as a file system, or it can hand control of those blocks to an application.
         - can mount VM to this using iSCSI protocol
-        - used in operational systems and databases
+        - used in operational systems (its obvious) and databases
         - As per geeksforgeeks, this storage is not accessible via the internet and only for attaching to VMs (https://www.geeksforgeeks.org/difference-between-aws-s3-and-aws-ebs/)
         - Metadata(location of each block in the file, name,etc) is limited in block storage which makes it faster
         Granular control
