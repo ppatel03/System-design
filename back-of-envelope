@@ -1117,7 +1117,7 @@ Distributed best practices
         Stock ticker streaming
         twitter feed updating
         Notifications to browser
-        Live commenting
+        Live commenting (but websockets are good for here)
       SSE gotchas:
         No binary support
         Maximum open connections limit
