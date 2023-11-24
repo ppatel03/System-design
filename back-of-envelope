@@ -885,7 +885,7 @@ Distributed best practices
         1. assign each thread in the server
         2. deploy aggregation service nodes on resource providers like Apache Hadoop YARN [21]
       Option 1 is easier to implement and doesn’t depend on resource providers. In reality, however, option 2 is more widely used because we can scale the system by adding more computing resources.
-  Using star schema as pre-filtered form 
+  Using star schema as pre-filtered form - Pg 94 DDIA 
     https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation
     To support data filtering like “show me the aggregated click count for ad001 within the USA only”, we can pre-define filtering criteria and aggregate based on them. This technique is called the star schema [11], which is widely used in data warehouses. The filtering fields are called dimensions. 
     A limitation with this approach is that it creates many more buckets and records, especially when we have a lot of filtering criteria.
