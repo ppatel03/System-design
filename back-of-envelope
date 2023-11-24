@@ -795,7 +795,7 @@ Distributed best practices
 
   Logging (errors), Metrics Monitoring (system level, business) and automated Deployment
     Logging (errors)
-      - datadog or with help of 
+      - datadog / envoy proxy -> control plance -> datadog or prometheus
       - logging errors to trigger alerts, sev
     Metrics Monitoring (system level, business)
       - datadog, 
