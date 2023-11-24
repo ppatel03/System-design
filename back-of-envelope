@@ -780,6 +780,8 @@ Distributed best practices
         /customers - gets all customers
     - use {} for accessing by id 
         /customers/{id} - gets customer by id 
+    - use hyphens(-) instead of underscores
+        /managed-devices
 
   Physical cores, Virtual cores and Logical cores
     https://www.youtube.com/watch?v=O2g6381An_k 
