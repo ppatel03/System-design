@@ -1582,7 +1582,7 @@ Distributed systems today and Benchmarking on common systems
           Bit rate - amount of data per second ( Resolution * color depth * frame rate )
             - Compression can help condense the data 
             - So higher the bit rate, better the quality 
-            - So 4k is 35-45 Mbps and 2K is 16 Mbps
+            - So 4k is 35-45 Mbps(3-4 MBps) and 2K is 16 Mbps (1 MBps)
 
       
 
