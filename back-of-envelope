@@ -304,6 +304,23 @@ Time to understand scalability, latency aspects
         25. How to handle spiky load ? 
           - always reserve SPIKE buffer
           - use rate limiter
+        26. How to tolerant faults ? 
+            https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#reliable-scalable-and-maintainable-applications 
+            A fault is usually defined as one component of the system deviating from its spec, whereas failure is when the system as a whole stops providing the required service to the user.
+
+            You should generally prefer tolerating faults over preventing faults.
+
+            Hardware faults. 
+              Until recently redundancy of hardware components was sufficient for most applications. As data volumes increase, more applications use a larger number of machines, proportionally increasing the rate of hardware faults. There is a move towards systems that tolerate the loss of entire machines. A system that tolerates machine failure can be patched one node at a time, without downtime of the entire system (rolling upgrade).
+            Software errors. 
+              It is unlikely that a large number of hardware components will fail at the same time. Software errors are a systematic error within the system, they tend to cause many more system failures than uncorrelated hardware faults.
+            Human errors. Humans are known to be unreliable. Configuration errors by operators are a leading cause of outages. You can make systems more reliable:
+              - Minimising the opportunities for error, peg: with admin interfaces that make easy to do the "right thing" and discourage the "wrong thing".
+              - Provide fully featured non-production sandbox environments where people can explore and experiment safely.
+              - Automated testing.
+              - Quick and easy recovery from human error, fast to rollback configuration changes, roll out new code gradually and tools to recompute data.
+              - Set up detailed and clear monitoring, such as performance metrics and error rates (telemetry).
+              - Implement good management practices and training.
 
   
 
