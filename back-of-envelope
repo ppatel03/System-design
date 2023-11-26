@@ -321,6 +321,39 @@ Time to understand scalability, latency aspects
               - Quick and easy recovery from human error, fast to rollback configuration changes, roll out new code gradually and tools to recompute data.
               - Set up detailed and clear monitoring, such as performance metrics and error rates (telemetry).
               - Implement good management practices and training.
+          27. Whats the reasonable performance SLA ? 
+              Service level objectives (SLOs) and service level agreements (SLAs) are contracts that define the expected performance and availability of a service. An SLA may state the median response time to be less than 200ms and a 99th percentile under 1s. These metrics set expectations for clients of the service and allow customers to demand a refund if the SLA is not met.
+          28. Approaches for coping with the load ? 
+                  Scaling up or vertical scaling: Moving to a more powerful machine
+                  Scaling out or horizontal scaling: Distributing the load across multiple smaller machines.
+                  Elastic systems: Automatically add computing resources when detected load increase. Quite useful if load is unpredictable.
+                Distributing stateless services across multiple machines is fairly straightforward. Taking stateful data systems from a single node to a distributed setup can introduce a lot of complexity. Until recently it was common wisdom to keep your database on a single node.
+          29. 3 principles of Maintainability 
+                  Operability. 
+                    Make it easy for operation teams to keep the system running. (monitoring, logging, security, up to date, etc.)
+                  Simplicity. 
+                    Easy for new engineers to understand the system by removing as much complexity as possible. (abstraction that hides the implementation details behind clean and simple to understand APIs and facades.)
+                  Evolvability. 
+                    Make it easy for engineers to make changes to the system in the future. (Agile working patterns provide a framework for adapting to change.)
+              How to measure ? - Varies by domain to domain. Its advisable to define "Maturity level"
+          30. Relational vs Document model
+              https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#query-languages-for-data 
+              The main arguments in favour of the document data model are schema flexibility, better performance due to locality, and sometimes closer data structures to the ones used by the applications. The relation model counters by providing better support for joins, and many-to-one and many-to-many relationships.
+              Document databases are sometimes called schemaless, but maybe a more appropriate term is schema-on-read, in contrast to schema-on-write.Schema-on-read is similar to dynamic (runtime) type checking, whereas schema-on-write is similar to static (compile-time) type checking.
+              Convergence of document and relational databases
+                PostgreSQL does support JSON documents. RethinkDB supports relational-like joins in its query language and some MongoDB drivers automatically resolve database references. Relational and document databases are becoming more similar over time.
+          31. What are Query languages for data
+                SQL is a declarative query language. In an imperative language, you tell the computer to perform certain operations in order.
+                In a declarative query language you just specify the pattern of the data you want, but not how to achieve that goal. A declarative query language hides implementation details of the database engine, making it possible for the database system to introduce performance improvements without requiring any changes to queries.
+
+                  A usability problem with MapReduce is that you have to write two carefully coordinated functions. A declarative language offers more opportunities for a query optimiser to improve the performance of a query. For there reasons, MongoDB 2.2 added support for a declarative query language called aggregation pipeline
+          32. When to use graph like data model 
+              If many-to-many relationships are very common in your application, it becomes more natural to start modelling your data as a graph. A graph consists of vertices (nodes or entities) and edges (relationships or arcs).
+              There are several ways of structuring and querying the data. The property graph model (implemented by Neo4j, Titan, and Infinite Graph) and the triple-store model (implemented by Datomic, AllegroGraph, and others). There are also three declarative query languages for graphs: Cypher, SPARQL, and Datalog. Cypher is a declarative language for property graphs created by Neo4j
+
+
+
+
 
   
 
