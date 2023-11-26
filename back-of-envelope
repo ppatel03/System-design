@@ -407,7 +407,11 @@ Time to understand scalability, latency aspects
                         - CompactProtocol, which is equivalent to BinaryProtocol but it packs the same information in less space. It packs the field type and the tag number into the same byte.
                   3. protocol buffers (gRPC)
                       Protocol Buffers are very similar to Thrift's CompactProtocol, bit packing is a bit different and that might allow smaller compression.
-                  4. Avro 
+                  4. Avro (Hive, Kafka)
+                      Same as above and supports two schema languages : Avro IDL (same as thrift IDL) and one is JSON based (machine-readable.).
+                      It compresses even further - it does not even specify the data type in its encoding. So you go go through the fields in the order they appear in the schema and use the schema to tell you the datatype of each field. Any mismatch in the schema between the reader and the writer would mean incorrectly decoded data.
+                      The key idea with Avro is that the writer’s schema and the reader’s schema don’t have to be the same—they only need to be compatible. When data is decoded (read), the
+                      Avro library resolves the differences by looking at the writer’s schema and the reader’s schema side by side and translating the data from the writer’s schema into the reader’s schema. The Avro specification [20] defines exactly how this resolution works, and it is illustrated in Figure 4-6.
 
 
 
@@ -1447,6 +1451,11 @@ Distributed best practices
       Pg 164 DDIA 
     means user is read the data moving backwards in time. Its possible if one read goes to updated replica and another to outdated replica.
     This is the reason why always have consistent hashing selection of server based on user id 
+  
+  Consistent prefix reads
+    https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#consistent-prefix-reads 
+      - If a sequence of writes happens in a certain order, then anyone reading those writes will see them appear in the same order (write 1 : "add milk" and write 2 : "remove milk"). This is a particular problem in partitioned (sharded) databases as there is no global ordering of writes.
+      - A solution is to make sure any writes casually related to each other are written to the same partition. If its not possible to write in same partition(large DB), then using version vector is a good approach to capture happens-before (causal) relationship.
 
   Use Parquet column over row format or csv file 
     https://www.upsolver.com/blog/apache-parquet-why-use
