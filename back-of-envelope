@@ -287,12 +287,14 @@ Time to understand scalability, latency aspects
             - place consecutive subtasks belong to same job on same hosts  (it also reduces network bandwidth)
             - For demand efficiency, identify bottlenecks for jobs which does overfetching 
         23. How to effectively do multi-leader replication ? 
+              Multi-leader replication is implemented with Tungsten Replicator for MySQL, BDR(bi-directional replication) for PostgreSQL or GoldenGate for Oracle. MySQL uses circular topology for its replication.
+
             - the common use case is multi-datacenter need where there is a leader in each datacenter
             - make sure there is atleast quorum consistency ( strong ) consistency in each datacenter
             - writes/reads of a particular user/session go to same datacenter
             - for conflicts, use different strategies
               - LWW based on timestamp
-              - Calls custom conflict resolution logic (some DBs support this). Example Dynamo's read repair and anti-entropy OR Azure CosmosDB 
+              - Calls custom conflict resolution logic (some DBs support this). Example Dynamo's read repair and anti-entropy OR Azure CosmosDB OR CouchDB
               - use version vectors - (also helps with ordering) - RiakDB
                 - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
                     - How CRDT is implemented ? - https://www.youtube.com/watch?v=FG5Varj1Ows 
@@ -300,6 +302,10 @@ Time to understand scalability, latency aspects
                         - State based CRDT : entire vector is sent. It helps with causal relationship. usually used in adding elements to the list
                         - Sequence CRDT : builds an eventually consistent list. Its hard. used in collaborative editors like Google docs. 
               - use lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
+
+              ONE FACT WITH RELATIONAL DBS : 
+                To order these events correctly, a technique called version vectors can be used, which we will discuss later in this chapter (see “Detecting Concurrent Writes” on page 184). However, conflict detection techniques are poorly implemented in many multi-leader replication systems. For example, at the time of writing, PostgreSQL BDR does not provide causal ordering of writes [27], and Tungsten Replicator for MySQL doesn’t even try to detect conflicts [34].
+                
         24. How to maintain data consistency between databasesm internal services, internal service + third party ? 
               - To maintain data consistency between replicas, use strong consistency ( quorum consistency) or eventual consistency.
               - To maintain data consistency between internal services, ensuring exactly-once processing is very important.
