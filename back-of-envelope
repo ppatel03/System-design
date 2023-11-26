@@ -397,6 +397,20 @@ Time to understand scalability, latency aspects
                   Column-oriented storage often lends itself very well to compression as the sequences of values for each column look quite repetitive, which is a good sign for compression. A technique that is particularly effective in data warehouses is bitmap encoding.
 
                   Remember : Cassandra and HBase have a concept of column families, which they inherited from Bigtable. THIS IS DIFFERENT FROM COLUMN-ORIENTED STORAGE
+            37. How messages can be transfered over the network ? - Pg 116
+                say JSON message : { key : value} 
+                  1. binary encoding (REST which uses base64)
+                  2. thrift
+                      Thrift offers two different protocols:
+
+                        - BinaryProtocol, there are no field names like userName, favouriteNumber. Instead the data contains field tags, which are numbers (1, 2)
+                        - CompactProtocol, which is equivalent to BinaryProtocol but it packs the same information in less space. It packs the field type and the tag number into the same byte.
+                  3. protocol buffers (gRPC)
+                      Protocol Buffers are very similar to Thrift's CompactProtocol, bit packing is a bit different and that might allow smaller compression.
+                  4. Avro 
+
+
+
 
 
 
