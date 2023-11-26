@@ -295,6 +295,10 @@ Time to understand scalability, latency aspects
               - Calls custom conflict resolution logic (some DBs support this). Example Dynamo's read repair and anti-entropy OR Azure CosmosDB 
               - use version vectors - (also helps with ordering) - RiakDB
                 - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
+                    - How CRDT is implemented ? - https://www.youtube.com/watch?v=FG5Varj1Ows 
+                        - Operational CRDT : just the operation (like inc or dec) is sent instead of vectors. usually used in counters
+                        - State based CRDT : entire vector is sent. It helps with causal relationship. usually used in adding elements to the list
+                        - Sequence CRDT : builds an eventually consistent list. Its hard. used in collaborative editors like Google docs. 
               - use lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
         24. How to maintain data consistency between databasesm internal services, internal service + third party ? 
               - To maintain data consistency between replicas, use strong consistency ( quorum consistency) or eventual consistency.
