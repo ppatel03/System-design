@@ -219,6 +219,7 @@ Time to understand scalability, latency aspects
               - Read committed by default to guarantee no dirty reads and writes. (default MySQL, Postgresql)
               - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle 11g does have this support)
               - Serializable snapshot isolation (CockroachDB for distributed and Postgresql for single node) for phantoms where you cannot reserve locks on returned rows and write in one transaction say row X,Y affects the other say row A,B (eg., check unique username or atleast one oncall or no meetings for that room at time X)
+              FOR MOST SQL DATABASES, WRITES TO FILE ARE SINGLE THREADED TO AVOID WRITE CONFLICTS ??
           b. Concensus esp. for consistency on distributed leaderless DBs like Cassandra
 
           Trade-offs with strict isolation and concensus : latency & availability 
@@ -350,6 +351,56 @@ Time to understand scalability, latency aspects
           32. When to use graph like data model 
               If many-to-many relationships are very common in your application, it becomes more natural to start modelling your data as a graph. A graph consists of vertices (nodes or entities) and edges (relationships or arcs).
               There are several ways of structuring and querying the data. The property graph model (implemented by Neo4j, Titan, and Infinite Graph) and the triple-store model (implemented by Datomic, AllegroGraph, and others). There are also three declarative query languages for graphs: Cypher, SPARQL, and Datalog. Cypher is a declarative language for property graphs created by Neo4j
+          33. Types of indexes ? 
+              https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#sstables-and-lsm-trees 
+              Hash tables index - Riak (Bitcask)
+                The simplest indexing strategy is to keep an in-memory hash map where every key is mapped to a byte offset in the data file. Whenever you append a new key-value pair to the file, you also update the hash map to reflect the offset of the data you just wrote.
+                Bitcask (the default storage engine in Riak) does it like that. The only requirement it has is that all the keys fit in the available RAM. Values can use more space than there is available in memory, since they can be loaded from disk.
+                As we only ever append to a file, so how do we avoid eventually running out of disk space? A good solution is to break the log into segments of certain size by closing the segment file when it reaches a certain size, and making subsequent writes to a new segment file. We can then perform compaction on these segments. Compaction means throwing away duplicate keys in the log, and keeping only the most recent update for each key.
+                Hash table has its limitations too:
+                The hash table must fit in memory. It is difficult to make an on-disk hash map perform well.
+                Range queries are not efficient.
+
+              LSM Tree + SSTable (ElasticSearch's Lucene indexing engine, Solr, Cassandra, HBase, RocksDB)
+                We introduce a new requirement to segment files: we require that the sequence of key-value pairs is sorted by key.
+                We call this Sorted String Table, or SSTable. We require that each key only appears once within each merged segment file (compaction already ensures that). SSTables have few big advantages over log segments with hash indexes.
+                  - Merging segments is simple and efficient (we can use algorithms like mergesort). When multiple segments contain the same key, we can keep the value from the most recent segment and discard the values in older segments.
+                  - You no longer need to keep an index of all the keys in memory. For a key like handiwork, when you know the offsets for the keys handback and handsome, you know handiwork must appear between those two. You can jump to the offset for handback and scan from there until you find handiwork, if not, the key is not present. You still need an in-memory index to tell you the offsets for some of the keys. One key for every few kilobytes of segment file is sufficient.
+                  - Since read requests need to scan over several key-value pairs in the requested range anyway, it is possible to group those records into a block and compress it before writing it to disk.
+
+              B Tree
+                One page is designated as the root and you start from there. The page contains several keys and references to child pages.
+                If you want to update the value for an existing key in a B-tree, you search for the leaf page containing that key, change the value in that page, and write the page back to disk. If you want to add new key, find the page and add it to the page. If there isn't enough free space in the page to accommodate the new key, it is split in two half-full pages, and the parent page is updated to account for the new subdivision of key ranges.
+
+                Trees remain balanced. A B-tree with n keys always has a depth of O(log n).
+
+                The basic underlying write operation of a B-tree is to overwrite a page on disk with new data. It is assumed that the overwrite does not change the location of the page, all references to that page remain intact. This is a big contrast to log-structured indexes such as LSM-trees, which only append to files.
+
+                Some operations require several different pages to be overwritten. When you split a page, you need to write the two pages that were split, and also overwrite their parent. If the database crashes after only some of the pages have been written, you end up with a corrupted index.
+
+                It is common to include an additional data structure on disk: a write-ahead log (WAL, also know as the redo log).
+
+                Careful concurrency control is required if multiple threads are going to access, typically done protecting the tree internal data structures with latches (lightweight locks).
+            34. In memory DBs 
+                  - Products such as VoltDB, MemSQL, and Oracle TimesTime are in-memory databases with disk access. Redis and Couchbase provide weak durability. Although redis can be extended to periodic (1 min) snapshotting to disk.
+            35. Data warehouse examples 
+                  Amazon RedShift is hosted version of ParAccel. Apache Hive, Spark SQL, Cloudera Impala, Facebook Presto, Apache Tajo, and Apache Drill. Some of them are based on ideas from Google's Dremel.
+                  Data warehouses are used in fairly formulaic style known as a star schema.
+                  The name "star schema" comes from the fact than when the table relationships are visualised, the fact table is in the middle, surrounded by its dimension tables, like the rays of a star.
+            36. How does column oriented DB work 
+                  Column-oriented storage is simple: don't store all the values from one row together, but store all values from each column together instead. If each column is stored in a separate file, a query only needs to read and parse those columns that are used in a query, which can save a lot of work.
+
+                  Column-oriented storage often lends itself very well to compression as the sequences of values for each column look quite repetitive, which is a good sign for compression. A technique that is particularly effective in data warehouses is bitmap encoding.
+
+                  Remember : Cassandra and HBase have a concept of column families, which they inherited from Bigtable. THIS IS DIFFERENT FROM COLUMN-ORIENTED STORAGE
+
+
+
+
+
+
+
+
 
 
 
