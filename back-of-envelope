@@ -201,9 +201,12 @@ Time to understand scalability, latency aspects
       b. Queue to avoid synchronous processing and support fault tolerant, durability 
       c. Think about edge cases for product
       d. Some well-known challenges 
-        1. Exactly once if queue is used. 
+        1. Queue
+          a. Exactly once if queue is used. 
             - retry on producer end 
             - idempotency on consumer end (use rolling bloom filter for checking which does garbage collection based on watermarked time. https://cloud.google.com/dataflow/docs/concepts/exactly-once#latency )
+          b. Also Metrics monitoring on queue for time sensistive operations like notification system. 
+              - Also event tracking for analytics service which can help visualize the state (start, pending, in progress, complete) of the system.
         2. Consistency always with CQRS(sep read and write systems) or 
         3. Reconciallation for stream + batch DBs or payment system
         3. Idempotency for retry systems
