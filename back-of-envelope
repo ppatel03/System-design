@@ -438,6 +438,85 @@ Time to understand scalability, latency aspects
                       In many cases the problem is: how does the component making the routing decision learn about changes in the assignment of partitions to nodes?
 
                       Many distributed data systems rely on a separate coordination service such as ZooKeeper to keep track of this cluster metadata. Each node registers itself in ZooKeeper, and ZooKeeper maintains the authoritative mapping of partitions to nodes. The routing tier or the partitioning-aware client, can subscribe to this information in ZooKeeper. HBase, SolrCloud and Kafka use ZooKeeper to track partition assignment. MongoDB relies on its own config server. Cassandra and Riak take a different approach: they use a gossip protocol.
+              41. How to support lock ownership and leader election
+                    Apache ZooKeepr and etcd are often used for distributed locks and leader election.
+              42. Why is CAP theorem unhelpful ? 
+                    https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#the-unhelpful-cap-theorem 
+                    CAP is sometimes presented as Consistency, Availability, Partition tolerance: pick 2 out of 3. Or being said in another way either Consistency or Available when Partitioned.
+
+                    CAP only considers one consistency model (linearizability) and one kind of fault (network partitions, or nodes that are alive but disconnected from each other). It doesn't say anything about network delays, dead nodes, or other trade-offs. CAP has been historically influential, but nowadays has little practical value for designing systems.
+              43. What is "total order" ? 
+                    Total order allows any two elements to be compared. Peg, natural numbers are totally ordered.
+                    Also "Causal order" in the system is what happened before what (causally consistent).
+                    Linearizability
+                      In a linearizable system, we have a total order of operations: if the system behaves as if there is only a single copy of the data, and every operation is atomic, this means that for any two operations we can always say which one happened first. This total ordering is illustrated as a timeline in Figure 9-4.
+                    Causality
+                      We said that two operations are concurrent if neither happened before the other (see “The “happens-before” relationship and concurrency” on page 186). Put another way, two events are ordered if they are causally related (one happened before the other), but they are incomparable if they are concurrent. This means that causality defines a partial order, not a total order: some operations are ordered with respect to each other, but some are incomparable.
+
+                     Total order broadcast: needs two properties to hold below 
+                      - Reliable delivery: If a message is delivered to one node, it is delivered to all nodes.
+                      - Totally ordered delivery: Mesages are delivered to every node in the same order.
+                      ZooKeeper and etcd implement total order broadcast.
+              44. How to ensure linearizable writes and reads ? 
+                    Another way of looking at total order broadcast is that it is a way of creating a log. Delivering a message is like appending to the log.
+                    If you have total order broadcast, you can build linearizable storage on top of it.
+
+                    Because log entries are delivered to all nodes in the same order, if therer are several concurrent writes, all nodes will agree on which one came first. Choosing the first of the conflicting writes as the winner and aborting later ones ensures that all nodes agree on whether a write was commited or aborted.
+
+                    This procedure ensures linearizable writes, it doesn't guarantee linearizable reads.
+
+                    To make reads linearizable:
+
+                    You can sequence reads through the log by appending a message, reading the log, and performing the actual read when the message is delivered back to you (etcd works something like this).
+                    Fetch the position of the latest log message in a linearizable way, you can query that position to be delivered to you, and then perform the read (idea behind ZooKeeper's sync()).
+                    You can make your read from a replica that is synchronously updated on writes.
+              45. How 2-PC works ? - PostgreSQL, MySQL, DB2, SQL Server, and Oracle
+                    A transaction either succesfully commit, or abort. Atomicity prevents half-finished results.
+
+                    On a single node, transaction commitment depends on the order in which data is writen to disk: first the data, then the commit record.
+
+                    2PC uses a coordinartor (transaction manager). When the application is ready to commit, the coordinator begins phase 1: it sends a prepare request to each of the nodes, asking them whether are able to commit.
+                      - If all participants reply "yes", the coordinator sends out a commit request in phase 2, and the commit takes place.
+                      - If any of the participants replies "no", the coordinator sends an abort request to all nodes in phase 2.
+                      When a participant votes "yes", it promises that it will definitely be able to commit later; and once the coordiantor decides, that decision is irrevocable. Those promises ensure the atomicity of 2PC.
+
+                    If one of the participants or the network fails during 2PC (prepare requests fail or time out), the coordinator aborts the transaction. If any of the commit or abort request fail, the coordinator retries them indefinitely.
+
+                    If the coordinator fails before sending the prepare requests, a participant can safely abort the transaction.
+
+                    The only way 2PC can complete is by waiting for the coordinator to revover in case of failure. This is why the coordinator must write its commit or abort decision to a transaction log on disk before sending commit or abort requests to participants.
+
+                    2PC is also called a blocking atomic commit protocol, as 2Pc can become stuck waiting for the coordinator to recover.
+
+                    XA (X/Open XA for eXtended Architecture) is a standard for implementing two-phase commit across heterogeneous technologies. Supported by many traditional relational databases (PostgreSQL, MySQL, DB2, SQL Server, and Oracle) and message brokers (ActiveMQ, HornetQ, MSQMQ, and IBM MQ).
+
+                  The problem with locking is that database transactions usually take a row-level exclusive lock on any rows they modify, to prevent dirty writes.
+
+                  While those locks are held, no other transaction can modify those rows.
+
+                  When a coordinator fails, orphaned in-doubt transactions do ocurr, and the only way out is for an administrator to manually decide whether to commit or roll back the transaction.
+              46. best fault tolerance algorithms ? 
+                    The best-known fault-tolerant consensus algorithms are Viewstamped Replication (VSR), Paxos, Raft and Zab.
+              47. How fencing token (used in zookeeper) can help with linearizability / concensus ? 
+                    Assume every time the lock server grant sa lock or a lease, it also returns a fencing token, which is a number that increases every time a lock is granted (incremented by the lock service). Then we can require every time a client sends a write request to the storage service, it must include its current fencing token.
+
+                    The storage server remembers that it has already processed a write with a higher token number, so it rejects the request with the last token.
+
+                    If ZooKeeper is used as lock service, the transaciton ID zcid or the node version cversion can be used as a fencing token.
+              48. How Zookeeper supports total order broadcast (and hence concensus) ? Pg - 370 DDIA
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
