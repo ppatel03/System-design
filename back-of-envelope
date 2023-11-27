@@ -512,6 +512,14 @@ Time to understand scalability, latency aspects
                       Clients maintain a long-lived session on ZooKeeper servers, and the client and server periodically exchange heartbeats to check that the other node is still alive. Even if the connection is temporarily interrupted, or a ZooKeeper node fails, the session remains active. However, if the heartbeats cease for a duration that is longer than the session timeout, ZooKeeper declares the session to be dead. Any locks held by a session can be configured to be automatically released when the session times out (ZooKeeper calls these ephemeral nodes).
                     Change notifications
                       Not only can one client read locks and values that were created by another client, but it can also watch them for changes. Thus, a client can find out when another client joins the cluster (based on the value it writes to ZooKeeper), or if another client fails (because its session times out and its ephemeral nodes disappear). By subscribing to notifications, a client avoids having to frequently poll to find out about changes.
+              49. 
+              50.
+              51.
+              52. How integrity checking is done today 
+                  https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#trust-but-verify 
+                  ACID databases has led us toward developing applications on the basis of blindly trusting technology, neglecting any sort of auditability in the process.
+                  By contrast, event-based systems can provide better auditability (like with event sourcing).
+                  Cryptographic auditing and integrity checking often relies on Merkle trees. Outside of the hype for cryptocurrencies, certificate transparency is a security technology that relies on Merkle trees to check the validity of TLS/SSL certificates.
 
 
 
