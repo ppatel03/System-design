@@ -530,8 +530,35 @@ Time to understand scalability, latency aspects
                     Uniqueness constraints require consensus across multi-leader nodes 
                     Uniqueness in log-based messaging is much easier 
                     Multi-partition request processing - typically like Saga or Try confirm cancel 
+                      There are potentially three partitions: the one containing the request ID, the one containing the payee account, and one containing the payer account.
+                      The traditional approach to databases, executing this transaction would require an atomic commit across all three partitions.
+                      Equivalent correctness can be achieved with partitioned logs, and without an atomic commit.
 
+                      The request to transfer money from account A to account B is given a unique request ID by the client, and appended to a log partition based on the request ID.
+                      A stream processor reads the log of requests. For each request message it emits two messages to output streams: a debit instruction to the payer account A (partitioned by A), and a credit instruction to the payee account B (partitioned by B). The original request ID is included in those emitted messages.
+                      Further processors consume the streams of credit and debit instructions, deduplicate by request ID, and apply the chagnes to the account balances.
 
+              52. Prioritize integrity over timeliness ? Why ? 
+                    Consumers of a log are asynchronous by design, so a sender does not wait until its message has been proccessed by consumers. However, it is possible for a client to wait for a message to appear on an output stream.
+
+                    Consistency conflates two different requirements:
+
+                    Timeliness: users observe the system in an up-to-date state.
+                    Integrity: Means absence of corruption. No data loss, no contradictory or false data. The derivation must be correct.
+                    Violations of timeless are "eventual consistency" whereas violations of integrity are "perpetual inconsistency".
+                    - Integrity assurance is not complex at all as compared to timeliness which needs 2 PC / atomic commit 
+                        Stream processing systems can preserve integrity without requireing distributed transactions and an atomic commit protocol, which means they can potentially achieve comparable correctness with much better performance and operational robustness. Integrity can be achieved through a combination of mechanisms:
+
+                        - Representing the content of the write operation as a single message, this fits well with event-sourcing
+                        - Deriving all other state updates from that single message using deterministic derivation functions
+                        - Passing a client-generated request ID, enabling end-to-end duplicate supression and idempotence
+                        - Making messages immutable and allowing derived data to be reprocessed from time to time
+                        In many businesses contexts, it is actually acceptable to temporarily violate a constraint and fix it up later apologising. The cost of the apology (money or reputation), it is often quite low.
+
+                        Coordination-avoiding data-systems
+                        - Dataflow systems can maintain integrity guarantees on derived data without atomic commit, linearizability, or synchronous cross-partition coordination.
+                        - Although strict uniqueness constraints require timeliness and coordination, many applications are actually fine with loose constraints than may be temporarily violated and fixed up later.
+                        Dataflow systems can provide the data management services for many applications without requiring coordination, while still giving strong integrity guarantees. Coordination-avoiding data systems can achieve better performance and fault tolerance than systems that need to perform synchronous coordination.
 
               52. How integrity checking is done today 
                   https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#trust-but-verify 
