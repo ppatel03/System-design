@@ -200,6 +200,14 @@ Time to understand scalability, latency aspects
         - choice of database, data model, sharding (from back of envelope), replication (back of envelope) 
       b. Queue to avoid synchronous processing and support fault tolerant, durability 
       c. Think about edge cases for product
+        1. Rate limiter 
+          - Algorithms (Token bucket, sliding window is the best), 
+          - distributed counting using redis (single threaded and hence atomic)
+        2. Consistent Hashing 
+          - Ring formation, 
+          - add/remove server, 
+          - virtual replicas on ring to get even distribution of keys, 
+          - hotspot key problem by increasing number of replicas for that partition
       d. Some well-known challenges 
         1. Queue
           a. Exactly once if queue is used. 
@@ -220,7 +228,7 @@ Time to understand scalability, latency aspects
                 
           a. Discuss Isolations if needed : 
               - Read committed by default to guarantee no dirty reads and writes. (default MySQL, Postgresql)
-              - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle 11g does have this support)
+              - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle 11g does have this support, MySQL has loose support )
               - Serializable snapshot isolation (CockroachDB for distributed and Postgresql for single node) for phantoms where you cannot reserve locks on returned rows and write in one transaction say row X,Y affects the other say row A,B (eg., check unique username or atleast one oncall or no meetings for that room at time X)
               FOR MOST SQL DATABASES, WRITES TO FILE ARE SINGLE THREADED TO AVOID WRITE CONFLICTS ??
           b. Concensus esp. for consistency on distributed leaderless DBs like Cassandra
