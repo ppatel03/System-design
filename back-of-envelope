@@ -522,7 +522,10 @@ Time to understand scalability, latency aspects
               46. best fault tolerance algorithms ? 
                     The best-known fault-tolerant consensus algorithms are Viewstamped Replication (VSR), Paxos, Raft and Zab.
               47. How fencing token (used in zookeeper) can help with linearizability / concensus ? 
-                    First why do you need fecning token ? example, you need a lock which is time based to avoid lock owner to hold it indefinitely like GC pauses. Now if the expired client who went on GC pause still thinks it owns the lock, then it arises split brain situation (https://www.youtube.com/watch?v=1At8wV8fwp8)
+                    First why do you need fecning token ? 
+                      example, you need a lock which is time based to avoid lock owner to hold it indefinitely like GC pauses. Now if the expired client who went on GC pause still thinks it owns the lock, then it arises split brain situation (https://www.youtube.com/watch?v=1At8wV8fwp8). This means you have multiple lock holders.
+
+                    Now how fencing token works ? 
 
                     Assume every time the lock server grants a lock or a lease, it also returns a fencing token, which is a number that increases every time a lock is granted (incremented by the lock service). Then we can require every time a client sends a write request to the storage service, it must include its current fencing token.
 
