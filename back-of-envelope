@@ -238,15 +238,15 @@ Time to understand scalability, latency aspects
                 
           a. Discuss Isolations if needed : 
               - Read committed by default to guarantee no dirty reads and writes. (default MySQL, Postgresql)
-              - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle 11g does have this support, MySQL has loose support )
+              - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle,Postgresql does have this support but MySQL has loose support by not detecting conflicts )
               - Serializable snapshot isolation (CockroachDB for distributed and Postgresql for single node) for phantoms where you cannot reserve locks on returned rows and write in one transaction say row X,Y affects the other say row A,B (eg., check unique username or atleast one oncall or no meetings for that room at time X)
-              FOR MOST SQL DATABASES, WRITES TO FILE ARE SINGLE THREADED TO AVOID WRITE CONFLICTS ??
-          b. Concensus esp. for consistency on distributed leaderless DBs like Cassandra
+                - keep in mind that checking one doctor on call or unique username could be solved with "where" clause with snapshot isolation also. However where clause on the entire table could lead to slow queries. So its a trade-off 
+              FOR MOST SQL DATABASES, WRITES TO FILE ARE SINGLE THREADED TO AVOID WRITE CONFLICTS ??  
+          b. For distributed DBs, Concensus esp. for consistency on distributed leaderless DBs like Cassandra
+              Trade-offs with strict isolation / concensus VS latency / availability 
 
-          Trade-offs with strict isolation and concensus : latency & availability 
-
-        9. Distributed transactions if it involves multiple DB nodes 
-            - 2PC or TCC(Try + confirm/cancel) or Saga
+        9. Distributed transactions if it involves different DB tables or heterogeneous systems
+            - 2PC or TCC(Try + confirm/cancel) or Saga (new microsservice design pattern for DBs which do not support 2PC)
             Example balance transfer 
         10. Zookeeper for any of the operations : 
               - Service discovery + 
