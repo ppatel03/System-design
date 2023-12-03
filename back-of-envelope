@@ -269,8 +269,11 @@ Time to understand scalability, latency aspects
             - bloom filter
             - materialized views 
         14. Hot shard 
-            - spread the load across additional loads 
-              - more replicas like for cassandra (https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#partitioning-and-replication)
+            - spread the load across additional nodes 
+              - more replicas like for cassandra but its for entire table (https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#partitioning-and-replication)
+                - Smart strategy for hotspot key :
+                  - detect the hot spot key using sampling method (like in Pig) or dashboard (like in CockroachDB)
+                  - for that hotspot key, assign the copy number to each key and create combined partition key for Cassandra (https://stackoverflow.com/a/27889289/1540256 )
               - more reducers for Map-Reduce framework pg 408 DDIA
               Q. How to detect hot shard - pg 407 DDIA
                 - skewed join method in Pig runs a sampling method to detect hot keys
