@@ -207,7 +207,17 @@ Time to understand scalability, latency aspects
           - Ring formation, 
           - add/remove server, 
           - virtual replicas on ring to get even distribution of keys, 
-          - hotspot key problem by increasing number of replicas for that partition
+          - hotspot key problem by increasing number of replicas (however, its not per partition) 
+            - Replication strategies for Cassandra (https://www.baeldung.com/cassandra-replication-partitioning )
+            - Smart strategy for hotspot key :
+              - detect the hot spot key using sampling method (like in Pig) or dashboard (like in CockroachDB)
+              - for that hotspot key, assign the copy number to each key and create combined partition key for Cassandra (https://stackoverflow.com/a/27889289/1540256 )
+            - CockraochDB provides dashboard insights for hot spot (https://www.cockroachlabs.com/blog/the-hot-content-problem-metadata-storage-for-media-streaming/ )
+        3. Key value store 
+          - data partition
+          - data replication
+          - inconsistency resolution using versioning (RiakDB uses version vector, Dynamo, )
+
       d. Some well-known challenges 
         1. Queue
           a. Exactly once if queue is used. 
