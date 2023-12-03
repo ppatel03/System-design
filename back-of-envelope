@@ -589,7 +589,7 @@ Time to understand scalability, latency aspects
                         - Although strict uniqueness constraints require timeliness and coordination, many applications are actually fine with loose constraints than may be temporarily violated and fixed up later.
                         Dataflow systems can provide the data management services for many applications without requiring coordination, while still giving strong integrity guarantees. Coordination-avoiding data systems can achieve better performance and fault tolerance than systems that need to perform synchronous coordination.
 
-              52. How integrity checking is done today 
+              52. How integrity checking is done today (using merklee tree)
                   https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#trust-but-verify 
                   ACID databases has led us toward developing applications on the basis of blindly trusting technology, neglecting any sort of auditability in the process.
                   By contrast, event-based systems can provide better auditability (like with event sourcing).
