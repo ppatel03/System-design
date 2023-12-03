@@ -229,7 +229,7 @@ Time to understand scalability, latency aspects
         3. Reconciallation for stream + batch DBs or payment system
         3. Idempotency for retry systems
         4. NTP if relying on timestamps
-        5. Map-Reduce scaling, hot keys, priority pre-emption if streaming
+        5. Map-Reduce scaling, hot keys, priority pre-emption
         6. Verify Fault tolerence, Resiliency and durability
             For fault tolerance(operable) - enough replicas, data mirroring 
             For resilient (auto-repair) - Retry with circuit breaker, autoscale
