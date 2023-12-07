@@ -593,7 +593,9 @@ Time to understand scalability, latency aspects
                   https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#trust-but-verify 
                   ACID databases has led us toward developing applications on the basis of blindly trusting technology, neglecting any sort of auditability in the process.
                   By contrast, event-based systems can provide better auditability (like with event sourcing).
-                  Cryptographic auditing and integrity checking often relies on Merkle trees. Outside of the hype for cryptocurrencies, certificate transparency is a security technology that relies on Merkle trees to check the validity of TLS/SSL certificates.
+                  Pg 532 DDIA
+                  Cryptographic auditing and integrity checking often relies on Merkle trees [74], which are trees of hashes that can be used to efficiently prove that a record appears in some dataset (and a few other things). Outside of the hype of cryptocurrencies, certificate transparency is a security technology that relies on Merkle trees to check the val‐ idity of TLS/SSL certificates.
+                  I could imagine integrity-checking and auditing algorithms, like those of certificate transparency and distributed ledgers, becoming more widely used in data systems in general. Some work will be needed to make them equally scalable as systems without cryptographic auditing, and to keep the performance penalty as low as possible. But I think this is an interesting area to watch in the future.
 
 
 
