@@ -198,7 +198,9 @@ Time to understand scalability, latency aspects
     In-depth 
       a. think about data layer 
         - choice of database, data model, sharding (from back of envelope), replication (back of envelope) 
+
       b. Queue to avoid synchronous processing and support fault tolerant, durability 
+
       c. Think about edge cases for product
         1. Rate limiter 
           - Algorithms (Token bucket, sliding window is the best), 
@@ -214,9 +216,12 @@ Time to understand scalability, latency aspects
               - for that hotspot key, assign the copy number to each key and create combined partition key for Cassandra (https://stackoverflow.com/a/27889289/1540256 )
             - CockraochDB provides dashboard insights for hot spot (https://www.cockroachlabs.com/blog/the-hot-content-problem-metadata-storage-for-media-streaming/ )
         3. Key value store 
-          - data partition
+          - data partition - consistent hashing 
           - data replication
-          - inconsistency resolution using versioning (RiakDB uses version vector, Dynamo, )
+          - data consistency (quorum) R + W > N 
+          - inconsistency resolution using versioning (RiakDB uses version vector, Dynamo / Cockroach DB / MongoDB uses vector clocks or lamport timestamp  ). 
+            - Refer Pg 346 for lamport timestamp which supports total ordering (cannot tell if two operations are conncurrent or causally related) which supports linearizability (recency)
+            - Refer Pg 184 for version vector which supports causal order (can tell if two operations are concurrent of casually related) by keeping concurrent versions
 
       d. Some well-known challenges 
         1. Queue
