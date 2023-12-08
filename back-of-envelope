@@ -253,7 +253,8 @@ Time to understand scalability, latency aspects
                 - cannot figure next url vs easy to figure out next url if unique id increments by 1 for new entry 
             - Others : Rate limiter, Scaling with stateless, DB scaling with replication & sharding, Analytics 
           6. Web Crawler 
-            - High level : URL frontier (Seed urls)
+            - High level : 
+              URL frontier (Seed urls) -> Downloader (DNS resolover) -> Content Parser -> Link Extractor -> send to frontier
             - BFS vs DFS
             - URL Frontier 
               - politeness
@@ -267,6 +268,30 @@ Time to understand scalability, latency aspects
               - avoid spider traps by setting max length (A spider trap is a web page that causes a crawler in an infinite loop. For instance, an infinite deep directory structure is listed as follows: http://www.spidertrapexample.com/foo/bar/foo/bar/foo/bar/...)
               -  noise (ads, code snippets)
             - Others : Server side rendering, Scaling with statelessness, DB replication and sharding, Analytics
+          7. Design A Notification System
+            - Different types of notification
+              - App notification
+                - iOS : APNs, Android : FCM. For this you need two things - certificate upload(to build trust) and device token (for APNs/FCM to track about what device)
+              - SMS 
+                - Services like Twilio, Nexmo 
+              - Email service
+                - Mailchimp or Sendgrid 
+            - Contact gathering flow  
+              - collects user data and device info
+            - High level design 
+              - sender services -> notification service (DB look up) -> Device + notification type queue -> Consumers sends to Service Providers 
+            - Reliability (exactly once processing, prevent data loss by logging failed messages for retry)
+            - Notification template (cached in our DB so that Consumer can use it)
+            - Notification setting (opt in / opt out)
+            - Rate limiting
+            - Retry 
+            - Security (certificate upload, Appkey/appSecret pair)
+            - Monitor queued notifications
+            - Events tracking 
+          8. Design A News Feed System
+            
+              
+
               
 
 
