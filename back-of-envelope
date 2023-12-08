@@ -235,6 +235,39 @@ Time to understand scalability, latency aspects
             - Ticket Server like Flicket (SPOF)
             - Twitter snowflake approach (64 bits = 1 sign + 41 timestamp + 5 datacenter + 5 machine + 12 sequence )
             Other talking point - time sychronization using NTP, Bits tuning - timestamp vs sequence bits to support low concurrency 
+        5. URL shortener 
+            - URL redirect response is status code as 301 and location = original url in response headers. 302 for temporary redirect. 
+            - 301 helps in reducing server load vs 302 helps in tracking 
+            - Data model - id, short url, long url 
+            - Hash function : 62 ^ n = 300 B urls. So n ~ 7 chars 
+            - Techniques 
+              - hash + collison resolution 
+                - SHA-1 (120 bits), SHA-256 (256 bits)
+                - blook filter to improve look up 
+              - Base 62 conversion 
+                - unique id generator % 62 
+              - Hash vs Base 62 
+                - fixed vs variable lenght
+                -       vs  depend on unique id generator 
+                - collision vs collision free 
+                - cannot figure next url vs easy to figure out next url if unique id increments by 1 for new entry 
+            - Others : Rate limiter, Scaling with stateless, DB scaling with replication & sharding, Analytics 
+          6. Web Crawler 
+            - High level : URL frontier (Seed urls)
+            - BFS vs DFS
+            - URL Frontier 
+              - politeness
+              - priority (pagerank)
+              - Crawl based on Freshness (update history)
+            - Downloader (Robots)
+              - performance : distributed crawl, cache DNS, Locality, short timeout
+              - robustness : consistent hashing, save state, exception handling,
+            - Detect and avoid malciousness
+              - redundant content 
+              - avoid spider traps by setting max length (A spider trap is a web page that causes a crawler in an infinite loop. For instance, an infinite deep directory structure is listed as follows: http://www.spidertrapexample.com/foo/bar/foo/bar/foo/bar/...)
+              -  noise (ads, code snippets)
+            - Others : Server side rendering, Scaling with statelessness, DB replication and sharding, Analytics
+              
 
 
       d. Some well-known challenges 
