@@ -226,6 +226,16 @@ Time to understand scalability, latency aspects
             - detection using gossip protocol 
             - temporary failures from sloppy quorum and hinted handoffs (changes since last failure is synced back to replica)
             - permanent failures - use merklee tree to detect selected discrepancies and replicate rather than sending entire DB data over the network.
+          - Flow : 
+            - Write path (LSM tree + SS Table)
+            - Read path (LSM tree + SS Table + Bloom filter + sparse index)
+        4. Design A Unique ID Generator In Distributed Systems
+            - Multi-master replication using DBs (scaling problem, ID synchronization)
+            - UUID (128 bits long but not go up with time)
+            - Ticket Server like Flicket (SPOF)
+            - Twitter snowflake approach (64 bits = 1 sign + 41 timestamp + 5 datacenter + 5 machine + 12 sequence )
+            Other talking point - time sychronization using NTP, Bits tuning - timestamp vs sequence bits to support low concurrency 
+
 
       d. Some well-known challenges 
         1. Queue
