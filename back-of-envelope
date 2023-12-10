@@ -305,7 +305,25 @@ Time to understand scalability, latency aspects
                                                                     -> Post cache (post details) -> Post DB 
                                                                     -> User data (name, profile picture)
             - Others - Scaling, DB, Replication, Consistency, DB sharding, Multiple data centers, Metrics monitoring 
-          9. 
+          9. Design A Chat System
+            - Polling vs Long Polling vs WebSocket
+            - Data model ? 
+            - High level design 
+              - High level 
+                - Client <-> Chat Server (websocket)              -> key value DB
+                          -> API servers (help discover servers)  -> key value DB
+              - Message flows 1:1 with synchronization on muliple devices 
+              - Message flows Group chat 
+            - Online Presence/ Status Fan out 
+            - Others - support media files, E2E Encryption, Improve Load time by multi-datacenter, Retry with Queue
+          10. Design A Search Autocomplete System
+            - High level design (trie)
+            - Data gathering in the back-end (offline) to populate new values in the trie daily 
+            - Performance : Browser cache (header cache-control)
+            - Smart sharding based on historical queries for equal load partition
+            - Others - multi-criteria ranking, online update Vs offline batch update
+
+
 
 
               
