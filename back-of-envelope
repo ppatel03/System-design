@@ -279,7 +279,8 @@ Time to understand scalability, latency aspects
             - Contact gathering flow  
               - collects user data and device info
             - High level design 
-              - sender services -> notification service (DB look up) -> Device + notification type queue -> Consumers sends to Service Providers 
+              - sender services -> notification service (DB look up) -> Device + notification type queue -> Consumers -> Service Providers (APNs, FCMs, Twilio, MailChimp)
+              
             - Reliability (exactly once processing, prevent data loss by logging failed messages for retry)
             - Notification template (cached in our DB so that Consumer can use it)
             - Notification setting (opt in / opt out)
@@ -289,8 +290,23 @@ Time to understand scalability, latency aspects
             - Monitor queued notifications
             - Events tracking 
           8. Design A News Feed System
-            - build timeline On-Demand vs Push 
-              
+            - build timeline On-Demand vs Push
+              - on-demand for celebrities posts (> 1 M followes)
+              - push for other users post
+            - Feed publish flow
+              - Client/Browser -> LB -> publish-service (online path) -> Post DB -> Post cache
+                                                |
+                                            Queue (offline) -> Consumer -> Friends fetcher 
+                                                                        -> User data 
+                                                                        -> News Feed Cache
+                                                                        -> Notification service 
+            - Feed fetch flow
+               - Client/Browser -> LB -> feed-fetcher (online path) -> News Feed cache (set of post ids)
+                                                                    -> Post cache (post details) -> Post DB 
+                                                                    -> User data (name, profile picture)
+            - Others - Scaling, DB, Replication, Consistency, DB sharding, Multiple data centers, Metrics monitoring 
+          9. 
+
 
               
 
