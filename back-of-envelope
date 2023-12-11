@@ -507,7 +507,39 @@ Time to understand scalability, latency aspects
                   - If game_id, date is used as shard, then what about hot shard for recent game. Add random number across the key and distribute it across the shard. Only challenge is read has to be done across all shards for that key. 
                   - One option is you can return scores in percentiles which is rank within shard.
               - How to implement Tie Breaker
+            22. Payment System
+              - High level design 
+                  Pay-in flow
+
+                    Client  -> LB -> Payment service -> Payment executor -> PSP (Stripe, Paypal)
+                                      |         |               |
+                                      |         |               |
+                              Ledger Service.  Wallet Service   DB
+                                    
+                  Data model 
+                      (checkout_table -> checkout id, buyer info, credit card info, payment_status, payment_token from PSP )
+                      (order_details -> order_id, checkout_id, seller_id, amount, currency, ledger_updated, wallet_updated, payment_status)
+              - Double entry ledger 
+              - Hosted payment page 
+              - PSP integration ( Our payment executor creates nonce using checkout id and sends to PSP and at same time redirects user to PSP hosted page with redirect URL back to our page when payment is complete. Also we provide webhook to PSP to notify success ).
+              - Reconcilliation (automated, fixed with code and manual)
+              - Handle processing delays using webhook URL or polling
+              - Handling failed payments with Retry + dead letter queue
+              - Exactly once delivery using idempotency on payment token OR nonce (checkout id)
+              - Security 
+                  - use HTTPS, Enforce encrpytion, DB replication across regions, Rate limiting to avoid DDOS, Card theft by tokenization, PCI compliance, Address verification + card verification value (CVV)
+            23. Digital Wallet
+              - High level design 
+                  Client -> LB -> Wallet Service -> DB 
+
+              - But what if DB is sharded 
+                1. 2PC (lock + commit) - depends on DB support, XA standard to implement it for heterogeneous systems, needs co-ordinator support
+                2. TCC (Try Confirm/Cancel)  - leaves DB in inconsistent state but application has full control to handle it.
+                3. Saga - Best choice for microservice. Can be Decentralized and Orchestration using co-ordinator but unlike TCC, its slow. 
+                For 2 and 3 to handle unbalances state, use phase status table (transaction_id, phase_type, name, status, out_of_order flag for network lag)
+              - Event sourcing with materialized views 
               
+
 
 
 
