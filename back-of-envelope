@@ -333,10 +333,10 @@ Time to understand scalability, latency aspects
                     Browser/Client ->               API Service .       ->          MetaData DB 
                               |                           |                              ^
                               V                           v                              | update once transcoding is complete 
-                          (multipart upload) Block / Video Storage -> Transcode Service -> Transcoded Storage (S3) -> CDN
+                          (multipart upload) Block / Video Storage    ->         Transcode Service -> Transcoded Storage (S3) -> CDN
 
                 - Why Video transcoding (different resolutions, video formats (HLS, DASH), fps, bit rate)
-                - DAG model for video ( Video, Audio, Metadata. Video has further parallel step -> transcoding different resolutions, thumbnail, watermart)
+                - DAG model for video ( Video, Audio, Metadata. Video has further parallel step -> transcoding different resolutions, thumbnail, watermark)
                 - Performance - CDN, upload service across datacenters, parallelism everywhere
                 - Presigned URL for upload/modify
                 - Protection - AES encryption, watermarking 
@@ -388,6 +388,7 @@ Time to understand scalability, latency aspects
                   - User is by default subscribed to his/her friend's channel whether they are active or not. Saves the cost of new user joining the nearby service and having all his/her friend's subscribe to it.
               - Data model
                   - user id -> lat, long 
+              - Why cache is needed ? - to store recent data with TTL
               - Scaling (web socket, user DB, location cache, redis pub/sub IO bound and holds ~ 100K connections so need 100 servers, redis pub/sub server consistent hashing with zookeeper having its address, inform all web-socket servers to resubscribe on redis scale up/down)
               - Adding / removing 
               - User with many friends (not a problem since their friends channel would be distributed across)
