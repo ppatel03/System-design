@@ -318,13 +318,53 @@ Time to understand scalability, latency aspects
             - Others - support media files, E2E Encryption, Improve Load time by multi-datacenter, Retry with Queue
           10. Design A Search Autocomplete System
             - High level design (trie)
+                Client/Browser -> API Server -> Trie Cache -> Trie DB 
+                                                                  |
+                Analytics Logs -> Data parser -> Trie Builder (workers) -> update periodically to Trie DB
+
             - Data gathering in the back-end (offline) to populate new values in the trie daily 
             - Performance : Browser cache (header cache-control)
             - Smart sharding based on historical queries for equal load partition
+            - Filter unwanted words 
             - Others - multi-criteria ranking, online update Vs offline batch update
+          11. Design Youtube
+            - High level design 
+              - Upload flow 
+                  Browser/Client ->               API Service .       ->          MetaData DB 
+                            |                           |                              ^
+                            V                           v                              | update once transcoding is complete 
+                        (multipart upload) Block / Video Storage -> Transcode Service -> Transcoded Storage (S3) -> CDN
 
-
-
+              - Why Video transcoding (different resolutions, video formats (HLS, DASH), fps, bit rate)
+              - DAG model for video ( Video, Audio, Metadata. Video has further parallel step -> transcoding different resolutions, thumbnail, watermart)
+              - Performance - CDN, upload service across datacenters, parallelism everywhere
+              - Presigned URL for upload/modify
+              - Protection - AES encryption, watermarking 
+              - Others - Live streaming, scaling the database
+            12. Design Google Drive
+            - High level design
+                Browser/Client  -> Block server (socket) -> Object storage 
+                            |        | on completion 
+                            |        V
+                            | -->   LB.   -> API server -> Metadata DB 
+                                                  | notifies
+                                                  V
+                                                Notification service
+            - Block server (breaks into blocks, compresses, encrypt and also delta detection)
+            - High consistency on metadata DB 
+            - Upload flow (connects to API Server -> Gets Block server -> on completion of block upload -> Notification service)
+            - Download flow (from notification service -> downloads metadata about block ids -> downloads blocks from block server)
+            - Save storage space (discard old versions, set a limit on versions, dedup blocks, move to cold storage)
+            - How to resolve conflicts https://www.youtube.com/watch?v=0TJtwV29cjM&ab_channel=CrushingTechEducation 
+                - locks by line but its low performant
+                - operative transformation (google docs)
+                    - both gets their local copy updated from local change
+                    - block server apply transformation on both of those local changes 
+                - using CRDT
+                    - both gets their local copy updated from local change
+                    - both send their changes to each other 
+                    - CRDT : use union like in list based CRDT 
+                        {(H,0.2), (i, 0.2)} U {(!,0.3)} = {(H,0.2), (i, 0.2), (!,0.3)}
 
               
 
