@@ -313,7 +313,7 @@ Time to understand scalability, latency aspects
                 - Client <-> Chat Server (websocket)              -> key value DB
                           -> API servers (help discover servers)  -> key value DB
               - Message flows 1:1 with synchronization on muliple devices 
-              - Message flows Group chat 
+              - Message flows Group chat (Wechat still uses per user per message queue. So Group chats, user duplicates messages to all his/her friend's queue)
             - Online Presence/ Status Fan out 
             - Others - support media files, E2E Encryption, Improve Load time by multi-datacenter, Retry with Queue
           10. Design A Search Autocomplete System
@@ -538,7 +538,7 @@ Time to understand scalability, latency aspects
                 3. Saga - Best choice for microservice. Can be Decentralized and Orchestration using co-ordinator but unlike TCC, its slow. 
                 For 2 and 3 to handle unbalances state, use phase status table (transaction_id, phase_type, name, status, out_of_order flag for network lag)
               - Event sourcing with materialized views 
-              
+
 
 
 
