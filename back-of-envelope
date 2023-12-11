@@ -317,54 +317,117 @@ Time to understand scalability, latency aspects
             - Online Presence/ Status Fan out 
             - Others - support media files, E2E Encryption, Improve Load time by multi-datacenter, Retry with Queue
           10. Design A Search Autocomplete System
-            - High level design (trie)
-                Client/Browser -> API Server -> Trie Cache -> Trie DB 
-                                                                  |
-                Analytics Logs -> Data parser -> Trie Builder (workers) -> update periodically to Trie DB
+              - High level design (trie)
+                  Client/Browser -> API Server -> Trie Cache -> Trie DB 
+                                                                    |
+                  Analytics Logs -> Data parser -> Trie Builder (workers) -> update periodically to Trie DB
 
-            - Data gathering in the back-end (offline) to populate new values in the trie daily 
-            - Performance : Browser cache (header cache-control)
-            - Smart sharding based on historical queries for equal load partition
-            - Filter unwanted words 
-            - Others - multi-criteria ranking, online update Vs offline batch update
+              - Data gathering in the back-end (offline) to populate new values in the trie daily 
+              - Performance : Browser cache (header cache-control)
+              - Smart sharding based on historical queries for equal load partition
+              - Filter unwanted words 
+              - Others - multi-criteria ranking, online update Vs offline batch update
           11. Design Youtube
-            - High level design 
-              - Upload flow 
-                  Browser/Client ->               API Service .       ->          MetaData DB 
-                            |                           |                              ^
-                            V                           v                              | update once transcoding is complete 
-                        (multipart upload) Block / Video Storage -> Transcode Service -> Transcoded Storage (S3) -> CDN
+              - High level design 
+                - Upload flow 
+                    Browser/Client ->               API Service .       ->          MetaData DB 
+                              |                           |                              ^
+                              V                           v                              | update once transcoding is complete 
+                          (multipart upload) Block / Video Storage -> Transcode Service -> Transcoded Storage (S3) -> CDN
 
-              - Why Video transcoding (different resolutions, video formats (HLS, DASH), fps, bit rate)
-              - DAG model for video ( Video, Audio, Metadata. Video has further parallel step -> transcoding different resolutions, thumbnail, watermart)
-              - Performance - CDN, upload service across datacenters, parallelism everywhere
-              - Presigned URL for upload/modify
-              - Protection - AES encryption, watermarking 
-              - Others - Live streaming, scaling the database
+                - Why Video transcoding (different resolutions, video formats (HLS, DASH), fps, bit rate)
+                - DAG model for video ( Video, Audio, Metadata. Video has further parallel step -> transcoding different resolutions, thumbnail, watermart)
+                - Performance - CDN, upload service across datacenters, parallelism everywhere
+                - Presigned URL for upload/modify
+                - Protection - AES encryption, watermarking 
+                - Others - Live streaming, scaling the database
             12. Design Google Drive
-            - High level design
-                Browser/Client  -> Block server (socket) -> Object storage 
-                            |        | on completion 
-                            |        V
-                            | -->   LB.   -> API server -> Metadata DB 
-                                                  | notifies
-                                                  V
-                                                Notification service
-            - Block server (breaks into blocks, compresses, encrypt and also delta detection)
-            - High consistency on metadata DB 
-            - Upload flow (connects to API Server -> Gets Block server -> on completion of block upload -> Notification service)
-            - Download flow (from notification service -> downloads metadata about block ids -> downloads blocks from block server)
-            - Save storage space (discard old versions, set a limit on versions, dedup blocks, move to cold storage)
-            - How to resolve conflicts https://www.youtube.com/watch?v=0TJtwV29cjM&ab_channel=CrushingTechEducation 
-                - locks by line but its low performant
-                - operative transformation (google docs)
-                    - both gets their local copy updated from local change
-                    - block server apply transformation on both of those local changes 
-                - using CRDT
-                    - both gets their local copy updated from local change
-                    - both send their changes to each other 
-                    - CRDT : use union like in list based CRDT 
-                        {(H,0.2), (i, 0.2)} U {(!,0.3)} = {(H,0.2), (i, 0.2), (!,0.3)}
+              - High level design
+                  Browser/Client  -> Block server (socket) -> Object storage 
+                              |        | on completion 
+                              |        V
+                              | -->   LB.   -> API server -> Metadata DB 
+                                                    | notifies
+                                                    V
+                                                  Notification service
+              - Block server (breaks into blocks, compresses, encrypt and also delta detection)
+              - High consistency on metadata DB 
+              - Upload flow (connects to API Server -> Gets Block server -> on completion of block upload -> Notification service)
+              - Download flow (from notification service -> downloads metadata about block ids -> downloads blocks from block server)
+              - Save storage space (discard old versions, set a limit on versions, dedup blocks, move to cold storage)
+              - How to resolve conflicts https://www.youtube.com/watch?v=0TJtwV29cjM&ab_channel=CrushingTechEducation 
+                  - locks by line but its low performant
+                  - operative transformation (google docs)
+                      - both gets their local copy updated from local change
+                      - block server apply transformation on both of those local changes 
+                  - using CRDT
+                      - both gets their local copy updated from local change
+                      - both send their changes to each other 
+                      - CRDT : use union like in list based CRDT 
+                          {(H,0.2), (i, 0.2)} U {(!,0.3)} = {(H,0.2), (i, 0.2), (!,0.3)}
+            13. Proximity Service
+              - High level design
+                  Browser/Client -> LB -> API Service -> Geo hash DB (redis)
+                                                      -> DB (business info)
+              - Data model
+                  business info
+                    business id -> location info (lat and long), name, etc.
+                  search info
+                    geohash -> business id 
+              - Techniques 
+                1. GeoHash (boundary challenges )
+                2. Quadtree (in memory challenge and operational start up time )
+                3. Google S2 
+              - Sharding 
+              - Multi data center with privacy laws
+            14. Nearby Friends 
+              - High level design 
+                - leverage redis pub sub
+              - Periodic location update 
+              - Operation savings : 
+                  - User is by default subscribed to his/her friend's channel whether they are active or not. Saves the cost of new user joining the nearby service and having all his/her friend's subscribe to it.
+              - Data model
+                  - user id -> lat, long 
+              - Scaling (web socket, user DB, location cache, redis pub/sub IO bound and holds ~ 100K connections so need 100 servers, redis pub/sub server consistent hashing with zookeeper having its address, inform all web-socket servers to resubscribe on redis scale up/down)
+              - Adding / removing 
+              - User with many friends (not a problem since their friends channel would be distributed across)
+              - Nearby random persion (use geohash as the channel)
+            15. Distributed Message Queue
+              - point to point and pub-sub model 
+              - topics, partition and brokers 
+              - consumer group 
+              - high level design 
+                  Producer -> Queue (brokers holding partition) -> Consumer group 
+                                                    |
+                                      Zookeeper (offset of consumers, paritition info, etc.)
+              - data storage (sequential IO using disk. Each file could be like a segment. )
+              - message structure (key, value, topic, partition, offset, timestamp, size, crc for intergrity)
+              - router at producer and co-ordinator at consumer to join the parition
+              - consumer - push vs pull, rebalancing using co-ordinator
+              - replication - partitions replicas into multiple brokers , in sync replicas 
+              - scalability (producer easy since no cordination needed, consumer through coordinator, broker - parition balancing, partition add/removal )
+              - At most once, Atleast once and Exactly once
+              - Message filtering using tags 
+              - Delayed and scheduled messages (temporarily store in the Queue)
+              - Retry : failed consumed messages could be retried through Retry Queue 
+            16. Metrics Monitoring and Alerting System
+              - Data model : timestamp, value, set of <key,value> labels 
+              - line protocal which is used in Prometheus, OpenTSDB
+              - choice of DB : TimeSeries (burst read, high writes)
+              - High leve design 
+                  Metrics Source -> Metrics Collector -> Timeseries DB -> Query Service -> Alert Manager (uses alert rules) -> Notification service 
+                                                                                 -> Visualization 
+              - Push vs Pull
+              - Queue for Metrics Collector (parition by metrics name, topic by region, further tags for filters, )
+              - Storage optimization (RLE/Delta compression, downsampling & retention )
+              - Alerting system (how to dedup)
+              - Visualization system - Grafana
+            17. Ad Click Event Aggregation
+              - 
+              
+
+
+                
 
               
 
