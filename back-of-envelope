@@ -466,7 +466,7 @@ Time to understand scalability, latency aspects
                                  Storage (metadata, search store, object store, cache)
               - Metadata DB (relational -> user_folder (user_id, folder_id),  folder_emails(message_id, folder_id, from, to, subject, link_to_s3, etc.))
                 - Email threads could be identified by using message_id
-              - Email deliverability - dedicated IPs, Separate servers for promotio emails, Email sender reputation, Ban spammers, Feedback processing, Good relationship with ISPS
+              - Email deliverability - dedicated IPs, Separate servers for promotion emails, Email sender reputation, Ban spammers, Feedback processing, Good relationship with ISPS
               - Authentication : SPF (sender policy framework, Domain based message authentication). As an example, you can see that in "signed-by" section to every email
               - Search store : elastic search out of box 
               - Others : Compliance using GDPR, Storage optimization by deduping attachments
@@ -507,7 +507,7 @@ Time to understand scalability, latency aspects
               - Other DB option is Dynamo which uses consistent hashing 
                   - If game_id, date is used as shard, then what about hot shard for recent game. Add random number across the key and distribute it across the shard. Only challenge is read has to be done across all shards for that key. 
                   - One option is you can return scores in percentiles which is rank within shard.
-              - How to implement Tie Breaker
+              - How to implement  report scores if there is a Tie (may be one which got the score first - so timestamp based)
             22. Payment System
               - High level design 
                   Pay-in flow
