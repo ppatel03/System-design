@@ -423,7 +423,96 @@ Time to understand scalability, latency aspects
               - Alerting system (how to dedup)
               - Visualization system - Grafana
             17. Ad Click Event Aggregation
-              - 
+              - Data model
+                - star schema (fact table storing denormalized form and dimension table derived from fact for Aggregated data. Use filter id technique to further have faster retrieval)
+              - Keep Raw incoming data 
+              - DB : Cassandra 
+              - High level design 
+                  Logs/collection source -> Producer -> Queue -> Consumer aggregation (map reduce job) -> DB -> Query Service 
+              - Streaming vs Batching (use both : Kappa architecture like Flink) 
+              - Data recalculation using raw DB or Queue 
+              - Time : event time vs processing time. Use event time but know the gap = processing - event time. 
+              - Watermarking : use the above gap as extended interval 
+              - Tumbling window vs Sliding window 
+              - Delivery guarantee (exactly once using offset id and storing it only when Aggregator saves in DB)
+              - Scaling : Aggregator using consumer rebalancing, Map reduce using YARN, Cassandra supports consistent hashing
+              - Fault tolerant : use checkpoint barriers like in Flink to store the snapshot 
+              - Others - Data monitoring (Queue size, latency, CPU/RAM), Reconcialiation 
+            18. Hotel Reservation System
+              - API design
+              - Data model (SQL for consistency and read more, write less)
+              - Improved data model since room_id cannot be decided at booking time 
+              - concurrency issues 
+                - Pessimistic locking (like Serializable isolation, low performant, depends on DB support for locking)
+                - Optimistic locking 
+                  - using versioning (like in snapshot isolation but has write contention)
+                  - using unique key constraint (depends on DB support and has write contention)
+                Optimisitic locking makes more sense due to low writes 
+              - DB sharding (do we really need it - No based on requirements)
+              - what if DB is sharded (then we need distributed transaction like 2PC or Saga )
+            19. Distributed Email Service
+              - SMTP for sending emails and at times receiving too. But IMAP/POP3 famous for receiving 
+              - How to get address of email servers - using nslookup domain_name
+              - Attachment - MIME support 
+              - High level design 
+                - Email Sending flow 
+                    Client -> LB -> Web Server -> Outgoing queue (error queue) -> SMTP Outgoing (check spam, virus and retry) -> Internel
+                                      |
+                          Storage (metadata, search store, object store, cache)
+                - Email receiving flow 
+                    Internel -> LB -> SMTP Server -> Incoming queue -> Mail processor (check spam, virus) -> Web socket server -> Client 
+                                          |                                                               -> Notification service if offline
+                                 Storage (metadata, search store, object store, cache)
+              - Metadata DB (relational -> user_folder (user_id, folder_id),  folder_emails(message_id, folder_id, from, to, subject, link_to_s3, etc.))
+                - Email threads could be identified by using message_id
+              - Email deliverability - dedicated IPs, Separate servers for promotio emails, Email sender reputation, Ban spammers, Feedback processing, Good relationship with ISPS
+              - Authentication : SPF (sender policy framework, Domain based message authentication). As an example, you can see that in "signed-by" section to every email
+              - Search store : elastic search out of box 
+              - Others : Compliance using GDPR, Storage optimization by deduping attachments
+            20. S3-like Object Storage
+              - Block vs File vs Object (cheap, rest api support, high durability)
+              - High level design 
+                  Client -> LB -> API Service -> Metadata Serice -> Metadata DB 
+                                              -> Data store service (data routing, placement service like resource manager) -> Object DB
+                  
+                  Metadata DB  - (bucket table (bucket_id, details), bucket_objects (object_name, bucket_id, object_id, version_id) table)
+
+                  Upload flow : store basic info in Metadata DB, uploads the file via Data store service, gets the object id, stores in Metadata DB
+                  Download flow : Using bucket name and object_name, looks up the Metadata DB for object id and fetch the object from data store service
+              - Data store (append only, different files as segments, separate object_mapping table -> object id, file_name, offset, data size)
+              - Durability ( more replicas vs parity bits which is optimized)
+              - Integrity using checksum 
+              - Metadata sharding 
+                  - shard by bucket name, object name since most queries are based on that
+                  - but what about query to list all objects -> use separate denormalized table to store bucket name -> list of object ids 
+              - Object versioning 
+              - Multipart upload (breaks the file into muliple parts, server sends eTag for each part, after finish clients sends all etags in order for server to resemble and perform ordering )
+              - Garbage collection : same as compaction process in LSM+SS Table
+            21. Real-time Gaming Leaderboard
+              - High level design 
+                  Client -> Game service post score to -> Leadboard service -> DB 
+                          \                               /
+                            \___________________________/
+                              use for read queries only
+                  Data model (user id, game_id, score)
+              - Scale using Redis sorted set (hashtable + skip list)
+                  add scores using ZINCRBY leaderboard_feb_2021 1 'mary1934'
+                  get top 10 using ZREVRANGE leaderboard_feb_2021 0 9 WITHSCORES
+                  fetch rank using ZREVRANK leaderboard_feb_2021 'mary1934'
+                  if above returns 361, fetch 10 nearby ranks using  ZREVRANGE leaderboard_feb_2021 357 365
+              - Paritioning 
+                  - fixed parition using scores (easy for reads esp. top 10, hard for writes since users will keep moving across parition for score updates)
+                  - hash slot based partition based on key (hard to get top 10, need to read every shard). One option is you can return scores in percentiles which is rank within shard.
+              - Other DB option is Dynamo which uses consistent hashing 
+                  - If game_id, date is used as shard, then what about hot shard for recent game. Add random number across the key and distribute it across the shard. Only challenge is read has to be done across all shards for that key. 
+                  - One option is you can return scores in percentiles which is rank within shard.
+              - How to implement Tie Breaker
+              
+
+
+
+                
+
               
 
 
