@@ -1980,6 +1980,8 @@ Distributed best practices
        - but what if there are many editable fields - maintain the mapping of the info most recently modified and based on that read from leader
        - have client store timestamp of most recent write
 
+       Facebook's solution on read-after-write ; https://www.cs.utexas.edu/~vijay/cs380D-s18/feb6-fb.pdf 
+
   Monotonic read 
       Pg 164 DDIA 
     means user is read the data moving backwards in time. Its possible if one read goes to updated replica and another to outdated replica.
