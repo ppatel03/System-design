@@ -2740,7 +2740,8 @@ Distributed systems today and Benchmarking on common systems
                 - (tough) statefulness
                 - (tough) regional fluidity
             Solution 
-              - load testing every 4 (config) hours to help determine throughput and stopper metrics 
+              - Intially load testing is run for a week. After 2 days, it can halt if throughput and stopper metrics patterns are consistent.
+              - Then it runs periodic load testing every 4 (config) hours to help determine throughput and stopper metrics 
                 - use throughput metrics to get total instructions at peak hour for the service at lowest granalarity - region level + machine type
                 - calculate throughput for DR bufer, organic growth and spike buffer from throughput metric 
                 - get the estimate of # of machines needed
@@ -2755,6 +2756,9 @@ Distributed systems today and Benchmarking on common systems
                     - health check
                     - error rate
                     - response time for online services. 
+                What if throughput metric does not show consistent patterns
+                  - we leave out such services 
+                   
                 How autoscaling is done ? 
               
                   - while scaling down, 
