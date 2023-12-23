@@ -2756,8 +2756,12 @@ Distributed systems today and Benchmarking on common systems
                     - health check
                     - error rate
                     - response time for online services. 
-                What if throughput metric does not show consistent patterns
+
+                What if throughput metric does not show consistent patterns throughout the week ? 
                   - we leave out such services 
+
+                What if the services have different demand sources ? 
+                  - For most demand sources, we reserve quoto and spike buffer. 
                    
                 How autoscaling is done ? 
               
