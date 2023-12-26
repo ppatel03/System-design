@@ -2757,12 +2757,12 @@ Distributed systems today and Benchmarking on common systems
                     - error rate
                     - response time for online services. 
 
-                What if load testing results (throughput + stopper) does not show consistent patterns throughout the week ? 
-                A simple answer is perform frequent load testing (example 30 mins instead of 4 hours) and change throughput + stopper metrics throughout the week. But this is a HARD problem can be categorized into 
+                What if load testing results (throughput + stopper) does not show consistent patterns throughout the week. This was 45% of the case ? 
+                A simple answer is perform frequent load testing (example 30 mins instead of 4 hours) and change throughput + stopper metrics throughout the week. But this is a HARD problem with 2 major factos to be considered as 
                   A. Based on state
                     1. Stateless services : Downscale and Upscale SLA for stateless services is 30 mins. If services changes its throughput+stopper metrics within 30 mins interval, then we do not submit for autoscaling.
 
-                    2. Stateful services : These show mostly consistent patterns but incurs great of amount of time downscale/upscale. SLA is 4 hours.
+                    2. Stateful services : SLA for upscale/downscale is large -  4 hours But these show mostly consistent patterns
 
                   B. Based on demand sources limits (quotas vs unbounded)
                      Demand sources limit/quotas set
@@ -2773,6 +2773,9 @@ Distributed systems today and Benchmarking on common systems
                       - For viral content, we use promise cache to avoid multiple requests for same resource.
                       - Service level spike buffer
                       - Dynamic load balancing to calculate max throughput this service can hold currently and rate limits based on this data.
+
+                     So this solved 35% of the challenge. 10% of the case which were not solvable as below
+                     - (unbounded and violating state based SLA : stateless with less than 30 mins, stateful less than 4 hours)
                    
                 How autoscaling is done ? 
               
