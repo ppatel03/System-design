@@ -2758,9 +2758,7 @@ Distributed systems today and Benchmarking on common systems
                     - response time for online services. 
 
                 What if load testing results (throughput + stopper) does not show consistent patterns throughout the week ? 
-                A simple answer is perform frequent load testing (example 30 mins instead of 4 hours) and change throughput + stopper metrics throughout the week.
-
-                - This is a hard problem can be categorized into 
+                A simple answer is perform frequent load testing (example 30 mins instead of 4 hours) and change throughput + stopper metrics throughout the week. But this is a HARD problem can be categorized into 
                   A. Based on state
                     1. Stateless services : Downscale and Upscale SLA for stateless services is 30 mins. If services changes its throughput+stopper metrics within 30 mins interval, then we do not submit for autoscaling.
 
