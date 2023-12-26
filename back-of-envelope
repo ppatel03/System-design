@@ -647,6 +647,15 @@ Time to understand scalability, latency aspects
             - place consecutive subtasks belong to same job on same hosts  (it also reduces network bandwidth)
             - For demand efficiency, identify bottlenecks for jobs which does overfetching 
         23. How to effectively do multi-leader replication ? (all relational DBs, Kafka, Redis)
+            Great video : https://www.youtube.com/watch?v=1BXCxpcsmzc&ab_channel=Jordanhasnolife 
+            
+            5 techniques : 
+              - conflict avoidance (just make writes from leader)
+              - LWW
+              - Conflict on read (calls conflict resolution code on read like Dynamo read-repair /Azure CosmosDB/CouchDB read-repair)
+              - Conflict on write (calls conflict resolution code on write like CRDTs)
+              - Version vectors (like in Riak 2.0)
+
               Multi-leader replication is implemented with Tungsten Replicator for MySQL, BDR(bi-directional replication) for PostgreSQL or GoldenGate for Oracle. MySQL uses circular topology for its replication.
 
             - the common use case is multi-datacenter need where there is a leader in each datacenter
