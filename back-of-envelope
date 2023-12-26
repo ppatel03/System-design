@@ -2740,7 +2740,7 @@ Distributed systems today and Benchmarking on common systems
                 - (tough) statefulness
                 - (tough) regional fluidity
             Solution 
-              - Intially load testing is run for a week. After 2 days, it can halt if throughput and stopper metrics patterns are consistent.
+              - Intially load testing is run for a week. After 3 days, it can halt if throughput and stopper metrics patterns are consistent.
               - Then it runs periodic load testing every 4 (config) hours to help determine throughput and stopper metrics 
                 - use throughput metrics to get total instructions at peak hour for the service at lowest granalarity - region level + machine type
                 - calculate throughput for DR bufer, organic growth and spike buffer from throughput metric 
@@ -2757,11 +2757,24 @@ Distributed systems today and Benchmarking on common systems
                     - error rate
                     - response time for online services. 
 
-                What if throughput metric does not show consistent patterns throughout the week ? 
-                  - we leave out such services 
+                What if load testing results (throughput + stopper) does not show consistent patterns throughout the week ? 
+                A simple answer is perform frequent load testing (example 30 mins instead of 4 hours) and change throughput + stopper metrics throughout the week.
 
-                What if the services have different demand sources ? 
-                  - For most demand sources, we reserve quoto and spike buffer. 
+                - This is a hard problem can be categorized into 
+                  A. Based on state
+                    1. Stateless services : Downscale and Upscale SLA for stateless services is 30 mins. If services changes its throughput+stopper metrics within 30 mins interval, then we do not submit for autoscaling.
+
+                    2. Stateful services : These show mostly consistent patterns but incurs great of amount of time downscale/upscale. SLA is 4 hours.
+
+                  B. Based on demand sources limits (quotas vs unbounded)
+                     Demand sources limit/quotas set
+                      - setting demand source level quotas based on throughput metric and 
+                      - reserving demand source level spike buffer. 
+                       
+                     Demand sources limit/quotas not set (unbounded)
+                      - For viral content, we use promise cache to avoid multiple requests for same resource.
+                      - Service level spike buffer
+                      - Dynamic load balancing to calculate max throughput this service can hold currently and rate limits based on this data.
                    
                 How autoscaling is done ? 
               
