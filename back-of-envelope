@@ -634,10 +634,11 @@ Time to understand scalability, latency aspects
         20. Whats the best way to support CDC ? 
             - DB changes -> log based message passing (kakfa) -> different sources like Search index, Database, materialized views
             Kafka already log compaction to avoid storing outdated data in its partition
-        21. How to ensure recency guarantee ? - Linerazeability
-            - using Lamport timestamp (just the counter to record to indicate whats more updated ) - Pg 346 - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
+        21. How to ensure recency guarantee ? - Linerazeability 
+            - using Lamport timestamp (just the counter to record to indicate whats more updated ) 
+            - using Vector clocks  ( Pg 346 - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks. Refer https://cs.stackexchange.com/questions/101496/difference-between-lamport-timestamps-and-vector-clocks )
             - using quorum consistency (R+W > N) like Dynamo or strong consistency
-            - Lamport timestamp or vector clocks are often confused with version vectors 
+            - Version vectors (Partial ordering)
               - version vectors can check if 2 operations are concurrent or causally dependent on one other. Riak 2.0 uses version vectors - Pg 184 
         22. How to ensure good Job placement for a Job manager / resource manager ? 
           https://medium.com/pinterest-engineering/tuning-flink-clusters-for-stability-and-efficiency-50d3d50384ed 
@@ -2077,25 +2078,28 @@ Distributed best practices
               - some ways to resolve conflicts at DB level
                 - now for conflicts, use different strategies
                   1. LWW based on timestamp
-                  2. Calls custom conflict resolution logic (some DBs support this). Examples
+                  2. Conflict on Read / Conflict on Write. Calls custom conflict resolution logic (some DBs support this). Examples
                     - Dynamo
                     - Azure CosmosDB 
                   3. use version vectors - (also helps with ordering) - RiakDB
                     - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
-                  4. use lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
+                  4. use lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo,  Cockroach DB uses vector clock/lamport clocks
+                  5. Read repair or Anti-entropy
                     - Dynamo's read repair(resolve conficts when reading) and anti-entropy(resolve conflicts when writing)  
-            But how to ensure you are consistent values from different DB nodes ? 
-              - Quorum consistency (strong) - achieving concensus with R + W > N. Usually N is picked as odd number in DynamoDB
-                    w = r = (n + 1) / 2
-                - Limitations of Quorum consistency 
-                    Higher Latency – Lower Availability
-                    Quorum Consistency can sometimes lead to higher latency and lower availability if proper caution is not taken and there is a network interruption and many replicas become unreachable. This is because, if the number of reachable replicas falls below w or r, the database would become unavailable for writing or reading.
-              - Eventual Consistency
-                From the discussion so far we see that, although quorums appear to guarantee that a read returns the latest written value, in practice it is not so simple. Dynamo-style databases are generally optimized for eventual consistency. The parameters w and r allow us to adjust the probability of stale values being read, but it’s wise to not take them as absolute guarantees.
-                Application - Leaderless replication which can tolerate stale reads and has high availability and low latency
-              - Sloppy quorums and hinted handoff 
-                  https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#sloppy-quorums-and-hinted-handoff
-                    Sloppy quorums are useful for increasing write availability: as long as any w nodes are available, the database can accept writes. This also means that you cannot be sure to read the latest value for a key, because it may have been temporarily written to some nodes outside of n.
+
+                  5. Quorum consistency
+                    - But how to ensure you are consistent values from different DB nodes ? 
+                    - Quorum consistency (strong) - achieving concensus with R + W > N. Usually N is picked as odd number in DynamoDB
+                          w = r = (n + 1) / 2
+                      - Limitations of Quorum consistency 
+                          Higher Latency – Lower Availability
+                          Quorum Consistency can sometimes lead to higher latency and lower availability if proper caution is not taken and there is a network interruption and many replicas become unreachable. This is because, if the number of reachable replicas falls below w or r, the database would become unavailable for writing or reading.
+                      - Eventual Consistency
+                        From the discussion so far we see that, although quorums appear to guarantee that a read returns the latest written value, in practice it is not so simple. Dynamo-style databases are generally optimized for eventual consistency. The parameters w and r allow us to adjust the probability of stale values being read, but it’s wise to not take them as absolute guarantees.
+                        Application - Leaderless replication which can tolerate stale reads and has high availability and low latency
+                      - Sloppy quorums and hinted handoff 
+                          https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#sloppy-quorums-and-hinted-handoff
+                            Sloppy quorums are useful for increasing write availability: as long as any w nodes are available, the database can accept writes. This also means that you cannot be sure to read the latest value for a key, because it may have been temporarily written to some nodes outside of n.
               - Multi-datacenter operation
                 Each write from a client is sent to all replicas, regardless of datacenter, but the client usually only waits for acknowledgement from a quorum of nodes within its local datacenter so that it is unaffected by delays and interruptions on cross-datacenter link. 
 
