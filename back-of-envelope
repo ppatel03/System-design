@@ -47,7 +47,9 @@ Framework -
   4. Metrics monitoring & Alerting for oncall using datadog
     a. Business success 
     b. Engagement metrics
-    c. Reliability metrics
+    c. Reliability & Availability metrics 
+      - Availability 
+      - Latency, Accuracy, Error rate 
 
   From above, Conclude at high level from Back of envelope
    Example, High availability, bandwidth, large storage
