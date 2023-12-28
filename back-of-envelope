@@ -126,15 +126,23 @@ Time to understand scalability, latency aspects
             - if high availability, then ask availability nos example, 99.99 or 4 9s
 
           - Consistency 
-            - Types of Consistency 
+            - Types of Consistency (https://www.geeksforgeeks.org/sequential-consistency-in-distributive-systems/# )
               - High consistency (all provides total ordering)
                 - Serializability (serial order between multiple objects, multi-operations, arbitary time order)
-                - Linearizability (single operation, single-object, real-time order) 
+                - Linearizability/Atomic consistency (single operation, single-object, real-time order) 
+                  - One popular example is password update of someone’s bank account.
                 - Quorum consistency 
+              - Sequential consistency 
+                - DOES NOT ensure writes are visible instantaneously or in the same order as according to some global block.
+                - One example is that of facebook posts of friends (sequential for a particular friend, but not for overall)
+                - similar to Monotonic read consistency Pg 165 DDIA
               - Causal consistency (partial ordering and detect parallel events)
-              - Read-after-write consistency
-              - Monotonic read consistency
-              - Eventual consistency which is weakest
+                - Preserves the order of casually-related(dependent) operations.
+                - So, that’s why it does not ensure the ordering of operations that are non-causal.
+                - One example is Comment replies.
+              - Read-after-write consistency 
+               
+              - Eventual consistency which is weakest (default setting in Cassandra)
             90% of the time your ask of high consistency should be simple 
              - Based on Recency which is Linearizability
 
