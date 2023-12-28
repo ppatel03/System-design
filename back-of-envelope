@@ -539,17 +539,7 @@ Time to understand scalability, latency aspects
                 3. Saga - Best choice for microservice. Can be Decentralized and Orchestration using co-ordinator but unlike TCC, its slow. 
                 For 2 and 3 to handle unbalances state, use phase status table (transaction_id, phase_type, name, status, out_of_order flag for network lag)
               - Event sourcing with materialized views 
-
-
-
-
-
-                
-
-              
-
-
-                
+          
 
               
 
@@ -949,7 +939,12 @@ Time to understand scalability, latency aspects
                   Cryptographic auditing and integrity checking often relies on Merkle trees [74], which are trees of hashes that can be used to efficiently prove that a record appears in some dataset (and a few other things). Outside of the hype of cryptocurrencies, certificate transparency is a security technology that relies on Merkle trees to check the val‐ idity of TLS/SSL certificates.
                   I could imagine integrity-checking and auditing algorithms, like those of certificate transparency and distributed ledgers, becoming more widely used in data systems in general. Some work will be needed to make them equally scalable as systems without cryptographic auditing, and to keep the performance penalty as low as possible. But I think this is an interesting area to watch in the future.
 
-
+      e. SOME POPULAR OPTIONS BY COMPANIES
+        - Facebook uses master-slave per shard(partition) for its DB and 2-level cache 
+          - https://research.facebook.com/publications/existential-consistency-measuring-and-understanding-consistency-at-facebook/ 
+          - https://www.cs.utexas.edu/~vijay/cs380D-s18/feb6-fb.pdf 
+        - Paypal increased its scalability : 1 Billion transaction with just 8 VMs using Akka (Actor model framework)
+          - https://newsletter.systemdesign.one/p/actor-model 
 
 
 
