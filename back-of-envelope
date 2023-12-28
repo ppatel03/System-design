@@ -126,6 +126,18 @@ Time to understand scalability, latency aspects
             - if high availability, then ask availability nos example, 99.99 or 4 9s
 
           - Consistency 
+            - Types of Consistency 
+              - High consistency (all provides total ordering)
+                - Serializability (serial order between multiple objects, multi-operations, arbitary time order)
+                - Linearizability (single operation, single-object, real-time order) 
+                - Quorum consistency 
+              - Causal consistency (partial ordering and detect parallel events)
+              - Read-after-write consistency
+              - Monotonic read consistency
+              - Eventual consistency which is weakest
+            90% of the time your ask of high consistency should be simple 
+             - Based on Recency which is Linearizability
+
             - if Consistency over availability, it means high consitency.
             - Eventual Consistency (most of the times)
               - Data freshness SLA if eventual consistency 
@@ -943,7 +955,7 @@ Time to understand scalability, latency aspects
         - Facebook uses master-slave per shard(partition) for its DB and 2-level cache 
           - https://research.facebook.com/publications/existential-consistency-measuring-and-understanding-consistency-at-facebook/ 
           - https://www.cs.utexas.edu/~vijay/cs380D-s18/feb6-fb.pdf 
-            - Leaderless replication with leaf (top level) cache. So it gives sequential consistency (monotonic reads) and read-after-write consistency by always connecting the user to the same cache. 
+            - Leaderless replication with leaf (top level) cache. So it gives per-object sequential consistency (sequential consistency is total order BUT per object level in FB paper is same as monotonic read which is client will always see newer version of object but different client may see different versions) and read-after-write consistency by always connecting the user to the same cache. 
             - Leader based replication on root cache and DB.
         - Paypal increased its scalability : 1 Billion transaction with just 8 VMs using Akka (Actor model framework)
           - https://newsletter.systemdesign.one/p/actor-model 
