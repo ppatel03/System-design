@@ -943,6 +943,7 @@ Time to understand scalability, latency aspects
         - Facebook uses master-slave per shard(partition) for its DB and 2-level cache 
           - https://research.facebook.com/publications/existential-consistency-measuring-and-understanding-consistency-at-facebook/ 
           - https://www.cs.utexas.edu/~vijay/cs380D-s18/feb6-fb.pdf 
+            - Leaderless replication with leaf (top level) cache. So it gives sequential consistency (monotonic reads) and read-after-write consistency by always connecting the user to the same cache. 
         - Paypal increased its scalability : 1 Billion transaction with just 8 VMs using Akka (Actor model framework)
           - https://newsletter.systemdesign.one/p/actor-model 
 
