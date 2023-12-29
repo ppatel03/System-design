@@ -24,7 +24,7 @@ Framework -
       c. Estimate bandwidth in total for read and write QPS
         tell why you are estimating.
         High total bandwidth means you need distributed system with high availability and replication in DBs to spread out the load
-        High user bandwidth say 100 MB/s means latency could be very high 
+        Example, High user bandwidth say 100 MB/s means latency could be very high. So split the bandwidth with more replication 
 
     2.3 Estimate Total Storage bytes
       tell why you are estimating. 
@@ -41,7 +41,7 @@ Framework -
         - Statelessness (CD)
         - Replication
     3.4. Secondary stuff : 
-        a.4.1. Accuracy 
+        a.4.1. Accuracy (idempotency, exactly once processing)
         a.5.1. Security : Auth, VPC, Data encryption if personal data 
 
   4. Metrics monitoring & Alerting for oncall using datadog
@@ -2401,7 +2401,7 @@ Distributed systems today and Benchmarking on common systems
 
       Practical of retrieval using embedding : https://www.youtube.com/watch?v=ySus5ZS0b94&ab_channel=AdrianTwarog 
 
-      
+
     How to design document retreival
       https://www.youtube.com/watch?v=fcIzAg63WyI&ab_channel=Codetuber
       - using tf * idf like in elastic search 
