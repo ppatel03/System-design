@@ -2399,6 +2399,9 @@ Distributed systems today and Benchmarking on common systems
           - Add features to candidates -> rank top k candidates 
       Meta used Multiray platforms for embedding - https://ai.meta.com/blog/multiray-large-scale-AI-models/ 
 
+      Practical of retrieval using embedding : https://www.youtube.com/watch?v=ySus5ZS0b94&ab_channel=AdrianTwarog 
+
+      
     How to design document retreival
       https://www.youtube.com/watch?v=fcIzAg63WyI&ab_channel=Codetuber
       - using tf * idf like in elastic search 
