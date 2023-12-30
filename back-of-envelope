@@ -355,11 +355,13 @@ Time to understand scalability, latency aspects
             - Others - support media files, E2E Encryption, Improve Load time by multi-datacenter, Retry with Queue
           10. Design A Search Autocomplete System
               - High level design (trie)
+                  - Trie cache which stores prefix -> list of chars and their frequency. 
+                  - Trie cache is updated daily via logs collected. So data gathering in the back-end (offline) to populate new values in the trie daily
+
                   Client/Browser -> API Server -> Trie Cache -> Trie DB 
                                                                     |
                   Analytics Logs -> Data parser -> Trie Builder (workers) -> update periodically to Trie DB
-
-              - Data gathering in the back-end (offline) to populate new values in the trie daily 
+ 
               - Performance : Browser cache (header cache-control)
               - Smart sharding based on historical queries for equal load partition
               - Filter unwanted words 
