@@ -245,7 +245,7 @@ Time to understand scalability, latency aspects
           - data replication
           - data consistency (quorum) R + W > N 
           - inconsistency resolution using versioning (RiakDB uses version vector, Dynamo / Cockroach DB / MongoDB uses vector clocks or lamport timestamp  ). 
-            - Refer Pg 346 for lamport timestamp which supports total ordering (cannot tell if two operations are conncurrent or causally related) which supports linearizability (recency)
+            - Refer Pg 346 use the sequence number generated from lamport timestamp which supports total ordering (cannot tell if two operations are conncurrent or causally related) which supports linearizability (recency)
             - Refer Pg 184 for version vector which supports causal order (can tell if two operations are concurrent of casually related) by keeping concurrent versions. You need version vectors for operational CRDT (for counter and do not need to pass entire version vector on the network) and State based CRDT(casual relationships and need to pass version vectors over the network)
               - Version vector data structure : [version at node1, version at node2] | [[value at node1], [value at node2]]
                   https://www.youtube.com/watch?v=1BXCxpcsmzc&t=622s&ab_channel=Jordanhasnolife 
@@ -259,8 +259,10 @@ Time to understand scalability, latency aspects
         4. Design A Unique ID Generator In Distributed Systems
             - Multi-master replication using DBs (scaling problem, ID synchronization)
             - UUID (128 bits long but not go up with time)
-            - Ticket Server like Flicket (SPOF)
+            - Ticket Server like Flickr (SPOF)
             - Twitter snowflake approach (64 bits = 1 sign + 41 timestamp + 5 datacenter + 5 machine + 12 sequence )
+              - timestamp in milliseconds is 13 digits 
+              - number generator can just execute in may be 10 - 100 ns consider counter is in L1/L2 cache. So ~10^4 numbers could be easily generated in 1 miliseconds. So 12 bits atleast for sequence number
             Other talking point - time sychronization using NTP, Bits tuning - timestamp vs sequence bits to support low concurrency 
         5. URL shortener 
             - URL redirect response is status code as 301 and location = original url in response headers. 302 for temporary redirect. 
@@ -653,7 +655,7 @@ Time to understand scalability, latency aspects
             Kafka already log compaction to avoid storing outdated data in its partition
         21. How to ensure recency guarantee ? - Linerazeability 
             - Total ordering
-              - using Lamport timestamp (just the counter to record to indicate whats more updated. It is more compact ) 
+              - using sequence number from Lamport timestamp (just the counter to record to indicate whats more updated. It is more compact ) 
               - using Quorum consistency (R+W > N) like Dynamo or strong consistency
 
             However in total ordering, you cannot tell if 2 events are concurrent. You need causal ordering for that.
@@ -694,7 +696,7 @@ Time to understand scalability, latency aspects
                         - Operational CRDT : just the operation (like inc or dec) is sent instead of vectors. usually used in counters
                         - State based CRDT : entire vector is sent. It helps with causal relationship. usually used in adding elements to the list
                         - Sequence CRDT : builds an eventually consistent list. Its hard. used in collaborative editors like Google docs. 
-              - use lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
+              - use sequence number from lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
 
               ONE FACT WITH RELATIONAL DBS : 
                 To order these events correctly, a technique called version vectors can be used, which we will discuss later in this chapter (see “Detecting Concurrent Writes” on page 184). However, conflict detection techniques are poorly implemented in many multi-leader replication systems. For example, at the time of writing, PostgreSQL BDR does not provide causal ordering of writes [27], and Tungsten Replicator for MySQL doesn’t even try to detect conflicts [34].
@@ -2111,7 +2113,7 @@ Distributed best practices
                     - Azure CosmosDB 
                   3. use version vectors - (also helps with ordering) - RiakDB
                     - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
-                  4. use lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo,  Cockroach DB uses vector clock/lamport clocks
+                  4. use sequence number from lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo,  Cockroach DB uses vector clock/lamport clocks
                   5. Read repair or Anti-entropy
                     - Dynamo's read repair(resolve conficts when reading) and anti-entropy(resolve conflicts when writing)  
 
