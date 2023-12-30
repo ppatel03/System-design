@@ -338,10 +338,16 @@ Time to understand scalability, latency aspects
           9. Design A Chat System
             - Polling vs Long Polling vs WebSocket
             - Data model ? 
+              - 1:1 : id, from, to, message, timestamp
+              - Group : id, from, message, timestamp, group_id
             - High level design 
               - High level 
                 - Client <-> Chat Server (websocket)              -> key value DB
                           -> API servers (help discover servers)  -> key value DB
+              - 1:1 flow :  User A <-> Chat Server A -> Queue for User B -> Chat Server B <-> User B
+                                                            |
+                            User C <-> Chat Server A --------
+              - Group flow : similar to above where User A can send messsage to multiple Queue's for B and C both
               - Message flows 1:1 with synchronization on muliple devices 
               - Message flows Group chat (Wechat still uses per user per message queue. So Group chats, user duplicates messages to all his/her friend's queue)
             - Online Presence/ Status Fan out 
