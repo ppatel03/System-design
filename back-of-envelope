@@ -378,9 +378,9 @@ Time to understand scalability, latency aspects
 
                 - Why Video transcoding (different resolutions, video formats (HLS, DASH), fps, bit rate)
                 - DAG model for video ( Video, Audio, Metadata. Video has further parallel step -> transcoding different resolutions, thumbnail, watermark)
-                - Performance - CDN, upload service across datacenters, parallelism everywhere
-                - Presigned URL for upload/modify
-                - Protection - AES encryption, watermarking 
+                - Performance - CDN, GOP/multipart upload, upload service across datacenters, parallelism everywhere
+                - Safety : Presigned URL for authorized users to upload/modify
+                - Video Protection - AES encryption, watermarking 
                 - Others - Live streaming, scaling the database
             12. Design Google Drive
               - High level design
@@ -391,8 +391,8 @@ Time to understand scalability, latency aspects
                                                     | notifies
                                                     V
                                                   Notification service
-              - Block server (breaks into blocks, compresses, encrypt and also delta detection)
-              - High consistency on metadata DB 
+              - Block server (avoid uploading entire file and instead focus only on changed lines by breaking into blocks, compression, encryption. The server supports delta detection)
+              - High consistency on metadata DB (User -> workspace -> file -> versions -> block id )
               - Upload flow (connects to API Server -> Gets Block server -> on completion of block upload -> Notification service)
               - Download flow (from notification service -> downloads metadata about block ids -> downloads blocks from block server)
               - Save storage space (discard old versions, set a limit on versions, dedup blocks, move to cold storage)
@@ -400,16 +400,22 @@ Time to understand scalability, latency aspects
                   - locks by line but its low performant
                   - operative transformation (google docs)
                       - both gets their local copy updated from local change
-                      - block server apply transformation on both of those local changes 
+                      - block server reacts as master server and apply transformation on both of those local changes
+                      - it is dependent on master server 
                   - using CRDT
-                      - both gets their local copy updated from local change
-                      - both send their changes to each other 
+                      - uses decimal indexes and avoids changing existing indices.
+                      - clients with their indexes sends their local copy to block server which updates in DB supporting CRDT
+                      - Block server notifies about the change to download. So this is eventually consistent
                       - CRDT : use union like in list based CRDT 
-                          {(H,0.2), (i, 0.2)} U {(!,0.3)} = {(H,0.2), (i, 0.2), (!,0.3)}
+                          - use decimal points instead of integers. This gives the opportunity to insert in between without changing the original indices. Example - 0.2, 0.4 and you insert something in between like 0.2, 0.3, 0.4 
+                          {(H,0.1), (i, 0.5)} U insert {(i,0.2), (!,0.6)} = {(H,0.1), (i, 0.2), (i, 0.5), (!,0.6)}
             13. Proximity Service
               - High level design
+
+                  - use GeoHash (size of planet ~ 5K * 5K km ~ 5 * 10 ^3 ~ 10 ^ 4.  Each divides by 4. So total 6 level nested geohash = 4 ^ 6 = 4096 )
                   Browser/Client -> LB -> API Service -> Geo hash DB (redis)
                                                       -> DB (business info)
+
               - Data model
                   business info
                     business id -> location info (lat and long), name, etc.
@@ -430,8 +436,8 @@ Time to understand scalability, latency aspects
               - Data model
                   - user id -> lat, long 
               - Why cache is needed ? - to store recent data with TTL
-              - Scaling (web socket, user DB, location cache, redis pub/sub IO bound and holds ~ 100K connections so need 100 servers, redis pub/sub server consistent hashing with zookeeper having its address, inform all web-socket servers to resubscribe on redis scale up/down)
-              - Adding / removing 
+              - Scaling (web socket, user DB, location cache, redis pub/sub lightweight ( total is 10 million connections and 100B each connection and just 1 GB of memory). So its IO bound and modern 10Gbps network can holds ~ 100K connections so need 100 servers for 10 million connections, redis pub/sub server consistent hashing with zookeeper having its address, inform all web-socket servers which stores channel ids to resubscribe when redis scale up/down )
+              - Adding / removing friends is straightforward - just pass an event to subscribe/unsubscribe
               - User with many friends (not a problem since their friends channel would be distributed across)
               - Nearby random persion (use geohash as the channel)
             15. Distributed Message Queue
