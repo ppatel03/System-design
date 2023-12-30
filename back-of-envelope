@@ -91,8 +91,8 @@ Time to understand scalability, latency aspects
           - Read : Write ratio
             DO NOT divided by no. of seconds to get QPS if its explictly mentioned about concurrent users say 10% of DAU. In such cases, QPS = 10% DAU
           - 1 day ~ 10^5 s
-          - 1 month ~ 3 * 10 ^ 6s and further ~ 10 ^ 6s
           - 1 week ~ 7 * 10 ^ 5s and further ~ 10 ^ 6s
+          - 1 month ~ 3 * 10 ^ 6s and further ~ 10 ^ 6s
           - 1 year ~ 365 * 10 ^ 5s and further ~ 10 ^ 8s
           For sake of time constraints, do not hesitate to round off large amount
 
@@ -105,7 +105,7 @@ Time to understand scalability, latency aspects
 3. Estimate Total Storage bytes (a year, 10 years)
     a. tell why you are estimating. Just a high level conclusion if you need DB sharding which depends on size and bandwidth. 
       - a year, 10 years 
-    example, to help decide if sharding is need or master-replica model. Example more than 64 TB of storage definitely needs sharding (most AWS DBs or even cache like Redis has max 64 - 128 TB of storage https://aws.amazon.com/about-aws/whats-new/2020/09/amazon-aurora-increases-maximum-storage-size-128tb/ )
+    example, to help decide if sharding is need and master-replica model per DB or per parition. Example more than 64 TB of storage definitely needs sharding (most AWS DBs or even cache like Redis has max 64 - 128 TB of storage https://aws.amazon.com/about-aws/whats-new/2020/09/amazon-aurora-increases-maximum-storage-size-128tb/ )
 
 4. Non-Functional Requirements (https://www.datacore.com/blog/availability-durability-reliability-resilience-fault-tolerance/ )
 
@@ -143,8 +143,9 @@ Time to understand scalability, latency aspects
                 - So, that’s why it does not ensure the ordering of operations that are non-causal.
                 - One example is Comment replies.
               - Read-after-write consistency 
-               
+                - examples like profile update, whether you liked a post or not
               - Eventual consistency which is weakest (default setting in Cassandra)
+
             90% of the time your ask of high consistency should be simple 
              - Based on Recency which is Linearizability
 
@@ -152,6 +153,7 @@ Time to understand scalability, latency aspects
             - Eventual Consistency (most of the times)
               - Data freshness SLA if eventual consistency 
                 - With this in mind, it provides as good idea about time to resolve conflicts with concurrent writes  
+                    - Example, like counter DB between datacenters. So using CRDT to resolve conflicts
                     - Example, building search engine or yelp. With this you can even decide that, your system could be out of sync from third part servers for 10s in a day
             - Latency + quorum to replica if Quorum consistency 
             - If Strong consistency ( Quorum consistency)  (for NoSQL like Cassandra)
@@ -161,10 +163,11 @@ Time to understand scalability, latency aspects
             Tips to ensure consistency with non-database services 
             - To maintain data consistency between internal services, ensuring exactly-once processing is very important.
             - To maintain data consistency between the internal service and external service (PSP), we usually rely on idempotency and reconciliation.
-            - For replicas, ensure acknowledge only if all replicas respond to read/write update.
+            - For replicas, acknowledge only if all replicas respond to read/write update.
                   
       a.2. Latency 
-        - this would help decide whether you really need low latency optimizations like cache, or not. Remember today mosts have 1 Gbps network and internal datacenter is 25 Gbps ~ 2.5 GBps
+        - this would help decide whether you really need low latency optimizations like cache, or not. DBs can be as fast as ms today and cache as us today
+        - Remember today mosts have 1 Gbps network and internal datacenter is 25 Gbps ~ 2.5 GBps
 
       a.3. Fault tolerant + Durability + Resilency
         - Fault tolerance
@@ -173,7 +176,7 @@ Time to understand scalability, latency aspects
                 Example, say 99.999999% (six 9's) durability can be achieved assuming failure rate of one server is  0.01% (say 99.99% guarantee for ec2 on aws). This means you need 2 servers atleast which means 1 replica 
                   0.0001 ^ 2    = 0.0000001    or  10 ^ -8
                   1 - 0.0000001 = 0.9999999 or  8 9s  
-                  % * 100       = 99.999999%      or  6 9s 
+                  % * 100       = 99.999999%      or  8 9s 
             - can help to reason using pull architectures with persistence
             - can help to reason out if you need erasure coding for data recovery
             - can help to reason out if you need checksum for data integrity
@@ -211,7 +214,7 @@ Time to understand scalability, latency aspects
       - different bandwidth requirements
       - easier to scale independently
     b. separate out different components of the system (eg. video recommendation system )
-      - avoids single point of failure
+      - avoids single point of failure (SPOF)
       - avoids monolithic 
       - map-reduce if needs to be sequential 
     c. data layer (just add the box data layer) 
@@ -219,13 +222,13 @@ Time to understand scalability, latency aspects
 
     In-depth 
       a. think about data layer 
-        - choice of database, data model, sharding (from back of envelope), replication (back of envelope) 
+        - choice of database, data model, sharding (from back of envelope), replication (back of envelope), challenges - hot partitioning  
 
       b. Queue to avoid synchronous processing and support fault tolerant, durability 
 
       c. Think about edge cases for product
         1. Rate limiter 
-          - Algorithms (Token bucket - bucket fill rate and , sliding window is the best), 
+          - Algorithms (Token bucket - bucket fill rate and bucket capacity, sliding window is the best), 
           - distributed counting using redis (single threaded and hence atomic)
         2. Consistent Hashing 
           - Ring formation, 
