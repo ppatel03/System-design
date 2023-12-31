@@ -453,11 +453,11 @@ Time to understand scalability, latency aspects
               - router at producer and co-ordinator at consumer to join the parition
               - consumer - push vs pull, rebalancing using co-ordinator
               - replication - partitions replicas into multiple brokers , in sync replicas 
-              - scalability (producer easy since no cordination needed, consumer through coordinator, broker - parition balancing, partition add/removal )
+              - scalability (producer easy since no cordination needed, consumer through coordinator, broker removal by creating a new parition plan and shifting replicas to available brokers and broker addition by adding some replicas and remove them from existing brokers to split the load )
               - At most once, Atleast once and Exactly once
               - Message filtering using tags 
-              - Delayed and scheduled messages (temporarily store in the Queue)
-              - Retry : failed consumed messages could be retried through Retry Queue 
+              - Delayed and scheduled messages (temporarily storage)
+              - Retry : failed consumed messages could be retried through dedicated Retry topic 
             16. Metrics Monitoring and Alerting System
               - Data model : timestamp, value, set of <key,value> labels 
               - line protocal which is used in Prometheus, OpenTSDB
