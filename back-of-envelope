@@ -621,10 +621,18 @@ Time to understand scalability, latency aspects
                 
           a. Discuss Isolations if needed : 
               - Read committed by default to guarantee no dirty reads and writes. (default MySQL, Postgresql)
-              - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle,Postgresql does have this support but MySQL has loose support by not detecting conflicts )
-              - Serializable snapshot isolation (CockroachDB for distributed and Postgresql for single node) for phantoms where you cannot reserve locks on returned rows and write in one transaction say row X,Y affects the other say row A,B (eg., check unique username or atleast one oncall or no meetings for that room at time X)
-                - keep in mind that checking one doctor on call or unique username COULD BE SOLVED with "where" clause with snapshot isolation also. However where clause on the entire table could lead to slow queries. So its a trade-off 
-              FOR MOST SQL DATABASES, WRITES TO FILE ARE SINGLE THREADED TO AVOID WRITE CONFLICTS ??  
+
+              - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle, MySQL).  Great example here - https://techcommunity.microsoft.com/t5/sql-server-blog/serializable-vs-snapshot-isolation-level/ba-p/383281 
+
+              But what if an update in target row could cause side effect in other rows which is also called write skew (eg., check unique username or atleast one oncall or no meetings for that room at time X) ? 
+
+              - Serializable isolation (CockroachDB for distributed and Postgresql for single node) for phantoms(write skew) where you cannot reserve locks on returned rows and write in one transaction say row X,Y affects the other say row A,B 
+                - keep in mind that 
+                  - unique username COULD BE SOLVED with unique constraint also. 
+                  - meeting rooms COULD BE SOLVED with adding rows based on future time slots and creating lock per row. This is process is called materialization of conflicts but its not always feasible (too many wastage of space esp. for companies with 10K meeting rooms ).  
+
+                FOR MOST SQL DATABASES, WRITES TO B+ tree based FILE OR LOCATION IS LOCKED TO AVOID WRITE CONFLICTS ??  
+              - Serializable snapshot isolation : similar to snapshot isolation with conflict detection and rejecting the writes like in postgresql. https://www.postgresql.org/docs/current/transaction-iso.html#XACT-REPEATABLE-READ 
           b. For distributed DBs, Concensus esp. for consistency on distributed leaderless DBs like Cassandra
               Trade-offs with strict isolation / concensus VS latency / availability 
 
