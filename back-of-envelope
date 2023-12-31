@@ -490,6 +490,11 @@ Time to understand scalability, latency aspects
               - API design
               - Data model (SQL for consistency and read more, write less)
               - Improved data model since room_id cannot be decided at booking time 
+                  - hotel (hotel id, ..)
+                  - user (user id, ..)
+                  - room_type_inventory (hotel id, room type id, # available)
+                  - reservation (hotel id, room type id, reservation id, user id, start date, end date)
+                  - room (room id, room type id, floor) populated during check-in
               - concurrency issues 
                 - Pessimistic locking (like Serializable isolation, low performant, depends on DB support for locking)
                 - Optimistic locking 
@@ -511,8 +516,12 @@ Time to understand scalability, latency aspects
                     Internel -> LB -> SMTP Server -> Incoming queue -> Mail processor (check spam, virus) -> Web socket server -> Client 
                                           |                                                               -> Notification service if offline
                                  Storage (metadata, search store, object store, cache)
-              - Metadata DB (relational -> user_folder (user_id, folder_id),  folder_emails(message_id, folder_id, from, to, subject, link_to_s3, etc.))
+              - Metadata DB (relational -> user_folder (user_id, folder_id),  folder_emails(message_id, folder_id, from, to, subject, link_to_s3, is_read, etc.))
+
+              - Queries : 
+                1. get all folders + get all emails from folders -> parition key (user id, folder_id) + sort key (message_id which is time based UUID)
                 - Email threads could be identified by using message_id
+                2. get all read + unread emails : extract all using userid+folder_id and perform filtering but its expensive to perform filtering at large scale. So use denormalized. tables for read and unread emails.
               - Email deliverability - dedicated IPs, Separate servers for promotion emails, Email sender reputation, Ban spammers, Feedback processing, Good relationship with ISPS
               - Authentication : SPF (sender policy framework, Domain based message authentication). As an example, you can see that in "signed-by" section to every email
               - Search store : elastic search out of box 
@@ -552,7 +561,7 @@ Time to understand scalability, latency aspects
                   - fixed parition using scores (easy for reads esp. top 10, hard for writes since users will keep moving across parition for score updates)
                   - hash slot based partition based on key (hard to get top 10, need to read every shard). One option is you can return scores in percentiles which is rank within shard.
               - Other DB option is Dynamo which uses consistent hashing 
-                  - If game_id, date is used as shard, then what about hot shard for recent game. Add random number across the key and distribute it across the shard. Only challenge is read has to be done across all shards for that key. 
+                  - If game_id, date is used as shard, then what about hot shard for recent game. Add random number across the key and distribute it across the shard. Only challenge is it adds reads complexity to get partition #. 
                   - One option is you can return scores in percentiles which is rank within shard.
               - How to implement  report scores if there is a Tie (may be one which got the score first - so timestamp based)
             22. Payment System
