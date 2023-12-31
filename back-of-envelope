@@ -493,7 +493,7 @@ Time to understand scalability, latency aspects
               - concurrency issues 
                 - Pessimistic locking (like Serializable isolation, low performant, depends on DB support for locking)
                 - Optimistic locking 
-                  - using versioning (like in snapshot isolation but has write contention)
+                  - using versioning (like in serializable snapshot isolation but has write contention)
                   - using unique key constraint (depends on DB support and has write contention)
                 Optimisitic locking makes more sense due to low writes 
               - DB sharding (do we really need it - No based on requirements)
