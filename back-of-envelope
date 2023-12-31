@@ -469,10 +469,10 @@ Time to understand scalability, latency aspects
               - Queue for Metrics Collector (parition by metrics name, topic by region, further tags for filters, )
               - Storage optimization (RLE/Delta compression, downsampling & retention )
               - Alerting system (how to dedup)
-              - Visualization system - Grafana
+              - Visualization system - Grafana as open source
             17. Ad Click Event Aggregation
               - Data model
-                - star schema (fact table storing denormalized form and dimension table derived from fact for Aggregated data. Use filter id technique to further have faster retrieval)
+                - star schema (fact table storing denormalized form and dimension table derived from fact for Aggregated data. To avoid indexing on every column on dimension table, Use filter id technique to further have faster retrieval)
               - Keep Raw incoming data 
               - DB : Cassandra 
               - High level design 
