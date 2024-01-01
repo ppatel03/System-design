@@ -981,7 +981,7 @@ Time to understand scalability, latency aspects
                     https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#enforcing-constraints 
                     Uniqueness constraints require consensus across multi-leader nodes 
                     Uniqueness in log-based messaging is much easier 
-                    
+
                     Multi-partition request processing - typically like Saga or Try confirm cancel 
                       There are potentially three partitions: the one containing the request ID, the one containing the payee account, and one containing the payer account.
                       The traditional approach to databases, executing this transaction would require an atomic commit across all three partitions.
@@ -1020,6 +1020,7 @@ Time to understand scalability, latency aspects
                   Pg 532 DDIA
                   Cryptographic auditing and integrity checking often relies on Merkle trees [74], which are trees of hashes that can be used to efficiently prove that a record appears in some dataset (and a few other things). Outside of the hype of cryptocurrencies, certificate transparency is a security technology that relies on Merkle trees to check the val‐ idity of TLS/SSL certificates.
                   I could imagine integrity-checking and auditing algorithms, like those of certificate transparency and distributed ledgers, becoming more widely used in data systems in general. Some work will be needed to make them equally scalable as systems without cryptographic auditing, and to keep the performance penalty as low as possible. But I think this is an interesting area to watch in the future.
+                  dynamo anit-entropy relies on Merklee tree
 
       e. SOME POPULAR OPTIONS BY COMPANIES
         - Facebook uses master-slave per shard(partition) for its DB and 2-level cache 
