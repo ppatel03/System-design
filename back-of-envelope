@@ -1098,7 +1098,7 @@ Distributed Systems estimate
     Send packet CA (California) ->Netherlands->CA	= 150 ms 
     Disk seek	= 10 ms
     Human brain to process an object = 10-20 ms
-    NTP error delay = 30-50 ms
+    NTP error delay threshold = 30-50 ms
     DNS response time ranges : 10ms to 200ms.
     Replication lag guarantee for AWS RDS : < 100 ms 
       https://www.bluematador.com/docs/troubleshooting/rds-replica-lag#:~:text=Replication%20lag%20measures%20how%20far,than%20100ms%20of%20replication%20lag. 
@@ -1156,12 +1156,13 @@ Distributed Systems estimate
             200 reads ~ 200 us
             200 writes ~ 1 ms (writes 4x slower)
           load test
-            10K reads ~ 10-20 ms 
-            10K writes ~ 100 ms (writes 4x slower)
+            48 cores, 3 node cluster
+            100K reads ~ 10-20 ms 
+            100K writes ~ 100 ms (writes 4x slower)
     -  CockroachDB
          - Single row reads and writes
           https://www.cockroachlabs.com/docs/v22.2/performance.html
-          across availability zones - 3 node cluster, c5d.9xlarge (36v CPUs, 72 G RAM)
+          across availability zones - 3 node cluster, c5d.9xlarge (16v CPUs, 72 G RAM)
             100K-200K QPS
             single-row reads in 50-100 ms and processes 
             single-row writes in 50-100 ms
@@ -1170,7 +1171,7 @@ Distributed Systems estimate
             - p95 in 250-300 ms
     - Timeseries : OpenTSDB / InfluxDB
         Influx DB benchmarking from bytebytego : 
-            8 cores and 32GB RAM can handle over 250K writes per second, greater than 1 M series
+            8 cores and 32GB RAM can handle over 250K writes per second, support storage greater than 1 M series,  25 burst read QPS
             (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
     - S3 
         3K-5K
@@ -1188,7 +1189,7 @@ Distributed Systems estimate
     - RocksDB (SSD)
         -> ~1-10ms
     - Flink
-        -> as low as 10 ms
+        -> as low as 5-10 ms
     - Ngnix
       -> Scale upto 1 million QPS (1 million QPS, 65K SSL TPS, 70 Gbps throughput for Netflix, Hulu, Airbnb, Pinterest)
       -> ~ 100us
@@ -1236,7 +1237,7 @@ Distributed Systems estimate
         caches on disk using sequential IO (pretty fast)
         allows consumer to consume at their own pace
       Distributed caches
-        Redis : in-memory single threaded with lot of other features(sorted set, geohash, CRDT, atomic) and can be attached to persistance storage.
+        Redis : in-memory single threaded with lot of other features(sorted set, skiplist, geohash, CRDT, atomic) and can be attached to persistance storage.
         Memcache : in-memory multi threaded for larger datasets but cannot be attached to persistence storage 
         RocksDB : LSM tree to leverage memory + SSD 
       Full text search
@@ -1249,7 +1250,7 @@ Distributed Systems estimate
           What is replication log
           https://help.serena.com/doc_center/cm/ver14_2_0_1/admin_console/adminhelp/ddevg_replication_logs/what_is_a_replication_log.htm
       Promise cache
-        Cache which provides the promise that it will get the value from source DB and avoids forwarding all request to DB for that value. It helps reduce load on the DB asking for the same value
+        Cache which provides the promise that it will get the value from source DB and avoids forwarding all request to DB for that value. It helps reduce load on the DB asking for the same value. You can implement the promise cache using Redis pub sub.
 
 
 
@@ -1263,17 +1264,18 @@ Distributed Systems estimate
 Distributed best practices
   Top 7 distributed design patterns 
     https://www.youtube.com/watch?v=nH4qjmP2KEE&t=12s&ab_channel=ByteByteGo
-    Ambassador
+    Ambassador (sidecar)
       - proxy to offload work like handle logging, monitoring, handling retries
       - example, kubernetes uses envoy proxy to simply communication between services. You can upgrade this feature with Istio which uses service mesh (network layer between control plane and envoy proxy in each pod )
     Circuit Breaker 
     CQRS
-    Event Sourcing 
+    Event Sourcing (Immutable events)
     Leader Election 
     Pub/Sub
     Strangler
       - helps in migration esp. monolithic to microservice. It has Strangler Facade which takes the decision whethere this API call should be made to monolithic or microservice. 
-    Sharding
+    Sharding 
+      - Consistent hashing, Range based 
 
   Smallest short length required ( say for tiny url )
     The hashValue consists of characters from [0-9, a-z, A-Z], containing 10 + 26 + 26 = 62 possible characters. To figure out the length of hashValue, find the smallest n such that 62^n ≥ 365 billion. 
@@ -1322,6 +1324,7 @@ Distributed best practices
   Failure detection algo 
     - gossip prototocol to detect availability failures in distributed systems (Cassandra)
     - Raft (description below) using used for master-replica model does both detect failures and resolve conflicts
+    - Zookeeper
       
 
   Master election concensus algo
@@ -1334,6 +1337,7 @@ Distributed best practices
         What is replication log
           https://help.serena.com/doc_center/cm/ver14_2_0_1/admin_console/adminhelp/ddevg_replication_logs/what_is_a_replication_log.htm
       Raft is used in Kafka, etcd, CockroachDB
+      Other alternative is Zookeepeer which uses ZAB(zookeeper atomic broadcast) which works similar to Raft
 
 
   Failure handling algo
@@ -1356,7 +1360,7 @@ Distributed best practices
 
         
   - detecting inconsistency          
-      1. Merklee tree - used by Cassandra, DynamoDB Blockchain (can detect and handle failures by syncing remaining replicas)
+      1. Merklee tree - used by Cassandra, DynamoDB during anti-entropy, Blockchain (can detect and handle failures by syncing remaining replicas)
           What if a replica is permanently unavailable? To handle such a situation, we implement an anti-entropy protocol to keep replicas in sync. Anti-entropy involves comparing each piece of data on replicas and updating each replica to the newest version. A Merkle tree is used for inconsistency detection and minimizing the amount of data transferred.
           Quoted from Wikipedia [7]: “A hash tree or Merkle tree is a tree in which every non-leaf node is labeled with the hash of the labels or values (in case of leaves) of its child nodes. Hash trees allow efficient and secure verification of the contents of large data structures”.
                 Step 1: Divide key space into buckets (4 in our example) as shown in Figure 13. A bucket is used as the root level node to maintain a limited depth of the tree.
@@ -1383,7 +1387,7 @@ Distributed best practices
     https://blog.mailfence.com/symmetric-vs-asymmetric-encryption/ 
     RSA, DSA, Diffie-Hellman - key exchange is asymmetric
     AES, DES - is symmetric
-    Hash
+    Hash - SHA-1 <  Murmur hash <  SHA-256 in terms of collision
     SHA-1 is hash function and not encryption one
         https://stackoverflow.com/questions/31532498/is-sha-1-length-always-40-symbols
         SHA-1 produces a 160-bit (20-byte) hash value known as a message digest. A SHA-1 hash value is typically rendered as a hexadecimal number, 40 digits long.
@@ -1403,7 +1407,7 @@ Distributed best practices
 
   Change Data Capture
   CDC is a mechanism that reads data changes from the database and applies the changes to another data system. 
-    -  One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10].
+    -  One common solution is Debezium [9]. It uses a source connector to read changes from a database and applies them to cache solutions such as Redis [10]. Also supported in SQL(Postgresql, Oracle, MySQL) and noSQL DB like Cassandra.
     - Another is Kafka Connect (pg 457)
     - Walmart's CDC solution from Cassandra (https://medium.com/walmartglobaltech/walmarts-cassandra-cdc-solution-6fc650031a3 )
   Pg 455 - DDIA 
@@ -1436,7 +1440,7 @@ Distributed best practices
             Moderm HTTPS uses TLS - https://excalidraw.com/#room=6ee4f5d6f525a19d546c,Duz5YdLv0qhwGv9pNSZo_Q 
             1. first establishes TCP handshake at transport (helps in getting the sequence number)
             2. then client sends hello and gets the certificate from server which has public key of server (Asymmetric) 
-            3. then client encryptes his/her session key with server's public key and then on server, it gets clients sesssion key by decrypting with server's private key. This is Asymmetric encryption
+            3. then client encryptes his/her session key with server's public key and then on server, it gets clients sesssion key by decrypting it with server's private key. This is Asymmetric encryption
             4. Now both has session key and uses session key as cipher to encrypt and decrypt at both sides. This is Symmetric encryption.
 
             SSL uses public key encryption (Asymmetric encryption) only. However, this website claims it supports both Asymmetric and symmetric - https://www.trentonsystems.com/blog/symmetric-vs-asymmetric-encryption
@@ -1495,6 +1499,12 @@ Distributed best practices
 
       What Is IAM (Identity & Access Management)?
         GREAT VIDEO HOW AWS HANDLES IAM (policy, roles, users and groups) - https://www.youtube.com/watch?v=VclOgMtBXN4
+        - policy are defined for each resources as an action on resource (example, allaccess, read, write)
+        - users are for people while roles are for aws resources 
+        - So For example, lambda needs access to Dynamo DB. So lambda needs a role to which policy is attached
+        - For user, policy can be attached directly to user 
+        - Sometimes, user wants to give temp access to other external user. So in this case, it assumes the role for other external user and grants temp access.
+        
         https://spectralops.io/blog/top-11-identity-access-management-tools/
           Identity and Access Management (IAM) tools are designed to manage identities (users) and access (authentication and authorization). The goal of IAM tools is to streamline the management of user accounts and privileges from all aspects.
           In most cases, an IAM solution will let you define a policy. This policy will, in turn, determine the roles of users. Each role defined will have permissions set. These permissions allow access to specific resources. 
