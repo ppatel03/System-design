@@ -641,7 +641,7 @@ Time to understand scalability, latency aspects
             Example balance transfer 
         10. Zookeeper for any of the operations : 
               - Service discovery + 
-              - Concensus + (vs Raft - https://stackoverflow.com/questions/47760448/what-is-the-difference-between-zookeeper-and-raft )
+              - Concensus by providing total order broadcast + (vs Raft - https://stackoverflow.com/questions/47760448/what-is-the-difference-between-zookeeper-and-raft )
               - leader election + 
               - failure detection + 
               - subscribe to config change updates 
@@ -649,20 +649,21 @@ Time to understand scalability, latency aspects
         11. Security : 
               - Storing Personal Data : encrtyped form 
               - Rate limiter to avoid DDOS
+              - TLS + JWT token based Auth 2.0 
         12. Reduce Storage Size
             - move infrequent data to Amazon S3 glacier
             - avoid short-term checkpoints
-            - retention
+            - retention policies after 1+ year
             - compression - RLE, Delta compression for timeseries
         13. Latency 
             - caching 
                 - distributed cache, CDN 
-            - bloom filter
-            - materialized views 
+            - bloom filter for look ups
+            - materialized views for frequent queries (postgresql support "refresh materialized view" command)
         14. Hot shard 
             - spread the load across additional nodes 
-              - more replicas like for cassandra but its for entire table (https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#partitioning-and-replication)
-                - Smart strategy for hotspot key :
+              1. more replicas like for cassandra but its for entire table (https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#partitioning-and-replication)
+                - Smart strategy for resolving hotspot on per key basis :
                   - detect the hot spot key using sampling method (like in Pig) or dashboard (like in CockroachDB)
                   - for that hotspot key, assign the copy number to each key and create combined partition key for Cassandra (https://stackoverflow.com/a/27889289/1540256 )
               - more reducers for Map-Reduce framework pg 408 DDIA
@@ -689,15 +690,20 @@ Time to understand scalability, latency aspects
         20. Whats the best way to support CDC ? 
             - DB changes -> log based message passing (kakfa) -> different sources like Search index, Database, materialized views
             Kafka already log compaction to avoid storing outdated data in its partition
-        21. How to ensure recency guarantee ? - Linerazeability 
+            All relational databases (MySQL, Oracle, Postgresql) have CDC to Kafka. Additional Debezium is the tool to support both relational and non-relational DB like Cassandra (Enable CDC on cassandra.yaml - http://tinyurl.com/ytw3ogbu  ). 
+        21. How to ensure recency guarantee ? - Linearizeability 
             - Total ordering
-              - using sequence number from Lamport timestamp (just the counter to record to indicate whats more updated. It is more compact ) 
+              - using sequence number from Lamport timestamp (just the counter to record to indicate the order and help whats more updated. It is more compact ) 
               - using Quorum consistency (R+W > N) like Dynamo or strong consistency
+              - very strict : serializable isolation with quorum consistency 
 
             However in total ordering, you cannot tell if 2 events are concurrent. You need causal ordering for that.
             - Causal ordering 
               - Version vectors (Partial ordering) :  can check if 2 operations are concurrent or causally dependent on one other. Riak 2.0 uses version vectors - Pg 184 
-              - Vector clocks ( Pg 346 - MongoDB, Dynamo, Cockroach DB uses vector clocks. Refer https://cs.stackexchange.com/questions/101496/difference-between-lamport-timestamps-and-vector-clocks )
+              - Vector clocks 
+                - Pg 346 - MongoDB, Dynamo, Cockroach DB uses vector clocks. 
+                - Refer https://cs.stackexchange.com/questions/101496/difference-between-lamport-timestamps-and-vector-clocks 
+                - Nice video : https://youtu.be/1BXCxpcsmzc?t=524 
             
         22. How to ensure good Job placement for a Job manager / resource manager ? 
           https://medium.com/pinterest-engineering/tuning-flink-clusters-for-stability-and-efficiency-50d3d50384ed 
@@ -705,14 +711,18 @@ Time to understand scalability, latency aspects
             - place it with machine type awareness based on bottleneck resources (cpu-instance hardware vs memory instances) 
             - place soft limits on jobs using Cgroups and some proportion reserved for burst capacity (each job needs during start up). However, also look for ways to avoid internal fragmentation / banding.     
             - place consecutive subtasks belong to same job on same hosts  (it also reduces network bandwidth)
+            - Premptive priority based scheduling for resource constraints
+              - https://www.geeksforgeeks.org/preemptive-priority-cpu-scheduling-algortithm/# 
+              - Other method is SJFS (Shortest job first)
             - For demand efficiency, identify bottlenecks for jobs which does overfetching 
+
         23. How to effectively do multi-leader replication ? (all relational DBs, Kafka, Redis)
             Great video : 
             (Multi-leader) https://www.youtube.com/watch?v=1BXCxpcsmzc&ab_channel=Jordanhasnolife 
             (Leaderless) https://www.youtube.com/watch?v=atDe7qka6q8&ab_channel=Jordanhasnolife 
             
             5 techniques : 
-              - conflict avoidance (just make writes from leader)
+              - conflict avoidance (just make writes of an item from one leader)
               - LWW
               - Conflict on read (calls conflict resolution code on read like Dynamo read-repair /Azure CosmosDB/CouchDB read-repair)
               - Conflict on write (calls conflict resolution code on write like CRDTs)
@@ -723,16 +733,15 @@ Time to understand scalability, latency aspects
             - the common use case is multi-datacenter need where there is a leader in each datacenter
             - make sure there is atleast quorum consistency ( strong ) consistency in each datacenter
             - writes/reads of a particular user/session go to same datacenter
-            - for conflicts, use different strategies
-              - LWW based on timestamp
-              - Calls custom conflict resolution logic (some DBs support this). Example Dynamo's read repair and anti-entropy OR Azure CosmosDB OR CouchDB
-              - use version vectors - (also helps with ordering) - RiakDB
+            - for conflicts, use different strategies shared above
+              - some details about version vectors - (also helps with ordering) - RiakDB
+                https://youtu.be/1BXCxpcsmzc?t=524 
                 - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
                     - How CRDT is implemented ? - https://www.youtube.com/watch?v=FG5Varj1Ows 
-                        - Operational CRDT : just the operation (like inc or dec) is sent instead of vectors. usually used in counters
-                        - State based CRDT : entire vector is sent. It helps with causal relationship. usually used in adding elements to the list
-                        - Sequence CRDT : builds an eventually consistent list. Its hard. used in collaborative editors like Google docs. 
-              - use sequence number from lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo, Cockroach DB uses vector clock/lamport clocks
+                        - Operational CRDT : just the operation (like inc or dec) is sent instead of vectors. usually used in counters.
+                        - State based CRDT : entire vector is sent (like vec[add(1,2), remove(1)] ). It helps with causal relationship. usually used in adding elements to the list
+                        - Sequence CRDT : builds an eventually consistent list. Its hard. used in collaborative editors like Google docs. Example, using decimal and placing random number range in between decimals for insertion. [(H, 0.1), (!, 0.3)] U [(H, 0.1), (i, 0.2), (!, 0.3)] -> H!(already in DB) + Hi!(node2) -> Hi!
+              - for ordering, you can use sequence number from lamport timestamp - recency guarantee (just incrementing version to get latest versions) 
 
               ONE FACT WITH RELATIONAL DBS : 
                 To order these events correctly, a technique called version vectors can be used, which we will discuss later in this chapter (see “Detecting Concurrent Writes” on page 184). However, conflict detection techniques are poorly implemented in many multi-leader replication systems. For example, at the time of writing, PostgreSQL BDR does not provide causal ordering of writes [27], and Tungsten Replicator for MySQL doesn’t even try to detect conflicts [34].
@@ -749,7 +758,8 @@ Time to understand scalability, latency aspects
               - To maintain data consistency between the internal service and external service (PSP), we usually rely on idempotency and reconciliation.
         25. How to handle spiky load ? 
           - always reserve SPIKE buffer
-          - use rate limiter
+          - use rate limiter 
+          - for multi-tenants, support quota system for demand 
         26. How to tolerant faults ? 
             https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#reliable-scalable-and-maintainable-applications 
             A fault is usually defined as one component of the system deviating from its spec, whereas failure is when the system as a whole stops providing the required service to the user.
@@ -758,15 +768,21 @@ Time to understand scalability, latency aspects
 
             Hardware faults. 
               Until recently redundancy of hardware components was sufficient for most applications. As data volumes increase, more applications use a larger number of machines, proportionally increasing the rate of hardware faults. There is a move towards systems that tolerate the loss of entire machines. A system that tolerates machine failure can be patched one node at a time, without downtime of the entire system (rolling upgrade).
+              It is unlikely that a large number of hardware components will fail at the same time.
             Software errors. 
-              It is unlikely that a large number of hardware components will fail at the same time. Software errors are a systematic error within the system, they tend to cause many more system failures than uncorrelated hardware faults.
-            Human errors. Humans are known to be unreliable. Configuration errors by operators are a leading cause of outages. You can make systems more reliable:
+               Software errors are a systematic error within the system, they tend to cause many more system failures than uncorrelated hardware faults.
+            Human errors.
+              Humans are known to be unreliable. Configuration errors by operators are a leading cause of outages. You can make systems more reliable:
+              1. - Set up detailed and clear monitoring, such as performance metrics and error rates (telemetry).
+              2. - Automated testing.
+              3. - Provide fully featured non-production sandbox environments where people can explore and experiment safely.
+              4. - Quick and easy recovery from human error, fast to rollback configuration changes, 
+              5. - roll out new code gradually.
+
+              Others
               - Minimising the opportunities for error, peg: with admin interfaces that make easy to do the "right thing" and discourage the "wrong thing".
-              - Provide fully featured non-production sandbox environments where people can explore and experiment safely.
-              - Automated testing.
-              - Quick and easy recovery from human error, fast to rollback configuration changes, roll out new code gradually and tools to recompute data.
-              - Set up detailed and clear monitoring, such as performance metrics and error rates (telemetry).
               - Implement good management practices and training.
+
           27. Whats the reasonable performance SLA ? 
               Service level objectives (SLOs) and service level agreements (SLAs) are contracts that define the expected performance and availability of a service. An SLA may state the median response time to be less than 200ms and a 99th percentile under 1s. These metrics set expectations for clients of the service and allow customers to demand a refund if the SLA is not met.
           28. Approaches for coping with the load ? 
@@ -774,13 +790,14 @@ Time to understand scalability, latency aspects
                   Scaling out or horizontal scaling: Distributing the load across multiple smaller machines.
                   Elastic systems: Automatically add computing resources when detected load increase. Quite useful if load is unpredictable.
                 Distributing stateless services across multiple machines is fairly straightforward. Taking stateful data systems from a single node to a distributed setup can introduce a lot of complexity. Until recently it was common wisdom to keep your database on a single node.
-          29. 3 principles of Maintainability 
-                  Operability. 
-                    Make it easy for operation teams to keep the system running. (monitoring, logging, security, up to date, etc.)
+          29. 3 principles of Maintainability (SEO)
+                  
                   Simplicity. 
                     Easy for new engineers to understand the system by removing as much complexity as possible. (abstraction that hides the implementation details behind clean and simple to understand APIs and facades.)
                   Evolvability. 
                     Make it easy for engineers to make changes to the system in the future. (Agile working patterns provide a framework for adapting to change.)
+                  Operability. 
+                    Make it easy for operation teams to keep the system running. (monitoring, logging, security, up to date, etc.)
               How to measure ? - Varies by domain to domain. Its advisable to define "Maturity level"
           30. Relational vs Document model
               https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#query-languages-for-data 
@@ -851,11 +868,10 @@ Time to understand scalability, latency aspects
                   4. Avro (Hive, Kafka)
                       Same as above and supports two schema languages : Avro IDL (same as thrift IDL) and one is JSON based (machine-readable.).
                       It compresses even further - it does not even specify the data type in its encoding. So you go go through the fields in the order they appear in the schema and use the schema to tell you the datatype of each field. Any mismatch in the schema between the reader and the writer would mean incorrectly decoded data.
-                      The key idea with Avro is that the writer’s schema and the reader’s schema don’t have to be the same—they only need to be compatible. When data is decoded (read), the
-                      Avro library resolves the differences by looking at the writer’s schema and the reader’s schema side by side and translating the data from the writer’s schema into the reader’s schema. The Avro specification [20] defines exactly how this resolution works, and it is illustrated in Figure 4-6.
+                      The key idea with Avro is that the writer’s schema and the reader’s schema don’t have to be the same—they only need to be compatible. When data is decoded (read), the Avro library resolves the differences by looking at the writer’s schema and the reader’s schema side by side and translating the data from the writer’s schema into the reader’s schema. The Avro specification [20] defines exactly how this resolution works, and it is illustrated in Figure 4-6.
               38. How to rebalance partitions ? 
                     - How not to do it: Hash mod n. The problem with mod N is that if the number of nodes N changes, most of the keys will need to be moved from one node to another.
-                    - Fixed number of partitions. Create many more partitions than there are nodes and assign several partitions to each node. If a node is added to the cluster, we can steal a few partitions from every existing node until partitions are fairly distributed once again. The number of partitions does not change, nor does the assignment of keys to partitions. The only thing that change is the assignment of partitions to nodes. This is used in Riak, Elasticsearch, Couchbase, and Voldemport. You need to choose a high enough number of partitions to accomodate future growth. Neither too big or too small.
+                    - Fixed number of partitions. Create many more partitions than there are nodes and assign several partitions to each node. If a node is added to the cluster, we can steal a few partitions from every existing node until partitions are fairly distributed once again. The number of partitions does not change, nor does the assignment of keys to partitions. The only thing that change is the assignment of partitions to nodes. This is used in Kafka brokers, Riak, Elasticsearch, Couchbase, and Voldemport. You need to choose a high enough number of partitions to accomodate future growth. Neither too big or too small.
                     - Dynamic partitioning. The number of partitions adapts to the total data volume. An empty database starts with an empty partition. While the dataset is small, all writes have to processed by a single node while the others nodes sit idle. HBase and MongoDB allow an initial set of partitions to be configured (pre-splitting).
                     - Partitioning proportionally to nodes. Cassandra and Ketama make the number of partitions proportional to the number of nodes. Have a fixed number of partitions per node. This approach also keeps the size of each partition fairly stable.
               39. Is rebalance have to be manual ? 
@@ -919,7 +935,7 @@ Time to understand scalability, latency aspects
 
                     2PC is also called a blocking atomic commit protocol, as 2Pc can become stuck waiting for the coordinator to recover.
 
-                    XA (X/Open XA for eXtended Architecture) is a standard for implementing two-phase commit across heterogeneous technologies. Supported by many traditional relational databases (PostgreSQL, MySQL, DB2, SQL Server, and Oracle) and message brokers (ActiveMQ, HornetQ, MSQMQ, and IBM MQ).
+                    XA (X/Open XA for eXtended Architecture) is a standard for implementing two-phase commit across heterogeneous technologies. Supported by many traditional relational databases (PostgreSQL, MySQL, DB2, SQL Server, and Oracle) and message brokers (Kafka, ActiveMQ, HornetQ, MSQMQ, and IBM MQ).
 
                   The problem with locking is that database transactions usually take a row-level exclusive lock on any rows they modify, to prevent dirty writes.
 
@@ -927,7 +943,7 @@ Time to understand scalability, latency aspects
 
                   When a coordinator fails, orphaned in-doubt transactions do ocurr, and the only way out is for an administrator to manually decide whether to commit or roll back the transaction.
               46. best fault tolerance algorithms ? 
-                    The best-known fault-tolerant consensus algorithms are Viewstamped Replication (VSR), Paxos, Raft and Zab.
+                    The best-known fault-tolerant consensus algorithms are Viewstamped Replication (VSR), Paxos, Raft and Zab(Zookeeper).
               47. How fencing token (used in zookeeper) can help with linearizability / concensus ? 
                     First why do you need fecning token ? 
                       example, you need a lock which is time based to avoid lock owner to hold it indefinitely like GC pauses. Now if the expired client who went on GC pause still thinks it owns the lock, then it arises split brain situation (https://www.youtube.com/watch?v=1At8wV8fwp8). This means you have multiple lock holders.
@@ -942,7 +958,7 @@ Time to understand scalability, latency aspects
               48. How Zookeeper supports total order broadcast (and hence concensus) ? Pg - 370 DDIA
                     Linearizable atomic operations
                       Using an atomic compare-and-set operation, you can implement a lock: if several nodes concurrently try to perform the same operation, only one of them will suc‐ ceed. The consensus protocol guarantees that the operation will be atomic and linearizable, even if a node fails or the network is interrupted at any point. A dis‐ tributed lock is usually implemented as a lease, which has an expiry time so that it is eventually released in case the client fails (see “Process Pauses” on page 295).
-                    Total ordering of operations
+                    Total ordering of operations (similar to assigning the order based on LAMPORT TIMESTAMP)
                       As discussed in “The leader and the lock” on page 301, when some resource is protected by a lock or lease, you need a fencing token to prevent clients from con‐ flicting with each other in the case of a process pause. The fencing token is some number that monotonically increases every time the lock is acquired. ZooKeeper provides this by totally ordering all operations and giving each operation a monotonically increasing transaction ID (zxid) and version number (cversion) [15].
                     Failure detection
                       Clients maintain a long-lived session on ZooKeeper servers, and the client and server periodically exchange heartbeats to check that the other node is still alive. Even if the connection is temporarily interrupted, or a ZooKeeper node fails, the session remains active. However, if the heartbeats cease for a duration that is longer than the session timeout, ZooKeeper declares the session to be dead. Any locks held by a session can be configured to be automatically released when the session times out (ZooKeeper calls these ephemeral nodes).
@@ -965,6 +981,7 @@ Time to understand scalability, latency aspects
                     https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#enforcing-constraints 
                     Uniqueness constraints require consensus across multi-leader nodes 
                     Uniqueness in log-based messaging is much easier 
+                    
                     Multi-partition request processing - typically like Saga or Try confirm cancel 
                       There are potentially three partitions: the one containing the request ID, the one containing the payee account, and one containing the payer account.
                       The traditional approach to databases, executing this transaction would require an atomic commit across all three partitions.
