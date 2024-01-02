@@ -2573,6 +2573,7 @@ Distributed systems today and Benchmarking on common systems
         600 MB/s on 25 Gbps network on AWS 
         1 million messages per second
         i3en.2xlarge instance type (with 8 vCores, 64 GB RAM, 2 x 2,500 GB NVMe SSDs)
+        Good performance but do not use it for large storage
 
       When to use Kafka ? 
         https://www.engati.com/blog/redis-kafka-rabbitmq
