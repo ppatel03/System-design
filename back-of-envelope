@@ -2436,7 +2436,7 @@ Distributed systems today and Benchmarking on common systems
         - redis pub sub 
         - DB for persistence 
       - My try : https://leetcode.com/discuss/interview-question/583184/FBInstagram-'Live-Comments'-System-design/918003 
-      - Facebook's  --> Write locally, Read globally technique
+      - Facebook's  --> Write locally, Read globally technique (similar to sequential consistency, read after write consistency from cache)
 
     Design search engine
       https://medium.com/double-pointer/system-design-interview-search-engine-edb66b64fd5e 
