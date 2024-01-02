@@ -1571,6 +1571,9 @@ Distributed best practices
       DASH
         DASH stands for Dynamic Adaptive Streaming is an open standard and similar to HLS. It uses HTTP, small chunks and also supports adaptive streaming. A key difference between HLS and DASH is that DASH is codec agnostic. Hence you can use any codec you want.
 
+      Why HLS/DASH ? 
+        Both of these format consist of the manifest file  and the series of video chunks where each chunk contains video of few seconds. This manifest file is like a directory to tell the client video player what all output formats are, where to load the video chunks over HTTP. Both manisfest file and video chunks are usually cached in CDN for faster streaming.
+
     DNS
       https://www.youtube.com/watch?v=27r4Bzuj5NQ
       queries from browser go to DNS resolver (ISP, Cloudfare, Google) which fetches authoritative name server in hierarchial fashion.
