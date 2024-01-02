@@ -2432,7 +2432,7 @@ Distributed systems today and Benchmarking on common systems
     Design Live commenting system 
       https://leetcode.com/discuss/interview-question/583184/FBInstagram-'Live-Comments'-System-design/918003 
       - Same as proxity service in byte byte go
-        - client <-> server websocket connection
+        - client <-> server websocket connection. You can use via LB using TCP tunneling
         - redis pub sub 
         - DB for persistence 
       - My try : https://leetcode.com/discuss/interview-question/583184/FBInstagram-'Live-Comments'-System-design/918003 
