@@ -2171,18 +2171,13 @@ Distributed best practices
             But what if its distributed -  multileader or leaderless replication ? 
               - if multileader, make sure there is atleast quorum consistency ( strong ) consistency in each datacenter
               - first make sure there is atleast quorum consistency ( strong ) consistency in each datacenter or server(leaderless)
-              - need versioning to resolve conflicts  at DB level or application 
               - some ways to resolve conflicts at DB level
                 - now for conflicts, use different strategies
-                  1. LWW based on timestamp
-                  2. Conflict on Read / Conflict on Write. Calls custom conflict resolution logic (some DBs support this). Examples
-                    - Dynamo
-                    - Azure CosmosDB 
-                  3. use version vectors - (also helps with ordering) - RiakDB
-                    - merging siblings are hard even with version vectors. You need to use something advanced called CRDTs (Riak DB, Redis, Cassandra)
-                  4. use sequence number from lamport timestamp - recency guarantee (just incrementing version to get latest versions) - MongoDB, Dynamo,  Cockroach DB uses vector clock/lamport clocks
-                  5. Read repair or Anti-entropy
-                    - Dynamo's read repair(resolve conficts when reading) and anti-entropy(resolve conflicts when writing)  
+                  - conflict avoidance (just make writes of an item from one leader)
+                  - LWW
+                  - Conflict on read (calls conflict resolution code on read like Dynamo read-repair /Azure CosmosDB/CouchDB read-repair)
+                  - Conflict on write (calls conflict resolution code on write like CRDTs)
+                  - Version vectors (like in Riak 2.0) 
 
                   5. Quorum consistency
                     - But how to ensure you are consistent values from different DB nodes ? 
