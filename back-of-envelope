@@ -2774,7 +2774,8 @@ Distributed systems today and Benchmarking on common systems
 
     Examples of 
       - Demand efficiency 
-        - adding cache at function level like "Memoize" by simply tracing amount of function calls on a request
+        - adding cache at function level like "Memoize" by simply tracing amount of function calls on a request 
+        - Promise cache
         - removing GKs 
         - removing dead ifs 
         - removing old frameworks (simple pattern matching)
