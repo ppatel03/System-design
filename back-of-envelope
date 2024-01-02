@@ -2512,8 +2512,7 @@ Distributed systems today and Benchmarking on common systems
       https://www.youtube.com/watch?v=MAJ0aW5g17c (awesome)
         Example of GFS performing map function on worker servers and reduce using worker servers co-ordinated by master
       The MapReduce framework is a good option to aggregate ad click events. The directed acyclic graph (DAG) is a good model for it [9]. The key to the DAG model is to break down the system into small computing units, like the Map/Aggregate/Reduce nodes (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation). Facebook uses DAG model for its video streaming
-      Hotspot issue in map reduce
-        supported by resource manager (https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation)
+      
 
     Zookeeper 
     https://www.youtube.com/watch?v=gZj16chk0Ss&t=413s&ab_channel=ddddd
