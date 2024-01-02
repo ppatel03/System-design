@@ -2839,13 +2839,12 @@ Distributed systems today and Benchmarking on common systems
             - using BPF insights
           - Utilization efficiency
             - load testing + capacity automation due to 
-                - lack of understand of bottleneck metrics
-                - sharded services 
-                - DR buffer 
-                - organic growth
-                - spike buffer 
-                - (tough) statefulness
-                - (tough) regional fluidity
+                - Lack of clarity on service bottleneck metrics
+                - Uncertainty regarding the appropriate capacity for Disaster Recovery Buffer (DR) and Growth Buffer
+                - Double occupancy (DO) issue during host replacement, where old and new hosts serve traffic simultaneously.
+                - Regional Fluidity (RF) issue caused due to uneven capacity distribution across regions.
+                - Autoscaling Stateful services poses reliability and performance challenges.
+
             Solution 
               - Intially load testing is run for a week. After 3 days, it can halt if throughput and stopper metrics patterns are consistent.
               - Then it runs periodic load testing every 4 (config) hours to help determine throughput and stopper metrics 
