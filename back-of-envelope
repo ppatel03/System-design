@@ -2877,8 +2877,7 @@ Distributed systems today and Benchmarking on common systems
                        
                      Demand sources limit/quotas not set (unbounded)
                       - For viral content, we use promise cache to avoid multiple requests for same resource.
-                      - Service level spike buffer
-                      - Dynamic load balancing to calculate max throughput this service can hold currently and rate limits based on this data.
+                      - Service level rate limiter with spike buffer
 
                      So this solved 35% of the challenge. 10% of the case which were not solvable as below
                      - (unbounded and violating state based SLA : stateless with less than 30 mins, stateful less than 4 hours)
