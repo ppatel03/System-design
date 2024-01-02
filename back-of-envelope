@@ -3126,7 +3126,7 @@ Distributed systems today and Benchmarking on common systems
 
 
             Influx DB benchmarking from bytebytego : 
-              8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series
+              8 cores and 32GB RAM can handle over 250,000 writes per second, greater than 1 M series of storage, 25 burst read QPS 
               (https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system)
 
               Performance optimization
@@ -3182,6 +3182,7 @@ Distributed systems today and Benchmarking on common systems
                 Clustering used as sort key : https://www.youtube.com/watch?v=OCakxrzwuU4 
                   Remember data in cassandra on disk supports SSTable which is sorted string table.
                   So searching could be done in logN times like relational or mongoDB
+                  compaction could be ddone using merge sort
 
               Practical 
                     Cassandra indexing (partition + clustering which is sort key) : https://www.youtube.com/watch?v=S9rmf4X7E_E
