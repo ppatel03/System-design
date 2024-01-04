@@ -2875,6 +2875,7 @@ Distributed systems today and Benchmarking on common systems
                      Demand sources limit/quotas set
                       - setting demand source level quotas based on throughput metric and 
                       - reserving demand source level spike buffer. 
+                    So max capacity at Peak = max(throughput, sum of all quotas on throughput) / throughput per machine
                        
                      Demand sources limit/quotas not set (unbounded)
                       - For viral content, we use promise cache to avoid multiple requests for same resource.
