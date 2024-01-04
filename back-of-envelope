@@ -2871,7 +2871,7 @@ Distributed systems today and Benchmarking on common systems
                     2. Stateful services : SLA for upscale/downscale is large -  4 hours But these show mostly consistent patterns
 
                   B. Based on different demand sources limits (quotas vs unbounded)
-                      One thing observed was throughput metric was consistent
+                      One thing observed was with different demand sources, throughput metric was consistent but stopper metrics could change. Example, call from FB feed to ranking platform is CPU bound but from Insta feed to ranking platform is Mem bound.
                      Demand sources limit/quotas set
                       - setting demand source level quotas based on throughput metric and 
                       - reserving demand source level spike buffer. 
