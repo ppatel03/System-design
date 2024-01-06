@@ -425,9 +425,9 @@ Time to understand scalability, latency aspects
                 1. GeoHash (boundary challenges ) - Redis, Bing map, Lyft
                 2. Quadtree (in memory challenge and operational start up time ) - Yext
                 3. Google S2 - Google Maps, Tinder
-              - Sharding 
+              - Sharding (not needed since entire dataset can fit in memory)
               - Multi data center 
-              - Country with privacy laws (only route traffic to that country's region)
+              - Country with privacy laws (only route traffic to that country's datacenter)
             14. Nearby Friends 
               - High level design 
                 - leverage redis pub sub
