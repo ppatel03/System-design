@@ -1631,6 +1631,18 @@ Distributed best practices
     - use hyphens(-) instead of underscores
         /managed-devices
 
+  API testing 
+    https://www.youtube.com/watch?v=qquIJ1Ivusg&ab_channel=ByteByteGo 
+    1. Smoke Testing
+    2. Functional Testing
+    3. Integration Testing
+    4. Regression Testing
+    5. Load Testing (increasing load). Tool - Jmeter
+    6. Stress Testing ( spikes). Tool - Jmeter
+    7. Security Testing - mostly auth related
+    8. UI Testing . Tool - Jeste2e
+    9. Fuzz Testing - test edge cases and other attacks - SQL injection, XSS, buffer overflow
+
   Physical cores, Virtual cores and Logical cores
     https://www.youtube.com/watch?v=O2g6381An_k 
     Example, i7 has 4 physical cores and Each core can have ability to run 2 threads simultaneously. So 4 virtual cores. So 8 logical cores
