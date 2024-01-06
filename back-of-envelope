@@ -426,7 +426,8 @@ Time to understand scalability, latency aspects
                 2. Quadtree (in memory challenge and operational start up time ) - Yext
                 3. Google S2 - Google Maps, Tinder
               - Sharding 
-              - Multi data center with privacy laws
+              - Multi data center 
+              - Country with privacy laws (only route traffic to that country's region)
             14. Nearby Friends 
               - High level design 
                 - leverage redis pub sub
