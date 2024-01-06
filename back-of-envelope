@@ -422,9 +422,9 @@ Time to understand scalability, latency aspects
                   search info
                     geohash -> business id 
               - Techniques 
-                1. GeoHash (boundary challenges )
-                2. Quadtree (in memory challenge and operational start up time )
-                3. Google S2 
+                1. GeoHash (boundary challenges ) - Redis, Bing map, Lyft
+                2. Quadtree (in memory challenge and operational start up time ) - Yext
+                3. Google S2 - Google Maps, Tinder
               - Sharding 
               - Multi data center with privacy laws
             14. Nearby Friends 
