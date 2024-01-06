@@ -1632,8 +1632,9 @@ Distributed best practices
         /managed-devices
 
   API testing 
-    https://www.youtube.com/watch?v=qquIJ1Ivusg&ab_channel=ByteByteGo 
-    1. Smoke Testing
+    https://youtu.be/qquIJ1Ivusg?t=224 
+  
+    1. Smoke Testing (check if nothing breaks - just checks if API returns basic response with status code)
     2. Functional Testing
     3. Integration Testing
     4. Regression Testing
