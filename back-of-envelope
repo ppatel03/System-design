@@ -2872,18 +2872,22 @@ Distributed systems today and Benchmarking on common systems
                     2. Stateful services : SLA for upscale/downscale is large -  4 hours But these show mostly consistent patterns
 
                   B. Based on different demand sources limits (quotas vs unbounded)
-                      One thing observed was with different demand sources, throughput metric was consistent but stopper metrics could change. Example, call from FB feed to ranking platform is CPU bound but from Insta feed to ranking platform is Mem bound.
-                     Demand sources limit/quotas set
+                      
+                     1. Demand sources limit/quotas set
+                        One thing observed was with different demand sources, throughput metric was consistent but stopper metrics could change. Example, call from FB feed to ranking platform is CPU bound but from Insta feed to ranking platform is Mem bound.
+                        So every services decides the max throughput needed and distributes the quotas to its demand source and set rate limits.
                       - setting demand source level quotas based on throughput metric and 
                       - reserving demand source level spike buffer. 
-                    So max capacity at Peak = max(throughput, sum of all quotas on throughput) / throughput per machine
+                        So max capacity at Peak = max(throughput, sum of all quotas on throughput) / throughput per machine
                        
-                     Demand sources limit/quotas not set (unbounded)
+                     2. Demand sources limit/quotas not set (unbounded)
                       - For viral content, we use promise cache to avoid multiple requests for same resource.
                       - Service level rate limiter with spike buffer
 
-                     So this solved 35% of the challenge. 10% of the case which were not solvable as below
-                     - (unbounded and violating state based SLA : stateless with less than 30 mins, stateful less than 4 hours)
+                   So SLA time and quotas solved 35% of the challenge. 10% of the case which were not solvable for following use cases.
+                    1. service violating consistent load test SLA
+                    2. service with multiple demand sources and are unbounded with quotas 
+                    They need additional code changes implementing promise cache.
                    
                 How autoscaling is done ? 
               
