@@ -229,7 +229,7 @@ Time to understand scalability, latency aspects
             - read heavy, write heavy - LSM tree + SSTable DBs with Sparse Index + bloom filter
             - read heavy, burst writes - Time structured merge tree  
           - sharding support 
-            - noSQL DB if yes
+            - noSQL DB like Dynamo if yes ( even SQL DBs like MySQL, Postgresql support sharding but Dynamo because its very easy to set up sharding)
             - SQL DB if no 
           - selection
             - B Tree  + SQL - MySQL
