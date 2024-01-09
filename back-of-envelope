@@ -222,7 +222,28 @@ Time to understand scalability, latency aspects
 
     In-depth 
       a. think about data layer 
-        - choice of database, data model, sharding (from back of envelope), replication (back of envelope), consistency (quorum), challenges - hot partitioning  
+        - choice of database, 
+          - nature of workload : 
+            - read heavy, write less - B Tree
+            - read less, write more - LSM tree + SSTable 
+            - read heavy, write heavy - LSM tree + SSTable DBs with Sparse Index + bloom filter
+            - read heavy, burst writes - Time structured merge tree  
+          - sharding support 
+            - noSQL DB if yes
+            - SQL DB if no 
+          - selection
+            - B Tree  + SQL - MySQL
+            - B Tree + noSQL - DynamoDB, MongoDB
+            - LSM Tree + SSTable + noSQL - Cassandra, Rocks DB, Hive
+            - Time strucutured merge tree - InfliuxDB, Prometheus
+          
+
+        - data model, 
+        Advanced
+        - sharding (from back of envelope), 
+        - replication (back of envelope), 
+        - consistency (quorum), 
+        - challenges - hot partitioning  
 
       b. Queue to avoid synchronous processing and support fault tolerant, durability 
 
