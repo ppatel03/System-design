@@ -229,7 +229,7 @@ Time to understand scalability, latency aspects
             - read heavy, write heavy - LSM tree + SSTable DBs with Sparse Index + bloom filter
             - read heavy, burst writes - Time structured merge tree  
           - sharding support 
-            - noSQL DB like DynamoDB if yes ( even SQL DBs like MySQL, Postgresql support sharding but its very hard. You need to manually created sharded tables - https://www.squash.io/tutorial-on-database-sharding-in-postgresql/.  DynamoDB supports in-built sharding cluster)
+            - noSQL DB like DynamoDB if yes ( even SQL DBs like MySQL, Postgresql support sharding but its very hard. You need to manually created sharded tables and create application logic based on this - https://www.squash.io/tutorial-on-database-sharding-in-postgresql/.  DynamoDB provides out-of-box solution and supports in-built sharding cluster)
             - SQL DB if no 
           - selection
             - B Tree  + SQL - MySQL
