@@ -126,6 +126,8 @@ Time to understand scalability, latency aspects
                 8 9s -> 1 ms or very high (no downtime)
                 > 6 ps -> in us or super high (no downtime else SLA violated)
             - if high availability, then ask availability nos example, 99.99 or 4 9s
+            - With 2 servers of service runnings parallel each with 99.9% availability. The overall availability increase ~ 99.9999% http://tinyurl.com/ypgx8qqc 
+              99.9% ~ 0.1% ~ 0.001 ~ 0.001 ^ 2 ~ 0.000001 ~ 1 - 0.000001 ~ 0.999999 ~ 99.9999 % 
 
           - Consistency 
             - Types of Consistency (https://www.geeksforgeeks.org/sequential-consistency-in-distributive-systems/# )
