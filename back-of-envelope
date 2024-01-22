@@ -1136,7 +1136,7 @@ Distributed Systems estimate
     Between two availability zones : 5 ms
     Send packet CA (California) ->Netherlands->CA	= 150 ms 
     Disk seek	= 10 ms
-    Human brain to process an object = 10-20 ms. So 25 fps is should be enough
+    Human brain to process an object = 10-20 ms. So 25 fps is should than enough
     NTP error delay threshold = 30-50 ms
     DNS response time ranges : 10ms to 200ms.
     Replication lag guarantee for AWS RDS : < 100 ms 
