@@ -1068,7 +1068,7 @@ Time to understand scalability, latency aspects
         - Paypal increased its scalability : 1 Billion transaction with just 8 VMs using Akka (Actor model framework)
           - https://newsletter.systemdesign.one/p/actor-model 
         - Facebook configerator system http://tinyurl.com/2x6ben4m 
-          - 
+        - Doordash async IO using Gevent improved scalability and reliability of doordash orders https://doordash.engineering/2021/01/19/scaling-efficienc-of-a-python-service-with-gevent/ 
 
 
 
