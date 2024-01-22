@@ -635,7 +635,7 @@ Time to understand scalability, latency aspects
         2. Consistency always with CQRS(sep read and write systems) or 
         3. Reconciallation for stream + batch DBs or payment system
         3. Idempotency for retry systems
-        4. NTP if relying on timestamps
+        4. NTP sync if relying on timestamps
         5. Map-Reduce scaling, hot keys, priority pre-emption
         6. Verify Fault tolerence, Resiliency and durability
             For fault tolerance(operable) - enough replicas, data mirroring 
@@ -717,7 +717,7 @@ Time to understand scalability, latency aspects
             All relational databases (MySQL, Oracle, Postgresql) have CDC to Kafka. Additional Debezium is the tool to support both relational and non-relational DB like Cassandra (Enable CDC on cassandra.yaml - http://tinyurl.com/ytw3ogbu  ). 
         21. How to ensure recency guarantee ? - Linearizeability 
             - Total ordering
-              - using sequence number from Lamport timestamp (just the counter to record to indicate the order and help whats more updated. It is more compact ) 
+              - using sequence number from Lamport timestamp (just the counter to record to indicate the order and help whats more updated. It is more compact ) or Zookeeper monotonically increasing transaction id
               - using Quorum consistency (R+W > N) like Dynamo or strong consistency
               - very strict : serializable isolation with quorum consistency 
 
@@ -746,11 +746,13 @@ Time to understand scalability, latency aspects
             (Leaderless) https://www.youtube.com/watch?v=atDe7qka6q8&ab_channel=Jordanhasnolife 
             
             5 techniques : 
-              - conflict avoidance (just make writes of an item from one leader)
-              - LWW
-              - Conflict on read (calls conflict resolution code on read like Dynamo read-repair /Azure CosmosDB/CouchDB read-repair)
-              - Conflict on write (calls conflict resolution code on write like CRDTs)
-              - Version vectors (like in Riak 2.0) 
+              - Master-Replica model : conflict avoidance (just make writes of an item from one leader). 
+                - However, what if a master gets message 1, 2 in order but replica gets 2, 1 ? 
+                  - Its highly unlikely since most DBs sends in replication log. Replica will remember its last offset and start reading from 1 and then 2.
+              - Leaderless/MultiLeader : LWW
+              - Leaderless/MultiLeader :Conflict on read (calls conflict resolution code on read like Dynamo read-repair /Azure CosmosDB/CouchDB read-repair)
+              - Leaderless/MultiLeader :Conflict on write (calls conflict resolution code on write like CRDTs)
+              - Leaderless/MultiLeader :Version vectors (like in Riak 2.0) 
 
               Multi-leader replication is implemented with Tungsten Replicator for MySQL, BDR(bi-directional replication) for PostgreSQL or GoldenGate for Oracle. MySQL uses circular topology for its replication.
 
