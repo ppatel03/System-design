@@ -1210,9 +1210,9 @@ Distributed Systems estimate
         -> depth of 2 ~ 10 ms
         -> depth of 3 ~ 150ms
         -> depth of 5 ~ 2s vs 1 hour in MySQL
-    - RocksDB (SSD)
+    - RocksDB (SSD) (Facebook Laser is built on the top of RocksDB)
         -> ~1-10ms
-    - Flink
+    - Flink 
         -> as low as 5-10 ms
     - Ngnix
       -> Scale upto 1 million QPS (1 million QPS, 65K SSL TPS, 70 Gbps throughput for Netflix, Hulu, Airbnb, Pinterest)
@@ -3327,6 +3327,7 @@ Distributed systems today and Benchmarking on common systems
               https://www.youtube.com/watch?v=VAwtpa9EHf0 
               - Spark can be configured to be near real time processing but has slow performance
               - Flink is made for real-time processing with 2x performance as compared to Spark
+              - SPark faces OOM due to its in-memory nodes wherease Flink can take help of disks
               
           11. Google Cloud Spanner
             https://research.google/pubs/pub39966/
