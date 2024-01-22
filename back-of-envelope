@@ -784,6 +784,8 @@ Time to understand scalability, latency aspects
           - always reserve SPIKE buffer
           - use rate limiter 
           - for multi-tenants, support quota system for demand 
+          - use promise cache 
+          - use request collapsing in LB
         26. How to tolerant faults ? 
             https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#reliable-scalable-and-maintainable-applications 
             A fault is usually defined as one component of the system deviating from its spec, whereas failure is when the system as a whole stops providing the required service to the user.
