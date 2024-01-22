@@ -1052,7 +1052,7 @@ Time to understand scalability, latency aspects
                   - Use 3 level distribution tree Leader (zookeeper) -> Follower (zookeeper) -> cluster/datacenter observer -> server proxy binary inside host
                   - If configs are in GBs, use peer to peer network or circular topology to avoid network contention
                   - What if one of the observers fail ? 
-                    - it remembers the latest transaction id and requires all the missing id 
+                    - it remembers the latest transaction id and requires all the missing ids to be sent by follower.
                   - How Zookeeper ensures messages are in order ? 
                     - The commit log of ZooKeeper’s consensus protocol (ZAB) helps guarantee in-order delivery of config changes.
                    
