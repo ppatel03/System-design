@@ -1045,6 +1045,11 @@ Time to understand scalability, latency aspects
                   Cryptographic auditing and integrity checking often relies on Merkle trees [74], which are trees of hashes that can be used to efficiently prove that a record appears in some dataset (and a few other things). Outside of the hype of cryptocurrencies, certificate transparency is a security technology that relies on Merkle trees to check the val‐ idity of TLS/SSL certificates.
                   I could imagine integrity-checking and auditing algorithms, like those of certificate transparency and distributed ledgers, becoming more widely used in data systems in general. Some work will be needed to make them equally scalable as systems without cryptographic auditing, and to keep the performance penalty as low as possible. But I think this is an interesting area to watch in the future.
                   dynamo anit-entropy relies on Merklee tree
+              53. How to distribute configs to thousands of servers in multiple datacenters reliably ? 
+                  http://tinyurl.com/2x6ben4m 
+                  - Use 3 level distribution tree Leader (zookeeper) -> Follower (zookeeper) -> cluster/datacenter observer -> server proxy binary inside host
+                  - If configs are in GBs, use peer to peer network or circular topology to avoid network contention
+                   
 
       e. SOME POPULAR OPTIONS BY COMPANIES
         - Facebook uses master-slave per shard(partition) for its DB and 2-level cache 
@@ -1054,6 +1059,8 @@ Time to understand scalability, latency aspects
             - Leader based replication on root cache and DB.
         - Paypal increased its scalability : 1 Billion transaction with just 8 VMs using Akka (Actor model framework)
           - https://newsletter.systemdesign.one/p/actor-model 
+        - Facebook configerator system http://tinyurl.com/2x6ben4m 
+          - 
 
 
 
