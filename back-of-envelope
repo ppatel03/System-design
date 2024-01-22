@@ -1494,7 +1494,7 @@ Distributed best practices
           Today most websites supports https because of google standards
 
           ByteByteGo : https://www.youtube.com/watch?v=j9QmMEWmcfo
-            Moderm HTTPS uses TLS - https://excalidraw.com/#room=6ee4f5d6f525a19d546c,Duz5YdLv0qhwGv9pNSZo_Q 
+            Moderm HTTPS uses TLS - https://excalidraw.com/#room=c8d3386f5073e7a28986,MAgpFTKB8sh-C5IBZx4tPg 
             1. first establishes TCP handshake at transport (helps in getting the sequence number)
             2. then client sends hello and gets the certificate from server which has public key of server (Asymmetric) 
             3. then client encryptes his/her session key with server's public key and then on server, it gets clients sesssion key by decrypting it with server's private key. This is Asymmetric encryption
@@ -1587,7 +1587,7 @@ Distributed best practices
   Network/s / Networking
     OSI model
       https://www.youtube.com/watch?v=0y6FtKsg6J4
-      better to recap in https://excalidraw.com/#room=6ee4f5d6f525a19d546c,Duz5YdLv0qhwGv9pNSZo_Q 
+      better to recap in https://excalidraw.com/#room=c8d3386f5073e7a28986,MAgpFTKB8sh-C5IBZx4tPg  
 
     TCP/IP model
       https://www.techtarget.com/searchnetworking/definition/TCP-IP 
