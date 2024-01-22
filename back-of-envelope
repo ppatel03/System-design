@@ -1065,10 +1065,17 @@ Time to understand scalability, latency aspects
           - https://www.cs.utexas.edu/~vijay/cs380D-s18/feb6-fb.pdf 
             - Leaderless replication with leaf (top level) cache. So it gives per-object sequential consistency (sequential consistency is total order BUT per object level in FB paper which is same as monotonic read which is client will always see newer version of object but different client may see different versions) and read-after-write consistency by always connecting the user to the same cache. 
             - Leader based replication on root cache and DB.
+
         - Paypal increased its scalability : 1 Billion transaction with just 8 VMs using Akka (Actor model framework)
-          - https://newsletter.systemdesign.one/p/actor-model 
+          - https://newsletter.systemdesign.one/p/actor-model
+
         - Facebook configerator system http://tinyurl.com/2x6ben4m 
+          - 3 level distribution
+          - Zookeeper guarantee for total order broadcast using transaction id. If observer fails, then it can query for previous transaction ids. 
+
         - Doordash async IO using Gevent improved scalability and reliability of doordash orders https://doordash.engineering/2021/01/19/scaling-efficienc-of-a-python-service-with-gevent/ 
+          - from blocking I/O to async I/O
+          - gradual canary roll out
 
 
 
