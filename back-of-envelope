@@ -1049,6 +1049,8 @@ Time to understand scalability, latency aspects
                   http://tinyurl.com/2x6ben4m 
                   - Use 3 level distribution tree Leader (zookeeper) -> Follower (zookeeper) -> cluster/datacenter observer -> server proxy binary inside host
                   - If configs are in GBs, use peer to peer network or circular topology to avoid network contention
+                  - What if one of the observers fail ? 
+                    - it remembers the latest transaction id and requires all the missing id 
                    
 
       e. SOME POPULAR OPTIONS BY COMPANIES
