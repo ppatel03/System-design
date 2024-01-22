@@ -1051,6 +1051,8 @@ Time to understand scalability, latency aspects
                   - If configs are in GBs, use peer to peer network or circular topology to avoid network contention
                   - What if one of the observers fail ? 
                     - it remembers the latest transaction id and requires all the missing id 
+                  - How Zookeeper ensures messages are in order ? 
+                    - The commit log of ZooKeeper’s consensus protocol (ZAB) helps guarantee in-order delivery of config changes.
                    
 
       e. SOME POPULAR OPTIONS BY COMPANIES
