@@ -1078,6 +1078,8 @@ Time to understand scalability, latency aspects
           - from blocking I/O to async I/O
           - gradual canary roll out
 
+          Nice article about Java threads limitation -> Go threads : https://rcoh.me/posts/why-you-can-have-a-million-go-routines-but-only-1000-java-threads/ 
+
 
 
 
