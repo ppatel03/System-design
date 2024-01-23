@@ -738,6 +738,7 @@ Time to understand scalability, latency aspects
             - Premptive priority based scheduling for resource constraints
               - https://www.geeksforgeeks.org/preemptive-priority-cpu-scheduling-algortithm/# 
               - Other method is SJFS (Shortest job first)
+            - For software efficiency, support async I/O to avoid memory consuming threads blocked on I/O and not being able to utilize CPU
             - For demand efficiency, identify bottlenecks for jobs which does overfetching 
 
         23. How to effectively do multi-leader replication ? (all relational DBs, Kafka, Redis)
@@ -2842,6 +2843,7 @@ Distributed systems today and Benchmarking on common systems
         - Inefficiency or infrequent DB queries 
       - Software efficiency
         - For horizontal software written in C, using Folly libraries rather than traditional ones (in memory json manipulation or string-formatting)
+        - Implementation of Async IO
         - using BPF (say biosnoop command )
       - Utilization efficiency 
         - Autoscaling 
