@@ -619,9 +619,15 @@ Time to understand scalability, latency aspects
                 3. Saga - Best choice for microservice. Can be Decentralized and Orchestration using co-ordinator but unlike TCC, its slow. 
                 For 2 and 3 to handle unbalances state, use phase status table (transaction_id, phase_type, name, status, out_of_order flag for network lag)
               - Event sourcing with materialized views 
-          
-
-              
+            24. Distributed Job scheduler
+              - High level design
+                                      + Retry
+                  Jobs -> Consumer -> Queue -> Consumer (Driver) ----------(schedule)--------------> Workers 
+                              |                            |
+                              |                            | (which hosts to schedule)
+                              V                            V
+                             DB                        Resource manager(YARN)  ---------------------> Workers 
+                                                                               (query host resources)
 
 
       d. Some well-known challenges 
