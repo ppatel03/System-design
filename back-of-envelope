@@ -2938,28 +2938,28 @@ Distributed systems today and Benchmarking on common systems
                     - response time for online services. 
 
                 What if load testing results (throughput + stopper) does not show consistent patterns throughout the week. This was 45% of the case ? 
-                A simple answer is perform frequent load testing (example 30 mins instead of 4 hours) and change throughput + stopper metrics throughout the week. But this is a HARD problem with 2 major factos to be considered as 
-                  A. Based on state
-                    1. Stateless services : Downscale and Upscale SLA for stateless services is 30 mins. If services changes its throughput+stopper metrics within 30 mins interval, then we do not submit for autoscaling.
+                  This usually happens with different demand sources. One thing observed was with different demand sources, throughput metric was consistent but stopper metrics could change. Example, call from FB feed to ranking platform is CPU bound but from Insta feed to ranking platform is Mem bound.
+                  SOLUTION : 
+                  
+                  1. Sharded services based on demand sources : 
+                      - Do load testing at each demand source level and determine stopper metrics for each. Set quotas accordingly.
+                      Pros : great utilization 
+                      Cons : cubersome to manage for 1000+ demand sources especially shared endpoints like WWW
 
-                    2. Stateful services : SLA for upscale/downscale is large -  4 hours But these show mostly consistent patterns
+                  2. Non-sharded services + all stopper metrics based on demand sources : 
+                      - Add all stopper metrics from each demand sources. Add quotas to each demand source.
+                      Pros : easier to manage
+                      Cons : too much fragmentation esp. different peak hours for different demand source
+                
 
-                  B. Based on different demand sources limits (quotas vs unbounded)
-                      
-                     1. Demand sources limit/quotas set
-                        One thing observed was with different demand sources, throughput metric was consistent but stopper metrics could change. Example, call from FB feed to ranking platform is CPU bound but from Insta feed to ranking platform is Mem bound.
-                        So every services decides the max throughput needed and distributes the quotas to its demand source and set rate limits.
-                      - setting demand source level quotas based on throughput metric and 
-                      - reserving demand source level spike buffer. 
-                        So max capacity at Peak = max(throughput, sum of all quotas on throughput) / throughput per machine
+                 QUESTION : 
                        
-                     2. Demand sources limit/quotas not set (unbounded)
+                     What if Demand sources limit/quotas not set (unbounded)
                       - For viral content, we use promise cache to avoid multiple requests for same resource.
                       - Service level rate limiter with spike buffer
 
-                   So SLA time and quotas solved 35% of the challenge. 10% of the case which were not solvable for following use cases.
-                    1. service violating consistent load test SLA
-                    2. service with multiple demand sources and are unbounded with quotas 
+                   So Sharded + non-Sharded with quotas solved 35% of the challenge. 10% of the case which were not solvable for following use cases.
+                    1. service with multiple demand sources and are unbounded with quotas 
                     They need additional code changes implementing promise cache.
                    
                 How autoscaling is done ? 
