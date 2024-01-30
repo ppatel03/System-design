@@ -1677,6 +1677,7 @@ Distributed best practices
     format
       1. Initiated by Client : Request and Response
       2. Initiated by Server : Data sent 
+    Websocket tunneling is possible with HaProxy LB : http://tinyurl.com/yurdrom2 
 
   REST API naming conventions 
     https://restfulapi.net/resource-naming/ 
@@ -2003,11 +2004,19 @@ Distributed best practices
         - Istio also has another component called Istio ingress gateway (alternative to Nginx ingress controller). So it is hosted in the pod and it accepts the traffic from outside world and help redirect to your internal microservices using VirtualService rules in "gateway" CRD. 
 
   WebSocket - use for bi-directional communication
-    Websocket with load balancer or not - debatable 
-      websocket can be supported with load balancing through websocket tunnel but suggest not to do it https://www.haproxy.com/documentation/hapee/latest/load-balancing/protocols/websocket/ 
+
+
+    Websocket with load balancer : 
+      - Advantage : helps in scaling -  creates new socket connections, update existing HTTP connections to socket. 
+
+
+      Websocket through LB is possible through tunneling and is possible with HaProxy LB : http://tinyurl.com/yurdrom2  
+
       comparison of websocket vs long polling during scaling up / down  
         - https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o 
+
       Some systems does support websocket and load balancer https://bytebytego.com/courses/system-design-interview/nearby-friends 
+      
     Types of socket connections
       https://www.ibm.com/docs/en/zos/2.1.0?topic=sockets-socket-types
       Stream - data transmitted in continuous stream with length so that the receiver can read that length and process the data. Its reliable means data is sent without error or duplication
