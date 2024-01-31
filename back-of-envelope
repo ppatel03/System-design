@@ -379,9 +379,15 @@ Time to understand scalability, latency aspects
                   Wechat still uses per user per message queue. So Group chats, user duplicates messages to all his/her friend's queue
               - Message flows 1:1 with synchronization on muliple devices
 
+        -------------------------------- Interesting open question on websocket ----------------------------
+
               Client <-> Websocket server vs Client <-> LB <-> Websocker server
                 STILL A BIG QUESTION : https://stackoverflow.com/questions/65174175/how-do-websocket-connections-work-through-a-load-balancer 
                 Nice implementatiom : https://dzone.com/articles/load-balancing-of-websocket-connections
+
+                  - Websocket through LB is possible through tunneling and is possible with HaProxy LB : http://tinyurl.com/yurdrom2 
+                  - NGINX LB also  supports WebSocket by allowing a tunnel to be set up between a client and a backend server. https://www.nginx.com/blog/websocket-nginx/ 
+                  - Even companies like Whatsapp goes with this approach ( tried practically)
 
                 Client <-> LB <-> Websocker server
                   Pros
@@ -401,6 +407,8 @@ Time to understand scalability, latency aspects
                       3. Client directly establishes connection to server's public IP
                   Cons
                   - security due to man in middle attack. This can be avoided by establishing Auth first 
+
+          --------------------------------- Interesting open question on websocket ----------------------------
                 
               
             - Online Presence/ Status Fan out 
@@ -2034,7 +2042,9 @@ Distributed best practices
         Nice implementatiom : https://dzone.com/articles/load-balancing-of-websocket-connections
 
         Client <-> LB <-> Websocker server
-           Websocket through LB is possible through tunneling and is possible with HaProxy LB : http://tinyurl.com/yurdrom2  
+           Websocket through LB is possible through tunneling and is possible with HaProxy LB : http://tinyurl.com/yurdrom2 
+           NGINX LB also  supports WebSocket by allowing a tunnel to be set up between a client and a backend server. https://www.nginx.com/blog/websocket-nginx/ 
+           Even companies like Whatsapp goes with this approach ( tried practically)
           Pros
           - helps in scaling -  creates new socket connections, update existing HTTP connections to socket. 
           - more security due to LB's reverse proxy capabilities
