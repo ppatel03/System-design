@@ -377,7 +377,31 @@ Time to understand scalability, latency aspects
                             User C <-> Chat Server A --------
               - Group  chat flow : similar to above where User A can send messsage to multiple Queue's for B and C both
                   Wechat still uses per user per message queue. So Group chats, user duplicates messages to all his/her friend's queue
-              - Message flows 1:1 with synchronization on muliple devices 
+              - Message flows 1:1 with synchronization on muliple devices
+
+              Client <-> Websocket server vs Client <-> LB <-> Websocker server
+                STILL A BIG QUESTION : https://stackoverflow.com/questions/65174175/how-do-websocket-connections-work-through-a-load-balancer 
+                Nice implementatiom : https://dzone.com/articles/load-balancing-of-websocket-connections
+
+                Client <-> LB <-> Websocker server
+                  Pros
+                  - helps in scaling -  creates new socket connections, update existing HTTP connections to socket.  
+                  - more security due to LB's reverse proxy capabilities
+                  - easy to configure Websocket with available LBs like HaProxy or Ngnix 
+                  
+                  Cons
+                  - connection limits (65K) per network IP interface. So LB becomes a bottleneck
+
+                Client <-> Websocket server implmented in https://dzone.com/articles/load-balancing-of-websocket-connections 
+                  Pros 
+                  - easier to scale
+                  - A good way to implement is
+                      1. client connects to LB which forwards requests to Service discovery 
+                      2. Service discovery selects the best websocket chat server to select 
+                      3. Client directly establishes connection to server's public IP
+                  Cons
+                  - security due to man in middle attack. This can be avoided by establishing Auth first 
+                
               
             - Online Presence/ Status Fan out 
             - Others - support media files, E2E Encryption, Improve Load time by multi-datacenter, Retry with Queue
@@ -2003,20 +2027,38 @@ Distributed best practices
         - gather telemetry data - (metrics and tracing) from envoy proxies which can be consumed later by monitoring services like Prometheus or tracing servers, etc. 
         - Istio also has another component called Istio ingress gateway (alternative to Nginx ingress controller). So it is hosted in the pod and it accepts the traffic from outside world and help redirect to your internal microservices using VirtualService rules in "gateway" CRD. 
 
-  WebSocket - use for bi-directional communication
+  WebSocket - use for bi-directional communication 
 
+     Client <-> Websocket server vs Client <-> LB <-> Websocker server
+        STILL A BIG QUESTION : https://stackoverflow.com/questions/65174175/how-do-websocket-connections-work-through-a-load-balancer 
+        Nice implementatiom : https://dzone.com/articles/load-balancing-of-websocket-connections
 
-    Websocket with load balancer : 
-      - Advantage : helps in scaling -  creates new socket connections, update existing HTTP connections to socket. 
+        Client <-> LB <-> Websocker server
+           Websocket through LB is possible through tunneling and is possible with HaProxy LB : http://tinyurl.com/yurdrom2  
+          Pros
+          - helps in scaling -  creates new socket connections, update existing HTTP connections to socket. 
+          - more security due to LB's reverse proxy capabilities
+          - easy to configure Websocket with available LBs like HaProxy or Ngnix 
+          
+          Cons
+          - connection limits (65K) per network IP interface. So LB becomes a bottleneck
 
-
-      Websocket through LB is possible through tunneling and is possible with HaProxy LB : http://tinyurl.com/yurdrom2  
+        Client <-> Websocket server implmented in https://dzone.com/articles/load-balancing-of-websocket-connections 
+          Pros 
+          - easier to scale
+          - A good way to implement is
+              1. client connects to LB which forwards requests to Service discovery 
+              2. Service discovery selects the best websocket chat server to select 
+              3. Client directly establishes connection to server's public IP
+          Cons
+          - security due to man in middle attack. This can be avoided by establishing Auth first
+ 
 
       comparison of websocket vs long polling during scaling up / down  
         - https://dev.to/kevburnsjr/websockets-vs-long-polling-3a0o 
 
       Some systems does support websocket and load balancer https://bytebytego.com/courses/system-design-interview/nearby-friends 
-      
+
     Types of socket connections
       https://www.ibm.com/docs/en/zos/2.1.0?topic=sockets-socket-types
       Stream - data transmitted in continuous stream with length so that the receiver can read that length and process the data. Its reliable means data is sent without error or duplication
