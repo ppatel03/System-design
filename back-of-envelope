@@ -389,7 +389,7 @@ Time to understand scalability, latency aspects
                   - NGINX LB also  supports WebSocket by allowing a tunnel to be set up between a client and a backend server. https://www.nginx.com/blog/websocket-nginx/ 
                   - Even companies like Whatsapp goes with this approach ( tried practically)
 
-                Client <-> LB <-> Websocker server
+                Option 1 : Client <-> LB <-> Websocker server
                   Pros
                   - helps in scaling -  creates new socket connections, update existing HTTP connections to socket.  
                   - more security due to LB's reverse proxy capabilities
@@ -398,7 +398,7 @@ Time to understand scalability, latency aspects
                   Cons
                   - connection limits (65K) per network IP interface. So LB becomes a bottleneck
 
-                Client <-> Websocket server implmented in https://dzone.com/articles/load-balancing-of-websocket-connections 
+                Option 2: Client <-> Websocket server implmented in https://dzone.com/articles/load-balancing-of-websocket-connections 
                   Pros 
                   - easier to scale
                   - A good way to implement is
@@ -407,6 +407,9 @@ Time to understand scalability, latency aspects
                       3. Client directly establishes connection to server's public IP
                   Cons
                   - security due to man in middle attack. This can be avoided by establishing Auth first 
+
+                Option 3: connect with L3 LB 
+                  https://stackoverflow.com/questions/12526265/loadbalancing-web-sockets?rq=4 
 
           --------------------------------- Interesting open question on websocket ----------------------------
                 
@@ -2037,31 +2040,39 @@ Distributed best practices
 
   WebSocket - use for bi-directional communication 
 
-     Client <-> Websocket server vs Client <-> LB <-> Websocker server
-        STILL A BIG QUESTION : https://stackoverflow.com/questions/65174175/how-do-websocket-connections-work-through-a-load-balancer 
-        Nice implementatiom : https://dzone.com/articles/load-balancing-of-websocket-connections
+     -------------------------------- Interesting open question on websocket ----------------------------
 
-        Client <-> LB <-> Websocker server
-           Websocket through LB is possible through tunneling and is possible with HaProxy LB : http://tinyurl.com/yurdrom2 
-           NGINX LB also  supports WebSocket by allowing a tunnel to be set up between a client and a backend server. https://www.nginx.com/blog/websocket-nginx/ 
-           Even companies like Whatsapp goes with this approach ( tried practically)
-          Pros
-          - helps in scaling -  creates new socket connections, update existing HTTP connections to socket. 
-          - more security due to LB's reverse proxy capabilities
-          - easy to configure Websocket with available LBs like HaProxy or Ngnix 
-          
-          Cons
-          - connection limits (65K) per network IP interface. So LB becomes a bottleneck
+              Client <-> Websocket server vs Client <-> LB <-> Websocker server
+                STILL A BIG QUESTION : https://stackoverflow.com/questions/65174175/how-do-websocket-connections-work-through-a-load-balancer 
+                Nice implementatiom : https://dzone.com/articles/load-balancing-of-websocket-connections
 
-        Client <-> Websocket server implmented in https://dzone.com/articles/load-balancing-of-websocket-connections 
-          Pros 
-          - easier to scale
-          - A good way to implement is
-              1. client connects to LB which forwards requests to Service discovery 
-              2. Service discovery selects the best websocket chat server to select 
-              3. Client directly establishes connection to server's public IP
-          Cons
-          - security due to man in middle attack. This can be avoided by establishing Auth first
+                  - Websocket through LB is possible through tunneling and is possible with HaProxy LB : http://tinyurl.com/yurdrom2 
+                  - NGINX LB also  supports WebSocket by allowing a tunnel to be set up between a client and a backend server. https://www.nginx.com/blog/websocket-nginx/ 
+                  - Even companies like Whatsapp goes with this approach ( tried practically)
+
+                Option 1 : Client <-> LB <-> Websocker server
+                  Pros
+                  - helps in scaling -  creates new socket connections, update existing HTTP connections to socket.  
+                  - more security due to LB's reverse proxy capabilities
+                  - easy to configure Websocket with available LBs like HaProxy or Ngnix 
+                  
+                  Cons
+                  - connection limits (65K) per network IP interface. So LB becomes a bottleneck
+
+                Option 2: Client <-> Websocket server implmented in https://dzone.com/articles/load-balancing-of-websocket-connections 
+                  Pros 
+                  - easier to scale
+                  - A good way to implement is
+                      1. client connects to LB which forwards requests to Service discovery 
+                      2. Service discovery selects the best websocket chat server to select 
+                      3. Client directly establishes connection to server's public IP
+                  Cons
+                  - security due to man in middle attack. This can be avoided by establishing Auth first 
+
+                Option 3: connect with L3 LB 
+                  https://stackoverflow.com/questions/12526265/loadbalancing-web-sockets?rq=4 
+
+          --------------------------------- Interesting open question on websocket ----------------------------
  
 
       comparison of websocket vs long polling during scaling up / down  
