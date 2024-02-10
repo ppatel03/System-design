@@ -256,7 +256,7 @@ Time to understand scalability, latency aspects
 
       c. Think about edge cases for product
         1. Rate limiter 
-          - Algorithms (Token bucket - bucket fill rate and bucket capacity, sliding window is the best), 
+          - Algorithms (Token bucket - bucket fill rate and bucket capacity, fixed window, sliding window is the best), 
           - distributed counting using redis (single threaded and hence atomic)
         2. Consistent Hashing 
           - Ring formation, 
@@ -278,7 +278,7 @@ Time to understand scalability, latency aspects
               - Version vector data structure : [version at node1, version at node2] | [[value at node1], [value at node2]]
                   https://www.youtube.com/watch?v=1BXCxpcsmzc&t=622s&ab_channel=Jordanhasnolife 
           - Handle failures 
-            - detection using gossip protocol 
+            - detection using gossip protocol or using zookeeeper
             - temporary failures from sloppy quorum and hinted handoffs (changes since last failure is synced back to replica)
             - permanent failures - use merklee tree to detect selected discrepancies and replicate rather than sending entire DB data over the network. Example Dynamo uses Merklee Tree during Anti-Entropy process (https://www.youtube.com/watch?v=Jy4Cm2WEZVg&ab_channel=Jordanhasnolife )
           - Flow : 
@@ -300,7 +300,7 @@ Time to understand scalability, latency aspects
             - Techniques 
               - hash + collison resolution 
                 - SHA-1 (120 bits), SHA-256 (256 bits)
-                - blook filter to improve look up 
+                - bloom filter to improve look up 
               - Base 62 conversion 
                 - unique id generator % 62 
               - Hash vs Base 62 
