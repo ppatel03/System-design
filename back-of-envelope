@@ -358,6 +358,9 @@ Time to understand scalability, latency aspects
                                                                         -> User data 
                                                                         -> News Feed Cache
                                                                         -> Notification service 
+                Fanout service over Dataflow Pipeline like Spark, Flink 
+                  - Intermediate state maintenance is easier with Fanout service
+                  - Atomicity or distributed transaction across heterogeneous is easier because of single co-ordinator
             - Feed fetch flow
                - Client/Browser -> LB -> feed-fetcher (online path) -> News Feed cache (set of post ids)
                                                                     -> Post cache (post details) -> Post DB 
