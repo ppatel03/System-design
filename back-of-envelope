@@ -344,7 +344,7 @@ Time to understand scalability, latency aspects
             - Notification setting (opt in / opt out)
             - Rate limiting
             - Retry (PUT IT BACK TO THE QUEUE)
-            - Security (certificate upload, Appkey/appSecret pair)
+            - Security (certificate upload, Appkey/appSecret pair between our notification service and providers)
             - Monitor queued notifications
             - Events tracking 
           8. Design A News Feed System
