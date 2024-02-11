@@ -441,11 +441,13 @@ Time to understand scalability, latency aspects
               - Others - multi-criteria ranking, online update Vs offline batch update
           11. Design Youtube
               - High level design 
-                - Upload flow 
-                    Browser/Client ->               API Service .       ->          MetaData DB 
-                              |                           |                              ^
-                              V                           v                              | update once transcoding is complete 
-                          (multipart upload) Block / Video Storage    ->         Transcode Service -> Transcoded Storage (S3) -> CDN
+                - Upload flow (Grokking)
+                    Browser/Client ->  API Service   ------------->    MetaData DB 
+                                            |                              ^
+                                            |                              | update once transcoding is complete 
+                                            v                              |
+                                          Queue    -----------------> Transcode Service -----> Transcoded Storage (S3) -> CDN
+                                                                          (DAG)
 
                 - Why Video transcoding (different resolutions, video formats (HLS, DASH), fps, bit rate)
                 - DAG model for video ( Video, Audio, Metadata. Video has further parallel step -> transcoding different resolutions, thumbnail, watermark)
@@ -454,6 +456,7 @@ Time to understand scalability, latency aspects
                 - Video Protection - AES encryption, watermarking 
                 - Others - Live streaming, scaling the database
             12. Design Google Drive
+
               - High level design
                   Browser/Client  -> Block server (socket) -> Object storage 
                               |        | on completion 
@@ -462,10 +465,20 @@ Time to understand scalability, latency aspects
                                                     | notifies
                                                     V
                                                   Notification service
+
+              
               - Block server (avoid uploading entire file and instead focus only on changed lines by breaking into blocks, compression, encryption. The server supports delta detection)
-              - High consistency on metadata DB (User -> workspace -> file -> versions -> block id )
-              - Upload flow (connects to API Server -> Gets Block server -> on completion of block upload -> Notification service)
-              - Download flow (from notification service -> downloads metadata about block ids -> downloads blocks from block server)
+                - why dropbox breaks into 4MB
+                   - max block size is 4MB in block storage - http://tinyurl.com/2ya6opzs
+                 - why File chunking, hashing and encryption on block server over client side
+                  - client side is less secure, needs different implements on iOS, Android, WEB
+                
+              - High consistency on metadata DB 
+                  - User -> workspace (id, user id) -> file (id, workspace id) -> versions (id, file id, version number) -> block (id, version id) 
+              - Upload flow 
+                  connects to API Server -> Gets Block server -> on completion of block upload -> Notification service
+              - Download flow 
+                  from notification service -> downloads metadata about block ids -> downloads blocks from block server
               - Save storage space (discard old versions, set a limit on versions, dedup blocks, move to cold storage)
               - How to resolve conflicts https://www.youtube.com/watch?v=0TJtwV29cjM&ab_channel=CrushingTechEducation 
                   - locks by line but its low performant
@@ -482,8 +495,23 @@ Time to understand scalability, latency aspects
                           {(H,0.1), (i, 0.5)} U insert {(i,0.2), (!,0.6)} = {(H,0.1), (i, 0.2), (i, 0.5), (!,0.6)}
             13. Proximity Service
               - High level design
+                  -  Browser/Client -> LB -> API Service -> DB
 
-                  - use GeoHash (size of planet ~ 5K * 5K km ~ 5 * 10 ^3 ~ 10 ^ 4.  Each divides by 4. So total 6 level nested geohash = 4 ^ 6 = 4096 )
+                  - MySQL look up is expensive due to latitude and longitude indexes are expensive 
+                  - Other techniques
+                      - use GeoHash (size of planet ~ 5K * 5K km ~ 5 * 10 ^3 ~ 10 ^ 4.  Each divides by 4. So total 6 level nested geohash = 4 ^ 6 = 4096 ) - Redis, Bing map, Lyft
+                        - Pros 
+                            - faster look up in computing and fetching business by geo hash 
+                            - less operational overhead 
+                        - Cons 
+                            - popular cities will have many business under same geohash
+                            - boundary issues (closer business in different geohash. So go with shared prefix with an exception that equator divison has no shared prefix.)
+                      - use Quadtree (keep dividing till min number of business in each grid) - Yext
+                        - Pros 
+                            - solves popular cities problem of Geohash
+                        - Cons 
+                           - in memory challenge and operational start up time to construct / update quad tree
+                      - Google S2 - Google Maps, Tinder
                   Browser/Client -> LB -> API Service -> Geo hash DB (redis)
                                                       -> DB (business info)
 
@@ -492,12 +520,9 @@ Time to understand scalability, latency aspects
                     business id -> location info (lat and long), name, etc.
                   search info
                     geohash -> business id 
-              - Techniques 
-                1. GeoHash (boundary challenges ) - Redis, Bing map, Lyft
-                2. Quadtree (in memory challenge and operational start up time ) - Yext
-                3. Google S2 - Google Maps, Tinder
+             
               - Sharding (not needed since entire dataset can fit in memory)
-              - Multi data center 
+              - Performance - Multi data center set up
               - Country with privacy laws (only route traffic to that country's datacenter)
             14. Nearby Friends 
               - High level design 
