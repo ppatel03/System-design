@@ -626,7 +626,7 @@ Time to understand scalability, latency aspects
                   - hotel (hotel id, ..)
                   - user (user id, ..)
                   - room_type_inventory (hotel id, room type id, # available)
-                  - reservation (hotel id, room type id, reservation id, user id, start date, end date)
+                  - reservation (reservation id, hotel id, room type id,  user id, start date, end date)
                   - room (room id, room type id, floor) populated during check-in
               - concurrency issues 
                 - Pessimistic locking (like Serializable isolation, low performant, depends on DB support for locking)
@@ -654,7 +654,7 @@ Time to understand scalability, latency aspects
               - Queries : 
                 1. get all folders + get all emails from folders -> parition key (user id, folder_id) + sort key (message_id which is time based UUID)
                 - Email threads could be identified by using message_id
-                2. get all read + unread emails : extract all using userid+folder_id and perform filtering but its expensive to perform filtering at large scale. So use denormalized. tables for read and unread emails.
+                2. get all read + unread emails : extract all using userid+folder_id and perform filtering but its expensive to perform filtering at large scale. So use denormalized tables for read and unread emails.
               - Email deliverability - dedicated IPs, Separate servers for promotion emails, Email sender reputation, Ban spammers, Feedback processing, Good relationship with ISPS
               - Authentication : SPF (sender policy framework, Domain based message authentication). As an example, you can see that in "signed-by" section to every email
               - Search store : elastic search out of box 
@@ -670,7 +670,7 @@ Time to understand scalability, latency aspects
                   Upload flow : store basic info in Metadata DB, uploads the file via Data store service, gets the object id, stores in Metadata DB
                   Download flow : Using bucket name and object_name, looks up the Metadata DB for object id and fetch the object from data store service
               - Data store (append only, different files as segments, separate object_mapping table -> object id, file_name, offset, data size)
-              - Durability ( more replicas vs parity bits which is optimized)
+              - Durability ( more replicas vs parity bits which is optimized for space but low speed because of parity computation)
               - Integrity using checksum 
               - Metadata sharding 
                   - shard by bucket name, object name since most queries are based on that
