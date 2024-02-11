@@ -346,7 +346,7 @@ Time to understand scalability, latency aspects
             - Retry (PUT IT BACK TO THE QUEUE)
             - Security (certificate upload, Appkey/appSecret pair between our notification service and providers)
             - Monitor queued notifications
-            - Events tracking 
+            - Events tracking (state of notification)
           8. Design A News Feed System
             - build timeline On-Demand vs Push
               - on-demand for celebrities posts (> 1 M followes)
