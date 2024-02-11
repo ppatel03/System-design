@@ -365,7 +365,12 @@ Time to understand scalability, latency aspects
                - Client/Browser -> LB -> feed-fetcher (online path) -> News Feed cache (set of post ids)
                                                                     -> Post cache (post details) -> Post DB 
                                                                     -> User data (name, profile picture)
-            - Others - Scaling, DB, Replication, Consistency, DB sharding, Multiple data centers, Metrics monitoring 
+            - Need for caching to achieve us latency 
+            - Others 
+              - Scaling each component
+              - DB - sharding, Replication and consistency different levels ( read after write consistency, per user sequential consitency)
+              - Multiple data centers 
+              - Metrics monitoring 
           9. Design A Chat System
             - Polling vs Long Polling vs WebSocket
             - Data model ? 
