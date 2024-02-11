@@ -600,8 +600,8 @@ Time to understand scalability, latency aspects
                                                                                  -> Visualization 
               - Push vs Pull
               - Queue for Metrics Collector (parition by metrics name, topic by region, further tags for filters, )
-              - Storage optimization (RLE/Delta compression, downsampling & retention )
-              - Alerting system (how to dedup)
+              - Storage optimization (RLE and Delta compression, downsampling & retention )
+              - Alerting system (how to dedup - check if alert message is already provided)
               - Visualization system - Grafana as open source
             17. Ad Click Event Aggregation
               - Data model
