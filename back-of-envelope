@@ -1319,7 +1319,7 @@ Distributed Systems estimate
         5 ms
         600 MB/s on 25 Gbps network on AWS 
         1 million messages per second
-        i3en.2xlarge instance type (with 8 vCores, 64 GB RAM, 2 x 2,500 GB NVMe SSDs)
+        i3en.2xlarge instance type (with 16 vCores, 64 GB RAM, 2 x 2,500 GB NVMe SSDs)
     - Azure Redis Cache : 
         53 GB, with 99.9% availability (https://github.com/Huachao/azure-content/blob/master/articles/redis-cache/cache-faq.md)
         230 us (https://redis.io/docs/management/optimization/latency/)
