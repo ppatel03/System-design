@@ -751,9 +751,24 @@ Time to understand scalability, latency aspects
                              DB                        Resource manager(YARN)  ---------------------> Workers 
                                                                                (query host resources)
 
+            25. Skyscanner ( price drop alerting system)
+              - https://excalidraw.com/#room=47267ffe5868ab0f2007,UNO6JqgrtVZwYNRVl3G0sw 
+              IF YOU HAVE MORE THAN 1 CONTINOUS COMPONENT
+                alert-service (fan-out service)
+                  1. query DB and getting routes
+                  2. query APIs for routs
+                  3. form the url and send to price-price to get e price
+                  4. ask the eligibility service
+                  5. send to notification
+
+              - PIPELINE over FAN OUT DESIGN 
+                - When you do not need to send acknowledgement back to user ( not a deal breaker since you can provide status api to user )
+                - When your dependent jobs and time-consuming 
+
 
       d. Some well-known challenges 
-        1. Queue
+        1.1 ALWAYS CHOOSE QUEUE WHEN YOU HAVE MORE THAN ONE CONTINOUS SYSTEM https://excalidraw.com/#room=47267ffe5868ab0f2007,UNO6JqgrtVZwYNRVl3G0sw 
+        1.2 Queue challenges
           a. Exactly once if queue is used. 
             - retry on producer end 
             - idempotency on consumer end with additional consideration if you have already processed downstream or not (use rolling bloom filter for checking which does garbage collection based on watermarked time. https://cloud.google.com/dataflow/docs/concepts/exactly-once#latency )
