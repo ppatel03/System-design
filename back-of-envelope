@@ -630,6 +630,7 @@ Time to understand scalability, latency aspects
                   - room_type_inventory (hotel id, room type id, # available)
                   - reservation (reservation id, hotel id, room type id,  user id, start date, end date)
                   - room (room id, room type id, floor) populated during check-in
+              - Idempotency through checkout id
               - concurrency issues 
                 - Pessimistic locking (like Serializable isolation, low performant, depends on DB support for locking)
                 - Optimistic locking 
