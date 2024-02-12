@@ -245,7 +245,9 @@ Time to understand scalability, latency aspects
             - Time strucutured merge tree - InfliuxDB, Prometheus
           
 
-        - data model, 
+        - data model
+          - if noSQL, 1:many is separate table of <parent_id, list of child_ids>
+          - if SQL, 1:many is parent table, child table ( child_id, parent_id)
         Advanced
         - sharding (from back of envelope), 
         - replication (back of envelope), 
