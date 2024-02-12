@@ -733,7 +733,13 @@ Time to understand scalability, latency aspects
                 2. TCC (Try Confirm/Cancel)  - leaves DB in inconsistent state but application has full control to handle it.
                 3. Saga - Best choice for microservice. Can be Decentralized and Orchestration using co-ordinator but unlike TCC, its slow. 
                 For 2 and 3 to handle unbalances state, use phase status table (transaction_id, phase_type, name, status, out_of_order flag for network lag)
+
               - Event sourcing with materialized views 
+
+                So  With Saga or TCC
+                      Client -> LB -> Wallet Service (Orchestrator) ---> Commands to Partition 1 which has A balance --> DB partition 1
+                                                                    ---> Commans to Partition 2 which has B balance  --> DB partition 2
+                                                                    
             24. Distributed Job scheduler
               - High level design
                                       + Retry
