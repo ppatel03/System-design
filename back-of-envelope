@@ -370,7 +370,7 @@ Time to understand scalability, latency aspects
             - Need for caching to achieve us latency 
             - Others 
               - Scaling each component
-              - DB - sharding, Replication and consistency different levels ( read after write consistency, per user sequential consitency)
+              - DB - sharding, Replication and consistency different levels ( read after write consistency for post, per user sequential consitency for news feed)
               - Multiple data centers 
               - Metrics monitoring 
           9. Design A Chat System
