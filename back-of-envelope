@@ -765,6 +765,10 @@ Time to understand scalability, latency aspects
                 - When you do not need to send acknowledgement back to user ( not a deal breaker since you can provide status api to user )
                 - When your dependent jobs and time-consuming 
 
+              - FAN-OUT DESIGN Disadvantages
+                - Failure in one results in restarting the job (lose durability)
+                - A dependent time consuming job keeps the resources blocked 
+
 
       d. Some well-known challenges 
         1.1 ALWAYS CHOOSE QUEUE WHEN YOU HAVE MORE THAN ONE CONTINOUS SYSTEM https://excalidraw.com/#room=47267ffe5868ab0f2007,UNO6JqgrtVZwYNRVl3G0sw 
