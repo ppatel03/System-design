@@ -672,7 +672,7 @@ Time to understand scalability, latency aspects
 
                   Upload flow : store basic info in Metadata DB, uploads the file via Data store service, gets the object id, stores in Metadata DB
                   Download flow : Using bucket name and object_name, looks up the Metadata DB for object id and fetch the object from data store service
-              - Data store (append only, different files as segments, separate object_mapping table : object id -> file_name, offset, data size)
+              - Data store (append only, different files as segments, separate object_mapping table : object id -> file_name, offset, data size, checksum)
               - Durability 
                   - ( more replicas vs parity bits which is optimized for space but low speed because of parity computation)
                   - Example 
