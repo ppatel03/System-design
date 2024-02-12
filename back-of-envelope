@@ -743,8 +743,8 @@ Time to understand scalability, latency aspects
                                                                     
             24. Distributed Job scheduler
               - High level design
-                                      + Retry
-                  Jobs -> Consumer -> Queue -> Consumer (Driver) ----------(schedule)--------------> Workers 
+                                        + Retry
+                  Jobs -> Consumer ----> Queue -------> Consumer (Driver) ----------(schedule)--------------> Workers 
                               |                            |
                               |                            | (which hosts to schedule)
                               V                            V
