@@ -670,7 +670,11 @@ Time to understand scalability, latency aspects
                   Upload flow : store basic info in Metadata DB, uploads the file via Data store service, gets the object id, stores in Metadata DB
                   Download flow : Using bucket name and object_name, looks up the Metadata DB for object id and fetch the object from data store service
               - Data store (append only, different files as segments, separate object_mapping table : object id -> file_name, offset, data size)
-              - Durability ( more replicas vs parity bits which is optimized for space but low speed because of parity computation)
+              - Durability 
+                  - ( more replicas vs parity bits which is optimized for space but low speed because of parity computation)
+                  - Example 
+                    - with replicas : 4 bit data (d1, d2, d3 and d4) will have its copies. So its  2 * (d1, d2, d3 and d4) ~ 8 
+                    - with parity : 4 bit data (d1, d2, d3 and d4) will only have its 2 parity bits. So its  2 + (d1, d2, d3 and d4) ~ 6
               - Integrity using checksum 
               - Metadata sharding 
                   - shard by bucket name, object name since most queries are based on that
@@ -691,7 +695,7 @@ Time to understand scalability, latency aspects
                   fetch rank using ZREVRANK leaderboard_feb_2021 'mary1934'
                   if above returns 361, fetch 10 nearby ranks using  ZREVRANGE leaderboard_feb_2021 357 365
               - Paritioning 
-                  - fixed parition using scores (easy for reads esp. top 10, hard for writes since users will keep moving across parition for score updates)
+                  - fixed partition using scores (easy for reads esp. top 10, hard for writes since users will keep moving across parition for score updates)
                   - hash slot based partition based on key (hard to get top 10, need to read every shard). One option is you can return scores in percentiles which is rank within shard.
               - Other DB option is Dynamo which uses consistent hashing 
                   - If game_id, date is used as shard, then what about hot shard for recent game. Add random number across the key and distribute it across the shard. Only challenge is it adds reads complexity to get partition #. 
