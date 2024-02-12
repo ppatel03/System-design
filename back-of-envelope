@@ -695,7 +695,7 @@ Time to understand scalability, latency aspects
                   fetch rank using ZREVRANK leaderboard_feb_2021 'mary1934'
                   if above returns 361, fetch 10 nearby ranks using  ZREVRANGE leaderboard_feb_2021 357 365
               - Paritioning 
-                  - fixed partition using scores (easy for reads esp. top 10, hard for writes since users will keep moving across parition for score updates)
+                  - fixed partition using scores which is range partitioning (easy for reads esp. top 10, hard for writes since users will keep moving across parition for score updates)
                   - hash slot based partition based on key (hard to get top 10, need to read every shard). One option is you can return scores in percentiles which is rank within shard.
               - Other DB option is Dynamo which uses consistent hashing 
                   - If game_id, date is used as shard, then what about hot shard for recent game. Add random number across the key and distribute it across the shard. Only challenge is it adds reads complexity to get partition #. 
