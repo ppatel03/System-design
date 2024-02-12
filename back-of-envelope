@@ -2609,7 +2609,7 @@ Distributed systems today and Benchmarking on common systems
             - Why PoP
             - If CDN is used at receivers device, how updates on manifest file and video is published
               1. use TTL. when cache reaches TTL 
-              2. OR use push updates to the cache
+              2. OR use push updates to the CDN and cache
             - How to avoid thundering herd ? 
               - USE PROMISE CACHE. 
                   - basically if say 1 M clients requests for same item and there is cache miss. So instead of forwarding all requests to DB, only one request is made to DB to populate the cache. Rest all the requests are given promises.
