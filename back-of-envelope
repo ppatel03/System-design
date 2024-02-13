@@ -772,7 +772,10 @@ Time to understand scalability, latency aspects
 
       d. Some well-known challenges 
         1.1 ALWAYS CHOOSE QUEUE WHEN YOU HAVE ASYNC SYSTEM AND MORE THAN ONE CONTINOUS SYSTEM https://excalidraw.com/#room=47267ffe5868ab0f2007,UNO6JqgrtVZwYNRVl3G0sw 
-        1.2 Queue challenges
+        1.2 Why Queue
+            - increase durability (no data loss)
+            - scaling independently 
+        1.3 Queue challenges
           a. Exactly once if queue is used. 
             - retry on producer end 
             - idempotency on consumer end with additional consideration if you have already processed downstream or not (use rolling bloom filter for checking which does garbage collection based on watermarked time. https://cloud.google.com/dataflow/docs/concepts/exactly-once#latency )
