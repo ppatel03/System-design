@@ -3638,9 +3638,9 @@ Distributed systems today and Benchmarking on common systems
           - Draw Data model first
 
            http://tinyurl.com/26jf4dtq 
-          - SQL : Relationship + Read heavy, Write less + B tree  + Fixed schema
-          - no SQL like DynamoDB : Write less + B tree  + Schema flexbility 
-          - no SQL like CassandraDB : Write heavy + LSM tree + 
+          - SQL :                       Read heavy + B tree  + Fixed schema + Relationship + no Sharding ( hard to shared but arguable with AWS Aurora)
+          - no SQL like DynamoDB :      Write less + B tree  + Schema flexbility 
+          - no SQL like CassandraDB :   Write heavy + LSM tree + Schema flexibility
 
 
       2.  MySQL vs MongoDB
