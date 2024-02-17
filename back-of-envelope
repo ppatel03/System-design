@@ -229,25 +229,24 @@ Time to understand scalability, latency aspects
 
     In-depth 
       a. think about data layer 
-        - choice of database, 
-          - nature of workload : 
-            - read heavy, write less - B Tree
-            - read less, write more - LSM tree + SSTable 
-            - read heavy, write heavy - LSM tree + SSTable DBs with Sparse Index + bloom filter
-            - read heavy, burst writes - Time structured merge tree  
-          - sharding support 
-            - noSQL DB like DynamoDB if yes ( even SQL DBs like MySQL, Postgresql support sharding but its very hard. You need to manually created sharded tables and create application logic based on this - https://www.squash.io/tutorial-on-database-sharding-in-postgresql/.  DynamoDB provides out-of-box solution and supports in-built sharding cluster)
-            - SQL DB if no 
-          - selection
-            - B Tree  + SQL - MySQL
-            - B Tree + noSQL - DynamoDB, MongoDB
-            - LSM Tree + SSTable + noSQL - Cassandra, Rocks DB, Hive
-            - Time strucutured merge tree - InfliuxDB, Prometheus
-          
+          1. Draw Data model first
+            - if noSQL, 1:many is separate table of <parent_id, list of child_ids>
+            - if SQL, 1:many is parent table, child table ( child_id, parent_id)
+           
+          2. Choose the database
+            - SQL :                       Read heavy + B tree  + Fixed schema + Relationship + no Sharding ( hard to shared but arguable with AWS Aurora)
+            - no SQL like DynamoDB :      Write less + B tree  + Schema flexbility
+            - no SQL like MongoDB :       Write less + B tree  + Schema flexbility + Document DB
+            - no SQL like CassandraDB :   Write heavy + Read heavy + LSM tree, SS Table with sparse index + Schema flexibility 
+            - Timeseries DB - InfliuxDB, Prometheus:   Write heavy + Burst Read + TSM tree + Schema flexibility 
 
-        - data model
-          - if noSQL, 1:many is separate table of <parent_id, list of child_ids>
-          - if SQL, 1:many is parent table, child table ( child_id, parent_id)
+         
+          - sharding support 
+            - With AWS offers, both SQL DB like AWS Aurora and DynamoDB supports sharding http://tinyurl.com/26jf4dtq 
+            - Without AWS offers, SQL DB like MySQL, Postgresql are hard to shard - https://www.squash.io/tutorial-on-database-sharding-in-postgresql/
+            
+          
+          
         Advanced
         - sharding (from back of envelope), 
         - replication (back of envelope), 
@@ -3637,7 +3636,7 @@ Distributed systems today and Benchmarking on common systems
 
           - Draw Data model first
 
-           http://tinyurl.com/26jf4dtq 
+           http://tinyurl.com/26jf4dtq (SQL vs DynamoDB)
           - SQL :                       Read heavy + B tree  + Fixed schema + Relationship + no Sharding ( hard to shared but arguable with AWS Aurora)
           - no SQL like DynamoDB :      Write less + B tree  + Schema flexbility 
           - no SQL like CassandraDB :   Write heavy + LSM tree + Schema flexibility
