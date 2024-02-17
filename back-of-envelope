@@ -18,7 +18,9 @@ Framework -
   2. Scale 
     2.1 Estimate QPS 
       a. Estimate Read vs Write QPS 
-              
+
+    NOW TELL THAT YOU WILL ESTIMATE AT HIGH LEVEL ONLY 
+           
     2.2 Estimate bandwith quickly
       b. Estimate bandwidth per user for read and write QPS 
       c. Estimate bandwidth in total for read and write QPS
@@ -100,6 +102,7 @@ Time to understand scalability, latency aspects
           - 1 month ~ 3 * 10 ^ 6s and further ~ 10 ^ 6s
           - 1 year ~ 365 * 10 ^ 5s and further ~ 10 ^ 8s
           For sake of time constraints, do not hesitate to round off large amount
+
 
   b. Estimate bandwidth for read and write QPS 
       say 1 KB for 100K QPS ~ 100 MBps
