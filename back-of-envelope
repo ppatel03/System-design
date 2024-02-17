@@ -20,7 +20,7 @@ Framework -
       a. Estimate Read vs Write QPS 
 
     NOW TELL THAT YOU WILL ESTIMATE AT HIGH LEVEL ONLY 
-           
+
     2.2 Estimate bandwith quickly
       b. Estimate bandwidth per user for read and write QPS 
       c. Estimate bandwidth in total for read and write QPS
@@ -238,7 +238,7 @@ Time to understand scalability, latency aspects
             - if SQL, 1:many is parent table, child table ( child_id, parent_id)
            
           2. Choose the database
-            - SQL :                       Read heavy (B tree)  + Fixed schema + Relationship + no Sharding ( hard to shared but arguable with AWS Aurora)
+            - SQL :                       Read heavy (B tree)  + Fixed schema + Relationship + no Sharding ( hard to shared but arguable with AWS RDS - http://tinyurl.com/2b6no2zs )
             - no SQL like DynamoDB :      Read heavy(B tree)  + Schema flexbility
             - no SQL like MongoDB :       Read heavy(B tree)  + Schema flexbility + Document DB
             - no SQL like CassandraDB :   Write heavy(LSM tree + SS Table with sparse index) + Schema flexibility
@@ -247,7 +247,7 @@ Time to understand scalability, latency aspects
 
          
           - sharding support 
-            - With AWS offers, both SQL DB like AWS Aurora and DynamoDB supports sharding http://tinyurl.com/26jf4dtq 
+            - With AWS offers, both SQL DB like AWS RDS and DynamoDB supports sharding http://tinyurl.com/2b6no2zs  
             - Without AWS offers, SQL DB like MySQL, Postgresql are hard to shard - https://www.squash.io/tutorial-on-database-sharding-in-postgresql/
             
           
