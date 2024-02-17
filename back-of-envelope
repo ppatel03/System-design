@@ -3632,29 +3632,16 @@ Distributed systems today and Benchmarking on common systems
         
 
   Attempt to standardized DB selection criteria 
-      1. MySQL vs noSQL 
+      1. SQL vs noSQL 
 
-            When MySQL
-            if ACID, 
-              then MYSQL (high confidence)
-            if reasonable size (< 1 TB) not expected to scale rapidly,
-              if heavy reads (reading from read replicas is faster) 
-                if low writes 
-                  then MySQL (high confidence)
-                if heavy writes (else have to keep synchronizing and index making)
-                  then MySQL (low confidence)
-            If db needs rapid scale (size keeps growing)
-              if manual sharding is needed ( say by user id )
-                if sharding has all related rows (try to denormalize)
-                  if there are less aggregations 
-                    then MySQL (medium confidence)
-                  if there are more aggregations 
-                    then MySQL (low confidence since aggregations with sharding could be better achieved with noSQL DBs like MongoDB, Cassandra)
-            If db needs better search performance (not full text search)  
-              if index-ing on fixed columns,
-                then MySQL (high confidence)
-              if db experience heavy writes
-                then MySQL (low confidence since indexes increases write latency) 
+
+          - Draw Data model first
+
+           http://tinyurl.com/26jf4dtq 
+          - SQL : Relationship + Read heavy, Write less + B tree  + Fixed schema
+          - no SQL like DynamoDB : Write less + B tree  + Schema flexbility 
+          - no SQL like CassandraDB : Write heavy + LSM tree + 
+
 
       2.  MySQL vs MongoDB
 
