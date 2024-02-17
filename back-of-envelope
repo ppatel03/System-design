@@ -226,6 +226,7 @@ Time to understand scalability, latency aspects
       - map-reduce if needs to be sequential 
     c. data layer (just add the box data layer) 
     d. cover all API interactions at high level
+    e. atleast one domain specific problem
 
     In-depth 
       a. think about data layer 
@@ -234,18 +235,18 @@ Time to understand scalability, latency aspects
             - if SQL, 1:many is parent table, child table ( child_id, parent_id)
            
           2. Choose the database
-            - SQL :                       Read heavy + B tree  + Fixed schema + Relationship + no Sharding ( hard to shared but arguable with AWS Aurora)
-            - no SQL like DynamoDB :      Write less + B tree  + Schema flexbility
-            - no SQL like MongoDB :       Write less + B tree  + Schema flexbility + Document DB
-            - no SQL like CassandraDB :   Write heavy + Read heavy + LSM tree, SS Table with sparse index + Schema flexibility 
-            - Timeseries DB - InfliuxDB, Prometheus:   Write heavy + Burst Read + TSM tree + Schema flexibility 
+            - SQL :                       Read heavy (B tree)  + Fixed schema + Relationship + no Sharding ( hard to shared but arguable with AWS Aurora)
+            - no SQL like DynamoDB :      Read heavy(B tree)  + Schema flexbility
+            - no SQL like MongoDB :       Read heavy(B tree)  + Schema flexbility + Document DB
+            - no SQL like CassandraDB :   Write heavy(LSM tree + SS Table with sparse index) + Schema flexibility
+            - no SQL like CassandraDB with read heavy :   Write heavy, Read heavy (LSM tree + SS Table with sparse index + bloom filter) + Schema flexibility 
+            - Timeseries like InfliuxDB, Prometheus:   Write heavy + Burst Read + TSM tree + Schema flexibility 
 
          
           - sharding support 
             - With AWS offers, both SQL DB like AWS Aurora and DynamoDB supports sharding http://tinyurl.com/26jf4dtq 
             - Without AWS offers, SQL DB like MySQL, Postgresql are hard to shard - https://www.squash.io/tutorial-on-database-sharding-in-postgresql/
             
-          
           
         Advanced
         - sharding (from back of envelope), 
@@ -703,7 +704,8 @@ Time to understand scalability, latency aspects
                   - If game_id, date is used as shard, then what about hot shard for recent game. Add random number across the key and distribute it across the shard. Only challenge is it adds reads complexity to get partition #. 
                   - One option is you can return scores in percentiles which is rank within shard.
               - How to implement  report scores if there is a Tie (may be one which got the score first - so timestamp based)
-            22. Payment System
+            22. Payment System 
+                PLEASE REFER THIS VIDEO : http://tinyurl.com/2978ktbs 
               - High level design 
                   Pay-in flow
 
