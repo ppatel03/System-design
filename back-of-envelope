@@ -238,7 +238,7 @@ Time to understand scalability, latency aspects
             - if SQL, 1:many is parent table, child table ( child_id, parent_id)
            
           2. Choose the database
-            - SQL :                       Read heavy (B tree)  + Fixed schema + Relationship + no Sharding ( hard to shared but arguably possible with AWS RDS - http://tinyurl.com/2b6no2zs )
+            - SQL :                       Read heavy (B tree)  + Fixed schema + Relationship + no Sharding ( sharding is manual even with AWS RDS - http://tinyurl.com/2yapkhgn  )
             - no SQL like DynamoDB :      Read heavy(B tree)  + Schema flexbility
             - no SQL like MongoDB :       Read heavy(B tree)  + Schema flexbility + Document DB
             - no SQL like CassandraDB :   Write heavy(LSM tree + SS Table with sparse index) + Schema flexibility
@@ -246,8 +246,11 @@ Time to understand scalability, latency aspects
             - Timeseries like InfliuxDB, Prometheus:   Write heavy + Burst Read + TSM tree + Schema flexibility 
 
          
-          - sharding support 
-            - With AWS offers, both SQL DB like AWS RDS and noSQL DynamoDB supports sharding http://tinyurl.com/2b6no2zs  
+          - sharding support
+            - All NoSQL DB like Cassandra, MongoDB, Dynamo DB supports sharding with managed service. This means sharding strategy of hash based (consistent hashing) is already supported and also in-built routing logic for right shard. 
+
+            - With AWS offers you can shard both SQL DB like AWS RDS BUT Sharding is manual and not a managed service http://tinyurl.com/2yapkhgn 
+
             - Without AWS offers, SQL DB like MySQL, Postgresql are hard to shard - https://www.squash.io/tutorial-on-database-sharding-in-postgresql/
             
           
