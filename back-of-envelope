@@ -2725,7 +2725,7 @@ Distributed systems today and Benchmarking on common systems
         - retrieval using embedding model (embedding is ML-friendly version of original input. learn more in first 8 mins video https://www.youtube.com/watch?v=yfHHvmaMkcA&ab_channel=freeCodeCamp.org )
         - But how fetch 1K nearest embeddings amongst billions of recommendations ? 
           option 1. using geo spatial index ( geaohash for map is 2-dimensional but here is multi-dimensional). Its complex though.
-          option 2. using the cache index for each embeddings, here are nearest neighbours
+          option 2. using the cache index for each embeddings, here are nearest neighbours. Demands space.
 
         - ranking using distributed ranking service 
 
