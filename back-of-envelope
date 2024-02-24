@@ -2710,8 +2710,23 @@ Distributed systems today and Benchmarking on common systems
       https://www.youtube.com/watch?v=ZAIBFf8KpgI&ab_channel=Jordanhasnolife 
         Next video to watch about embedding model - https://www.youtube.com/watch?v=lh9CNRDqKBk&t=1630s&ab_channel=MLOps.community 
       These days preference is more on building online recommendation system rather than offline since offline / batch recommendation stops us from building real-time searches and esp. on viral videos 
-      - online recommendation needs retrieval and ranking 
+
+
+        Client --> LB ---> Recommendation service ( fan - out because of realtime) ----> Retrieval service (retrieve 1K using embedding model) 
+                            |              |
+                            |              |--------------------------------------------> Ranking service (using weights and merge sort )
+                            |                                                                 |
+                            |                                                                 |
+                            |                                                                 | (update the weights)
+                            |-------------> User Activity Log parser ----> Batch ML Job ------
+
+
+      - online recommendation needs retrieval (nearest neighbours) and ranking (rank those neighbours)
         - retrieval using embedding model (embedding is ML-friendly version of original input. learn more in first 8 mins video https://www.youtube.com/watch?v=yfHHvmaMkcA&ab_channel=freeCodeCamp.org )
+        - But how fetch 1K nearest embeddings amongst billions of recommendations ? 
+          option 1. using geo spatial index ( geaohash for map is 2-dimensional but here is multi-dimensional). Its complex though.
+          option 2. using the cache index for each embeddings, here are nearest neighbours
+
         - ranking using distributed ranking service 
 
       https://www.youtube.com/watch?v=lh9CNRDqKBk&t=1630s&ab_channel=MLOps.community 
