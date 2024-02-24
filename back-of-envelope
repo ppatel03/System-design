@@ -2705,6 +2705,26 @@ Distributed systems today and Benchmarking on common systems
           Since search query have multiple words, two types : 
             Conjunctive Search which is AND based 
             Disjunctive Search which is OR based
+
+    Design top K leaderboard deepdive 
+        https://www.youtube.com/watch?v=XbkjEX-jgj0&ab_channel=Jordanhasnolife 
+
+          High level Design
+
+                                                                              (Lambda architecture)
+
+         Client --> LB ---> Leaderboard service ---------> Queue ---------> Count min sketch ( 1 min window precomputation) 
+
+
+                                                                 ---------> large time window (1 hour window precomputation) -> MySQL 
+
+
+                                                                 ---------> any time window (exact count) ------------> Time series (burst reads. So no precomputation, so slow for ranking)
+
+
+                                                                 --------> no time window (over all time) ------------> MySQL
+
+
     
     Design recommendation system 
       https://www.youtube.com/watch?v=ZAIBFf8KpgI&ab_channel=Jordanhasnolife 
