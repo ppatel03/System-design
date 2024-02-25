@@ -3583,6 +3583,12 @@ Distributed systems today and Benchmarking on common systems
            https://www.youtube.com/watch?v=LeJG-M9HnCI
            - how Flink job manager deploys job on task managers
 
+          How Flink handles backpressure (with practical)? 
+            https://www.ververica.com/blog/how-flink-handles-backpressure 
+
+          Deep dive : How Flink network stack works (buffer) to support back-pressure ? 
+            https://flink.apache.org/2019/06/05/a-deep-dive-into-flinks-network-stack/  
+
 
           Kafka Stream vs Flink ? 
             https://www.openlogic.com/blog/apache-flink-vs-kafka-streams#
