@@ -1216,6 +1216,9 @@ Time to understand scalability, latency aspects
                     - it remembers the latest transaction id and requires all the missing ids to be sent by follower.
                   - How Zookeeper ensures messages are in order ? 
                     - The commit log of ZooKeeper’s consensus protocol (ZAB) helps guarantee in-order delivery of config changes.
+              54. Techniques to optimize and scale your application code to millions of requests ?
+                  - Actor model (akka, Elixir) : http://tinyurl.com/2c4a2xtn 
+                  - Reactors based Pub Sub model in Java which supports backpresssure : https://www.baeldung.com/reactor-core 
                    
 
       e. SOME POPULAR OPTIONS BY COMPANIES
