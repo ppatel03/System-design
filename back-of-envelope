@@ -1217,7 +1217,9 @@ Time to understand scalability, latency aspects
                   - How Zookeeper ensures messages are in order ? 
                     - The commit log of ZooKeeper’s consensus protocol (ZAB) helps guarantee in-order delivery of config changes.
               54. Techniques to optimize and scale your application code to millions of requests ?
-                  - Actor model (akka, Elixir) : http://tinyurl.com/2c4a2xtn 
+                  - Actor model (like Akka, Elixir) : http://tinyurl.com/2c4a2xtn 
+                      - helps with avoid race conditions because it process only one message at a time (http://tinyurl.com/26lajp6p)
+                      - its asynchronous, so no blocking io 
                   - Reactors based Pub Sub model in Java which supports backpresssure : https://www.baeldung.com/reactor-core 
                    
 
