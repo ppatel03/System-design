@@ -3580,19 +3580,33 @@ Distributed systems today and Benchmarking on common systems
            https://www.youtube.com/watch?v=_G-hQfT02BA 
            - Achive fault tolerant with periodic snapshots to S3/HDFS storage which serve as a checkpoint. 
            - Also guarantees exactly-once processing with checkpoint markers 
+           https://www.youtube.com/watch?v=LeJG-M9HnCI
+           - how Flink job manager deploys job on task managers
 
-          https://www.openlogic.com/blog/apache-flink-vs-kafka-streams# 
-           It was the first open source framework that could deliver on throughput at scale (up to tens of millions of events per second), sub-second latency as low as 10s of milliseconds, and accurate results.
 
-            How this is different from Kafka ?
+
+
+          Kafka Stream vs Flink ? 
             https://www.openlogic.com/blog/apache-flink-vs-kafka-streams#
-              - The main difference between Flink vs. Kafka Streams is that Flink is a data processing framework that uses a cluster model, whereas the Kafka Streams API is an embeddable library that eliminates the need for building clusters.
+            Kafka Streams : Kafka Streams API has an embeddable library that eliminates the need for building clusters and allows it to be seamlessly integrated into your existing toolstack. Developers can focus on their application without needing to worry about deployment. Plus, teams get all the benefits of Kafka including, failover, scalability, and security.
 
-            Flink vs Spark
-              https://www.youtube.com/watch?v=VAwtpa9EHf0 
+            Flink : It was the first open source framework that could deliver on throughput at scale (up to tens of millions of events per second), sub-second latency as low as 10s of milliseconds, and accurate results. Flink runs self-contained streams in a cluster model that can be deployed using resource managers or standalone. 
+
+            Difference : 
+              - Set up and Maintenance (Kafka wins) :
+                -  The main difference between Flink vs. Kafka Streams is that Flink is a data processing framework that uses a cluster model, whereas the Kafka Streams API is an embeddable library that eliminates the need for building clusters.
+              - Bounded + Unbounded (Flink wins) : 
+                - Kafka Streams only supports unbounded streams (streams with a start but no defined end). Flink, on the other hand, supports both bounded streams (defined start and end) and unbounded streams.
+              - Data sources support (Flink wins) : 
+                - Where Flink can ingest data from multiple sources, like external files or other message queues, Kafka Streams are shackled to Kafka topics as the source. Both support multiple data types for sink/output.
+
+          Flink vs Spark ? 
+            https://www.youtube.com/watch?v=VAwtpa9EHf0 
+            - Performance (Flink wins) 
               - Spark can be configured to be near real time processing but has slow performance
               - Flink is made for real-time processing with 2x performance as compared to Spark
-              - SPark faces OOM due to its in-memory nodes wherease Flink can take help of disks
+            - Memory (Flink wins)
+              - Spark faces OOM due to its in-memory nodes wherease Flink can take help of disks
               
           11. Google Cloud Spanner
             https://research.google/pubs/pub39966/
