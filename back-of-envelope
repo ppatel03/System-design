@@ -3584,8 +3584,6 @@ Distributed systems today and Benchmarking on common systems
            - how Flink job manager deploys job on task managers
 
 
-
-
           Kafka Stream vs Flink ? 
             https://www.openlogic.com/blog/apache-flink-vs-kafka-streams#
             Kafka Streams : Kafka Streams API has an embeddable library that eliminates the need for building clusters and allows it to be seamlessly integrated into your existing toolstack. Developers can focus on their application without needing to worry about deployment. Plus, teams get all the benefits of Kafka including, failover, scalability, and security.
@@ -3608,7 +3606,7 @@ Distributed systems today and Benchmarking on common systems
             - Memory (Flink wins)
               - Spark faces OOM due to its in-memory nodes wherease Flink can take help of disks
               
-          11. Google Cloud Spanner
+        11. Google Cloud Spanner
             https://research.google/pubs/pub39966/
             Spanner is Google's scalable, multi-version, globally-distributed, and synchronously-replicated database. It is the first system to distribute data at global scale and support externally-consistent distributed transactions.
             https://en.wikipedia.org/wiki/Spanner_(database)
