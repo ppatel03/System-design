@@ -3607,6 +3607,10 @@ Distributed systems today and Benchmarking on common systems
                     |                                                         |
                     |---------------------------------------------------------|
                     
+            - When are messages send by Netty server ? (related to coding question)
+                opt 1. When buffer is full but can take some time to fill the buffer 
+                opt 2. When there is buffer timeout but have overhead of maintaining buffer indexes (leetcode question)
+                opt 3. When certain event happens like checkpoint barrier
                     
                   
 
