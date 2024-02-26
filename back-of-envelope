@@ -3586,9 +3586,29 @@ Distributed systems today and Benchmarking on common systems
           How Flink handles backpressure (with practical)? 
             https://www.ververica.com/blog/how-flink-handles-backpressure 
 
-          Deep dive : How Flink network stack works (buffer) to support back-pressure ? 
+          (Very important) Deep dive : How Flink network stack works (buffer) to support back-pressure ? 
             https://flink.apache.org/2019/06/05/a-deep-dive-into-flinks-network-stack/  
+            - They used credit based flow control. Basically sender has knowledge about receivers capacity and receiver also knows about senders backlog.
+            - Design of Flink
+                          Task manager 1      (Netty Server in Java for NIO)   ------(TCP Connection)--------              Task Manager 2
 
+
+                    |---------------------------------------------------------                                                               
+                    |                                                         |
+                    |     - running subtask 1 (knows subtask 3,4 capacity).   |
+                    |              - buffer for subtask 3                     |
+                    |              - buffer for subtask 4                     |
+                    |                                                         |
+                    |                                                         |
+                    |    - running subtask 2 (knows subtask 3,4 capacity).    |
+                    |               - buffer for subtask 3                    |
+                    |              - buffer for subtask 4                     |
+                    |                                                         |
+                    |                                                         |
+                    |---------------------------------------------------------|
+                    
+                    
+                  
 
           Kafka Stream vs Flink ? 
             https://www.openlogic.com/blog/apache-flink-vs-kafka-streams#
