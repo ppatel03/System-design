@@ -3058,9 +3058,11 @@ Distributed systems today and Benchmarking on common systems
          - example of performance bottleneck as a perl process detected on Cassandra DB using biosnoop rather than iostat command https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity 
       - Its future is nice GUI. Example Netflix - ![Alt text](<Screenshot 2023-11-18 at 5.56.00 PM.png>)
 
-    eBPF - https://www.youtube.com/watch?v=45h6iqtorZQ&ab_channel=CodingTech 
-      - language and runtime to extend operating systems
-      - used for L4 LB (Facebook), AWS / Google uses EKS which uses eBPF, Smartphones 
+    eBPF - https://www.youtube.com/watch?v=KhPrMW5Rbbc&t=57s&ab_channel=CNCF%5BCloudNativeComputingFoundation%5D
+    Also Really great video : https://www.youtube.com/watch?v=eVsMkXDE_5I&ab_channel=F5DevCentral
+      - language and runtime to extend kernal modules so that we do not need to modify the kernel
+      - great substitute to avoid Istio service mesh for tracing which deploys heavy sidecar
+      - used for L4 LB (Facebook), AWS / Google uses EKS which uses eBPF for tracing (kubectl trace, networking and secutiy), Smartphones 
       - Grafana will soon be integrated with eBPF for observability 
 
     How to collect a Function level stack trace 
