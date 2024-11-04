@@ -3043,6 +3043,8 @@ Distributed systems today and Benchmarking on common systems
               - based on some event - exception, functional. Example cprofile, line_profiler above 
             statistical 
               - probe(search) call stack periodically. Example vmprof
+        java profiler (https://digma.ai/9-best-java-profilers-to-use-in-2024/#types-of-java-profilers)
+          - JProfiler, IntelliJ Profiler
             
 
       EXAMPLE FEATURES
@@ -3051,7 +3053,7 @@ Distributed systems today and Benchmarking on common systems
 
     BPF(Berkely packet filtering) profiling libraries to check performance bottleneck 
       nice video - https://www.youtube.com/watch?v=bGAVrtb_tFs&ab_channel=eBPF%26CiliumCommunity
-      - its a bytecode and execution evironment that we are using to create observability, networking, security and other software
+      - its a bytecode and execution evironment which provides direct extension to kernel modules(no need to change OS kernel code) that we are using to create observability, networking, security and other software.
       then how do you get quick and easy BPF performance wins 
       - top commands : 
         (1. execsnoop - anything periodic running 2. opensnoop - any misconfigurations or file not found 3. tcplife - any unexpected TCP sessions, 4. ext4slower - any filesystem I/O slower than 10ms 5. biosnoop - Any unusual disk access patterns or outliers ) 
@@ -3070,6 +3072,7 @@ Distributed systems today and Benchmarking on common systems
           perf record -g --call-graph dwarf -p $your_process_id 
       - example, Facebook's xenon -> https://github.com/facebook/hhvm/wiki/Profiling
 
+
     How to collect CPU instructions - MIPS 
       https://stackoverflow.com/questions/50019857/benchmarking-how-to-count-number-of-instructions-sent-to-cpu-to-find-consumed 
       perf stat --all-user ./my_program 
@@ -3086,14 +3089,24 @@ Distributed systems today and Benchmarking on common systems
         - Inefficiency or infrequent DB queries 
       - Software efficiency
         - For horizontal software written in C, using Folly libraries rather than traditional ones (in memory json manipulation or string-formatting)
+            - folly::small_vector over std::vector: Ideal for small collections, reducing heap allocations and improving cache locality.
+            - folly::F14 Hash Tables: Highly efficient hash table implementations with superior performance compared to standard std::unordered_map.
+            - folly::fbvector : A drop-in replacement for std::vector with improved memory management and performance characteristics.
+            - String Manipulation: Folly includes several optimized string handling utilities (e.g., folly::fbstring), which are faster and more memory-efficient than std::string in many scenarios. fbstring uses small-string optimization to minimize allocations for short strings, which is particularly useful in text-heavy applications.
+            - Logging and Debugging: Folly includes high-performance logging tools like folly::logging, which is optimized for low-latency, high-frequency logging scenarios. This helps reduce the overhead associated with logging in production.
+        - ML ranking : vector optimizations with sparse matrix. 
         - Implementation of Async IO
         - using BPF (say biosnoop command )
       - Utilization efficiency 
-        - Autoscaling 
+        - Autoscaling using capacity modelling (throughput and stopper metrics)
         - unused host 
+        - Kubernetes right sizing using AWS Karpenter - https://www.youtube.com/watch?v=FIBc8GkjFU0&ab_channel=ContainersfromtheCouch 
+          - https://karpenter.sh/ 
+
       - HW efficiency
         - replace new hardware based on bottlneck resource
         - avoid double occupancy
+        - degrade efficiency to solve unsellables 
 
     Regression detection algorithms 
       - Linear regression 
@@ -3177,7 +3190,11 @@ Distributed systems today and Benchmarking on common systems
                       Cons : cubersome to manage for 1000+ demand sources especially shared endpoints like WWW
 
                   2. Non-sharded services + all stopper metrics based on demand sources : 
-                      - Add all stopper metrics from each demand sources. Add quotas to each demand source.
+                      - This is hard 
+                        1. time based load testing based on demand source ratio ( say 1:2 for FB vs insta calls at 6:00 pm pst )
+                        2. get throughput and stopper metrics
+                        3. move backwards from stopper metrics and assign quotas on throughput ( say max throughput is 15 ins, then FB can max have 5 ins and insta can have max 10 ins )
+                        4. integrate ML in time based load testing
                       Pros : easier to manage
                       Cons : too much fragmentation esp. different peak hours for different demand source
                 
