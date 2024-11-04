@@ -3161,6 +3161,22 @@ Distributed systems today and Benchmarking on common systems
                 - Double occupancy (DO) issue during host replacement, where old and new hosts serve traffic simultaneously.
                 - Regional Fluidity (RF) issue caused due to uneven capacity distribution across regions.
                 - Autoscaling Stateful services poses reliability and performance challenges.
+        - Amazon
+          - Demand efficiency ( all end customers)
+            - add eBPF for cloud cost optimizer
+            - Right sizing :  add seamless instance family migration to AWS Karpenter feature to save costs 
+          - Platform efficiemncy 
+            - Software 
+              - Redshift and Elasticseach
+                - set quotas
+                - from Code guru profiler stats
+                - async io
+                - biosnoop to avoid unwanted disk access
+            - Utilization
+              - defragmentation using Live migration
+            - HW efficiency
+              - degrade efficiency by smartly select high risk hosts based on temperature, age and DCO bandwidth
+          
 
             Solution 
               - Intially load testing is run for a week. After 3 days, it can halt if throughput and stopper metrics patterns are consistent.
