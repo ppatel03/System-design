@@ -183,12 +183,12 @@ Time to understand scalability, latency aspects
           - maximum size Ethernet frame (1500 bytes) at 100 Mbps the latency is 120 µs. For comparison, the minimum size frame (64 bytes) at Gigabit speeds has a latency of just 0.5 µs
 
       a.3. Fault tolerant + Durability + Resilency
-        - Fault tolerance
-        - Durability 
+        - Fault tolerance : tolerate faults which means high standards than just availability ( DR ready : mirroring ) 
+        - Durability : no data loss ( replication )
             - can help reason how much to replicate. 
                 Example, say 99.999999% (six 9's) durability can be achieved assuming failure rate of one server is  0.01% (say 99.99% guarantee for ec2 on aws). This means you need 2 servers atleast which means 1 replica 
                   0.0001 ^ 2    = 0.0000001    or  10 ^ -8
-                  1 - 0.0000001 = 0.9999999 or  8 9s  
+                  1 - 0.0000001 = 0.99999999 or  8 9s  
                   % * 100       = 99.999999%      or  8 9s 
             - can help to reason using pull architectures with persistence
             - can help to reason out if you need erasure coding for data recovery
@@ -267,8 +267,10 @@ Time to understand scalability, latency aspects
 
       c. Think about edge cases for product
         1. Rate limiter 
-          - Algorithms (Token bucket - bucket fill rate and bucket capacity, fixed window, sliding window is the best), 
-          - distributed counting using redis (single threaded and hence atomic)
+          - Algorithms (Token bucket - bucket fill rate and bucket capacity(has issue with parameters tuning), Leaky bucket using queue (issue with tuning), fixed windo (has boundary issue), So sliding window is the best), 
+          - distributed counting using redis (single threaded and hence atomic). Race condition can be avoid using Redis sorted set
+          - Rate limiting rules config 
+          - Exceeded rate limit HTTP error : 429 too many request
         2. Consistent Hashing 
           - Ring formation, 
           - add/remove server, 
