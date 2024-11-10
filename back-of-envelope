@@ -157,7 +157,8 @@ Time to understand scalability, latency aspects
               - Eventual consistency which is weakest (default setting in Cassandra)
 
             90% of the time your ask of high consistency should be simple 
-             - Based on Recency which is Linearizability
+             -  Quorum consistency or 
+             -  you can extend to Recency guarantee - Linearazibility
 
             - if Consistency over availability, it means high consitency.
             - Eventual Consistency (most of the times)
