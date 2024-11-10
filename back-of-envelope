@@ -108,7 +108,7 @@ Time to understand scalability, latency aspects
       say 1 KB for 100K QPS ~ 100 MBps
       - can help reason your latency
       - can help reason your replication in DBs or multiple servers
-      - can help reason your sharding for database (remember internal data center max bandwidth to 25 Gbps ~ 2.5 GBps which means 1 KB = 1us ) https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html 
+      - can help reason your sharding for database (remember internal data center max bandwidth to 25 Gbps ~ 2.5 GBps ) https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html 
 
 3. Estimate Total Storage bytes (a year, 10 years)
     a. tell why you are estimating. Just a high level conclusion if you need DB sharding which depends on size and bandwidth. 
@@ -178,6 +178,8 @@ Time to understand scalability, latency aspects
       a.2. Latency 
         - this would help decide whether you really need low latency optimizations like cache, or not. DBs can be as fast as ms today and cache as us today
         - Remember today mosts have 1 Gbps network and internal datacenter is 25 Gbps ~ 2.5 GBps
+        - Latency number for 1G Ethernet 
+          - maximum size Ethernet frame (1500 bytes) at 100 Mbps the latency is 120 µs. For comparison, the minimum size frame (64 bytes) at Gigabit speeds has a latency of just 0.5 µs
 
       a.3. Fault tolerant + Durability + Resilency
         - Fault tolerance
