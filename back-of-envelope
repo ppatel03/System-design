@@ -44,7 +44,7 @@ Framework -
           - Data freshness SLA if eventual consistency
           - CAN PUT Strong consistency for few APIs like offline alerting, billing info
     3.2. Latency 
-    3.3. Fault tolerant + Durability (Use pull) + Resilency 
+    3.3. Fault tolerant (DR ready - mirroring) + Durability (No data loss - replication, Use pull) + Resilency (auto-recover : EFS)
         - Statelessness (CD)
         - Replication
     3.4. Secondary stuff : 
@@ -362,13 +362,13 @@ Time to understand scalability, latency aspects
             - Feed publish flow
               - Client/Browser -> LB -> publish-service (online path) -> Post DB -> Post cache
                                                 |
-                                            Queue (offline) -> Consumer -> Friends fetcher 
-                                                                        -> User data 
-                                                                        -> News Feed Cache
-                                                                        -> Notification service 
-                Fanout service over Dataflow Pipeline like Spark, Flink 
-                  - Intermediate state maintenance is easier with Fanout service
-                  - Atomicity or distributed transaction across heterogeneous is easier because of single co-ordinator
+                                            Queue (offline) ---> Consumer ----> Queue ------> Consumer ---------> News Feed Cache 
+                                                            - Friends fetcher                     |
+                                                            - User prefences data                 |
+                                                                                                Notification service                     
+                                                                         
+                Dataflow with multiple Queues (like Spark, Flink) over Fanout service
+                  - Durable system with help of Queues ( retry if failied )
             - Feed fetch flow
                - Client/Browser -> LB -> feed-fetcher (online path) -> News Feed cache (set of post ids)
                                                                     -> Post cache (post details) -> Post DB 
