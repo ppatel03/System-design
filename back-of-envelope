@@ -348,13 +348,14 @@ Time to understand scalability, latency aspects
           7. Design A Notification System
             - Different types of notification
               - App notification
-                - iOS : APNs, Android : FCM. For this you need two things - certificate upload(to build trust) and device token (for APNs/FCM to track about what device)
+                - iOS : APNs, Android : FCM. For this you need two things - certificate upload(to build trust between APN/FCM provider and device) and device token (for APNs/FCM to track about what device)
               - SMS 
                 - Services like Twilio, Nexmo 
               - Email service
                 - Mailchimp or Sendgrid 
             - Contact gathering flow  
-              - collects user data and device info
+              - during app install or user sign up, collects user name,  device info ( phone number, certificate, device token), phone number
+                  User ---> LB ----> API server ----> DB
             - High level design 
               - sender services -> notification service (DB look up) -> Device + notification type queue -> Consumers -> Service Providers (APNs, FCMs, Twilio, MailChimp)
 
