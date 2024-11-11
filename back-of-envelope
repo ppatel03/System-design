@@ -274,10 +274,10 @@ Time to understand scalability, latency aspects
         2. Consistent Hashing 
           - Ring formation, 
           - add/remove server, 
-          - virtual replicas on ring to get even distribution of keys, 
-          - hotspot key problem by increasing number of replicas (however, its not per partition) 
+          - To solve hot Node partition, you assign virtual replicas on ring to get even distribution of keys, 
+          - To solve hotspot key problem,  you can increase number of replicas but its common acorss all paritions and NOT customized for a partition or for a key
             - Replication strategies for Cassandra (https://www.baeldung.com/cassandra-replication-partitioning )
-            - Smart strategy for hotspot key :
+            - So Smart strategy for hotspot key :
               - detect the hot spot key using sampling method (like in Pig) or dashboard (like in CockroachDB)
               - for that hotspot key, assign the copy number to each key and create combined partition key for Cassandra (https://stackoverflow.com/a/27889289/1540256 )
             - CockraochDB provides dashboard insights for hot spot (https://www.cockroachlabs.com/blog/the-hot-content-problem-metadata-storage-for-media-streaming/ )
