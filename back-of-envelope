@@ -300,13 +300,16 @@ Time to understand scalability, latency aspects
             - Write path (LSM tree + SS Table)
             - Read path (LSM tree + SS Table + Bloom filter + sparse index)
         4. Design A Unique ID Generator In Distributed Systems
-            - Multi-master replication using DBs (scaling problem, ID synchronization)
+            - Requiremnt : 10K ids per second, so 64-bit ( 2^64 ~ 10^16) is more than enough
+            - Single database (bottleneck SPOF)
+            - Multi-database set up with increments by K for K DBs (scaling problem, ID synchronization)
             - UUID (128 bits long but not go up with time)
             - Ticket Server like Flickr (SPOF)
             - Twitter snowflake approach (64 bits = 1 sign + 41 timestamp + 5 datacenter + 5 machine + 12 sequence )
               - timestamp in milliseconds is 13 digits 
-              - number generator can just execute in may be 10 - 100 ns consider counter is in L1/L2 cache. So ~10^4 numbers could be easily generated in 1 miliseconds. So 12 bits atleast for sequence number
-            Other talking point - time sychronization using NTP, Bits tuning - timestamp vs sequence bits to support low concurrency 
+              - So how many numbers could be generated in 1 milliseconds ? ~10^4 
+                - number generator can just execute in may be 10 - 100 ns consider counter is in L1/L2 cache. So ~10^4 numbers could be easily generated in 1 miliseconds. So 12 bits atleast for sequence number
+            Other talking point - time sychronization using NTP, Bit size tuning - timestamp vs sequence bits to support low concurrency 
         5. URL shortener 
             - URL redirect response is status code as 301 and location = original url in response headers. 302 for temporary redirect. 
             - 301 helps in reducing server load vs 302 helps in tracking 
