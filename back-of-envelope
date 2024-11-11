@@ -320,7 +320,7 @@ Time to understand scalability, latency aspects
                 - SHA-1 (120 bits), SHA-256 (256 bits)
                 - bloom filter to improve look up 
               - Base 62 conversion 
-                - unique id generator % 62 
+                - using unique id generator, generate unique id then perform  unique id % 62 
               - Hash vs Base 62 
                 - fixed vs variable lenght
                 -       vs  depend on unique id generator 
@@ -329,17 +329,18 @@ Time to understand scalability, latency aspects
             - Others : Rate limiter, Scaling with stateless, DB scaling with replication & sharding, Analytics 
           6. Web Crawler 
             - High level : 
-              URL frontier (Seed urls) -> Downloader (DNS resolover) -> Content Parser -> Link Extractor -> send to frontier
-            - BFS vs DFS
+              URL frontier (Seed urls)-> Queue-> Downloader (DNS resolover) ->Q-> Content Parser( DB) -> Q-> Link Extractor -> Q ->send to frontier
+            - BFS over DFS
             - URL Frontier 
-              - politeness
+              - politeness ( avoid too many requests and getting blocked by rate limiter )
               - priority (pagerank)
               - Crawl based on Freshness (update history)
             - Downloader (Robots)
               - performance : distributed crawl, cache DNS, Locality, short timeout
-              - robustness : consistent hashing, save state, exception handling,
+            - Robustness : scaling using consistent hashing, save state using Q, exception handling,
+            - Extensibility : Rather than just "text", support new content types say images or video 
             - Detect and avoid malciousness
-              - redundant content 
+              - redundant content using deduplication with hashing
               - avoid spider traps by setting max length (A spider trap is a web page that causes a crawler in an infinite loop. For instance, an infinite deep directory structure is listed as follows: http://www.spidertrapexample.com/foo/bar/foo/bar/foo/bar/...)
               -  noise (ads, code snippets)
             - Others : Server side rendering, Scaling with statelessness, DB replication and sharding, Analytics
