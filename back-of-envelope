@@ -285,7 +285,7 @@ Time to understand scalability, latency aspects
           - data partition - consistent hashing 
           - data replication
           - data consistency (quorum) R + W > N 
-          - inconsistency resolution using versioning (RiakDB uses version vector, Dynamo / Cockroach DB / MongoDB uses vector clocks or lamport timestamp  ). 
+          - inconsistency resolution using versioning (RiakDB uses version vector, Dynamo / Cockroach DB / MongoDB uses vector clocks or lamport timestamp, Cassandra uses LWW using timestamp  ). 
             - Refer Pg 346 use the sequence number generated from lamport timestamp or Zookeeper based counter which supports total ordering (but cannot tell if two operations are conncurrent or are causally related) which supports linearizability (recency)
             - (Mature approach) Refer Pg 184 for version vector which supports causal order (can tell if two operations are concurrent or casually related) by keeping concurrent versions. You need version vectors for 
               - operational CRDT ( vector of increments for every node - Example node1 count=33 and increments [1,2,1], node2 count =33 and increments [1,0,1]. Here, to increment the count, you do not need to pass entire version vector on the network - https://tinyurl.com/2a3wd6ln) and 
