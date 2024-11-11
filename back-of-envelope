@@ -467,7 +467,7 @@ Time to understand scalability, latency aspects
                                             |                              ^
                                             |                              | update once transcoding is complete 
                                             v                              |
-                                          Queue    -----------------> Transcode Service -----> Transcoded Storage (S3) -> CDN
+                                    Orginal Storage    -----------------> Transcode Service -----> Transcoded Storage (S3) -> CDN
                                                                           (DAG - audio, video(resolution, fps, bit rate thumbnail watermark), metadata)
 
                 - Why Video transcoding (different resolutions, video formats (HLS, DASH), fps, bit rate)
