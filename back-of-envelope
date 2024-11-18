@@ -687,10 +687,18 @@ Time to understand scalability, latency aspects
               - Metadata DB (relational -> user_folder (user_id, folder_id),  folder_emails(message_id, folder_id, from, to, subject, link_to_s3, is_read, etc.))
 
               - Queries : 
-                1. get all folders + get all emails from folders -> parition key (user id, folder_id) + sort key (message_id which is time based UUID)
+                1. get all folders of users : parition key (user id) 
+                2. get all emails from folders ->  folder_id + sort key (message_id which is time based UUID)
                 - Email threads could be identified by using message_id
-                2. get all read + unread emails : extract all using userid+folder_id and perform filtering but its expensive to perform filtering at large scale. So use denormalized tables for read and unread emails.
-              - Email deliverability - dedicated IPs, Separate servers for promotion emails, Email sender reputation, Ban spammers, Feedback processing, Good relationship with ISPS
+                3. get all read + unread emails : extract all using userid+folder_id and perform filtering but its expensive to perform filtering at large scale. So use denormalized tables for read and unread emails.
+              - Email deliverability 
+                - dedicated IPs, 
+                - Separate servers for promotion emails, 
+                - Email sender reputation (Warm up new email server IP addresses slowly to build a good reputation, so big providers such as Office365, Gmail, Yahoo Mail,    
+                    etc. are less likely to put our emails in the spam folder.), 
+                - Ban spammers, 
+                - Feedback processing, 
+                - Good relationship with ISPS
               - Authentication : SPF (sender policy framework, Domain based message authentication). As an example, you can see that in "signed-by" section to every email
               - Search store : elastic search out of box 
               - Others : Compliance using GDPR, Storage optimization by deduping attachments
