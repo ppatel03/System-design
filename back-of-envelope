@@ -763,9 +763,14 @@ Time to understand scalability, latency aspects
                       (checkout_table -> checkout id, buyer info, credit card info, payment_status, payment_token from PSP )
                       (order_details -> order_id, checkout_id, seller_id, amount, currency, ledger_updated, wallet_updated, payment_status)
               - Double entry ledger 
+                  - The double-entry system states that the sum of all the transaction entries must be 0. 
+                  - Account	Debit	Credit
+                      buyer	  $1	
+                      seller		    $1
               - Hosted payment page 
               - PSP integration ( Our payment executor creates nonce using checkout id and sends to PSP and at same time redirects user to PSP hosted page with redirect URL back to our page when payment is complete. Also we provide webhook to PSP to notify success ).
               - Reconcilliation (automated, fixed with code and manual)
+                - Every night the PSP or banks send a settlement file to their clients. The settlement file contains the balance of the bank account, together with all the transactions that took place on this bank account during the day. The reconciliation system parses the settlement file and compares the details with the ledger system.
               - Handle processing delays using webhook URL or polling
               - Handling failed payments with Retry + dead letter queue
               - Exactly once delivery using idempotency on payment token OR nonce (checkout id)
