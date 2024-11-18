@@ -629,10 +629,15 @@ Time to understand scalability, latency aspects
               - Data model : timestamp, value, set of <key,value> labels 
               - line protocal which is used in Prometheus, OpenTSDB
               - choice of DB : TimeSeries (burst read, high writes)
+                  - OpenTSDB is a distributed time-series database, but since it is based on Hadoop and HBase, running a Hadoop/HBase cluster adds complexity. 
+                  - Twitter uses MetricsDB [10], and Amazon offers Timestream as a time-series database [11].
+                  - Promotheus 
+                  - For this design, we use InfluxDB because of scale - 8-core 32G ram, 250K writes/s, stores ~1M timeseries
               - High leve design 
                   Metrics Source -> Metrics Collector -> Timeseries DB -> Query Service -> Alert Manager (uses alert rules) -> Notification service 
                                                                                  -> Visualization 
               - Push vs Pull
+                - Prometheus is pull based vs InfluxDB is pull based
               - Queue for Metrics Collector (parition by metrics name, topic by region, further tags for filters, )
               - Storage optimization (RLE and Delta compression, downsampling & retention )
               - Alerting system (how to dedup - check if alert message is already provided)
@@ -785,7 +790,7 @@ Time to understand scalability, latency aspects
             24. Distributed Job scheduler
               - High level design
                                         + Retry
-                  Jobs -> Consumer ----> Queue -------> Consumer (Driver) ----------(schedule)--------------> Workers 
+                  Jobs -> Producer ----> Queue -------> Consumer (Driver) ----------(schedule)--------------> Workers 
                               |                            |
                               |                            | (which hosts to schedule)
                               V                            V
