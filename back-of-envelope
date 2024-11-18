@@ -782,7 +782,7 @@ Time to understand scalability, latency aspects
 
               - But what if DB is sharded 
                 1. 2PC (lock + commit) - depends on DB support, XA standard to implement it for heterogeneous systems, needs co-ordinator support
-                2. TCC (Try Confirm/Cancel)  - leaves DB in inconsistent state but application has full control to handle it.
+                2. TCC (Try Confirm/Cancel)  - leaves DB in inconsistent state but application has full control to handle it. Same with 2PC, needs co-ordinator support.
                 3. Saga - Best choice for microservice. Can be Decentralized and Orchestration using co-ordinator but unlike TCC, its slow. 
                 For 2 and 3 to handle unbalances state, use phase status table (transaction_id, phase_type, name, status, out_of_order flag for network lag)
 
