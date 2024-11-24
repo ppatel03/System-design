@@ -1111,7 +1111,7 @@ Time to understand scalability, latency aspects
                       The key idea with Avro is that the writer’s schema and the reader’s schema don’t have to be the same—they only need to be compatible. When data is decoded (read), the Avro library resolves the differences by looking at the writer’s schema and the reader’s schema side by side and translating the data from the writer’s schema into the reader’s schema. The Avro specification [20] defines exactly how this resolution works, and it is illustrated in Figure 4-6.
               38. How to rebalance partitions ? 
                     - How not to do it: Hash mod n. The problem with mod N is that if the number of nodes N changes, most of the keys will need to be moved from one node to another.
-                    - Fixed number of partitions. Create many more partitions than there are nodes and assign several partitions to each node. If a node is added to the cluster, we can steal a few partitions from every existing node until partitions are fairly distributed once again. The number of partitions does not change, nor does the assignment of keys to partitions. The only thing that change is the assignment of partitions to nodes. This is used in Kafka brokers, Riak, Elasticsearch, Couchbase, and Voldemport. You need to choose a high enough number of partitions to accomodate future growth. Neither too big or too small.
+                    - Fixed number of partitions. Create many more partitions than there are nodes and assign several partitions to each node. If a node is added to the cluster, we can steal a few partitions from every existing node until partitions are fairly distributed once again. The number of partitions does not change, nor does the assignment of keys to partitions. The only thing that change is the assignment of partitions to nodes. This is used in Kafka brokers(refer kafka system design), Riak, Elasticsearch, Couchbase, and Voldemport. You need to choose a high enough number of partitions to accomodate future growth. Neither too big or too small.
                     - Dynamic partitioning. The number of partitions adapts to the total data volume. An empty database starts with an empty partition. While the dataset is small, all writes have to processed by a single node while the others nodes sit idle. HBase and MongoDB allow an initial set of partitions to be configured (pre-splitting).
                     - Partitioning proportionally to nodes. Cassandra and Ketama make the number of partitions proportional to the number of nodes. Have a fixed number of partitions per node. This approach also keeps the size of each partition fairly stable. Example, In consistent hashing when new node is added, only its preceding neighbour node keys are affected.
               39. Is rebalance have to be manual ? 
@@ -1177,12 +1177,10 @@ Time to understand scalability, latency aspects
 
                     XA (X/Open XA for eXtended Architecture) is a standard for implementing two-phase commit across heterogeneous technologies. Supported by many traditional relational databases (PostgreSQL, MySQL, DB2, SQL Server, and Oracle) and message brokers (Kafka, ActiveMQ, HornetQ, MSQMQ, and IBM MQ).
 
-                  The problem with locking is that database transactions usually take a row-level exclusive lock on any rows they modify, to prevent dirty writes.
-
-                  While those locks are held, no other transaction can modify those rows.
+                  The problem with locking is that database transactions usually take a row-level exclusive lock on any rows they modify, to prevent dirty writes.While those locks are held, no other transaction can modify those rows.
 
                   When a coordinator fails, orphaned in-doubt transactions do ocurr, and the only way out is for an administrator to manually decide whether to commit or roll back the transaction.
-              46. best fault tolerance algorithms ? 
+              46. best fault tolerance concensus algorithms ? 
                     The best-known fault-tolerant consensus algorithms are Viewstamped Replication (VSR), Paxos, Raft and Zab(Zookeeper).
               47. How fencing token (used in zookeeper) can help with linearizability / concensus ? 
                     First why do you need fecning token ? 
