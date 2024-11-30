@@ -1897,8 +1897,7 @@ Distributed best practices
     - use nouns
     - avoid verbs 
     - do not use CRUD in naming since it would be obvious with HTTP methods - GET, POST , PUT , DELETE
-    - for idempotency, avoid POST and only limit to PUT and DELETE 
-      - difference between POST and PUT
+    - difference between POST and PUT
         - Purpose : 
           - POST: Used to create a new resource. The server decides the URI (Uniform Resource Identifier) of the created resource.
               Example: Submitting a form to create a new user.
