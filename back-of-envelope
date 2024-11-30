@@ -1635,16 +1635,18 @@ Distributed best practices
           https://github.com/keyvanakbary/learning-notes/blob/master/books/designing-data-intensive-applications.md#sloppy-quorums-and-hinted-handoff
           Leaderless replication may be appealing for use cases that require high availability and low latency, and that can tolerate occasional stale reads.
 
-          It's likely that the client won't be able to connect to some database nodes during a network interruption.
+          How do you keep strong consistency if there is network failure ? 
 
-            1. Is it better to return errors to all requests for which we cannot reach quorum of w or r nodes?
-            2. Or should we accept writes anyway, and write them to some nodes that are reachable but aren't among the n nodes on which the value usually lives?
+            It's likely that the client won't be able to connect to some database nodes during a network interruption.
 
-          The latter is known as sloppy quorum: writes and reads still require w and r successful responses, but those may include nodes that are not among the designated n "home" nodes for a value.
+              1. Is it better to return errors to all requests for which we cannot reach quorum of w or r nodes?
+              2. Or should we accept writes anyway, and write them to some nodes that are reachable but aren't among the n nodes on which the value usually lives?
 
-          Once the network interruption is fixed, any writes are sent to the appropriate "home" nodes (hinted handoff).
+            The latter is known as sloppy quorum: writes and reads still require w and r successful responses, but those may include nodes that are not among the designated n "home" nodes for a value.
 
-          Sloppy quorums are useful for increasing write availability: as long as any w nodes are available, the database can accept writes. This also means that you cannot be sure to read the latest value for a key, because it may have been temporarily written to some nodes outside of n
+            Once the network interruption is fixed, any writes are sent to the appropriate "home" nodes (hinted handoff).
+
+            Sloppy quorums are useful for increasing write availability: as long as any w nodes are available, the database can accept writes. This also means that you cannot be sure to read the latest value for a key, because it may have been temporarily written to some nodes outside of n
 
 
         
