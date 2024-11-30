@@ -2183,7 +2183,7 @@ Distributed best practices
     https://www.youtube.com/watch?v=zt8Cocdy15c
     use hash(password + salt(random string attached))
     salting helps in eliminating rainbow attacks - https://www.beyondidentity.com/glossary/rainbow-table-attack
-    Even if you salt in same DB as password, attacker will never able to guess the actually password since it does not know how salt text is combined with password before hashing.
+    Even if you keep salt in same DB as password, attacker will never able to guess the actually password since it does not know how salt text is combined with password before hashing.
 
   Bare metal, VMs and containers
     https://www.youtube.com/watch?v=Jz8Gs4UHTO8
