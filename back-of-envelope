@@ -1268,7 +1268,8 @@ Time to understand scalability, latency aspects
                   - What if one of the observers fail ? 
                     - it remembers the latest transaction id and requires all the missing ids to be sent by follower.
                   - How Zookeeper ensures messages are in order ? 
-                    - The commit log of ZooKeeper’s consensus protocol (ZAB) helps guarantee in-order delivery of config changes.
+                    - The commit log of ZooKeeper’s consensus protocol (ZAB) helps guarantee in-order delivery of config changes. Read this how : https://medium.com/@adityashete009/the-zab-algorithm-502781c54498
+
               54. Techniques to optimize and scale your application code to millions of requests ?
                   - Actor model (like Akka support in Scala and Java, Elixir for Erlang) : http://tinyurl.com/2c4a2xtn 
                       - helps with avoid race conditions because it process only one message at a time (http://tinyurl.com/26lajp6p)
