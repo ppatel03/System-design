@@ -825,7 +825,8 @@ Time to understand scalability, latency aspects
                 - When you do not need to send acknowledgement back to user ( not a deal breaker since you can provide status api to user )
                 - When your dependent jobs and time-consuming 
 
-              - FAN-OUT DESIGN Disadvantages
+              - FAN-OUT DESIGN Disadvantages 
+                - single point of failure
                 - Failure in one results in restarting the job (lose durability)
                 - A dependent time consuming job keeps the resources blocked 
 
@@ -871,7 +872,7 @@ Time to understand scalability, latency aspects
           b. For distributed DBs, Concensus esp. for consistency on distributed leaderless DBs like Cassandra
               Trade-offs with strict isolation / concensus VS latency / availability 
 
-        9. Distributed transactions if it involves different DB tables or heterogeneous systems
+        9. Distributed transactions if it involves DB tables on different nodes or heterogeneous systems
             - 2PC or TCC(Try + confirm/cancel) or Saga (new microsservice design pattern for DBs which do not support 2PC)
             Example balance transfer 
         10. Zookeeper for any of the operations : 
@@ -879,7 +880,8 @@ Time to understand scalability, latency aspects
               - Concensus by providing total order broadcast + (vs Raft - https://stackoverflow.com/questions/47760448/what-is-the-difference-between-zookeeper-and-raft )
               - leader election + 
               - failure detection + 
-              - subscribe to config change updates 
+              - subscribe to config change updates + 
+              - consistent, high available state storage
             Zookeeper is best deployed for small pieces of state where linearizability and high availability is critical. (https://aphyr.com/posts/291-call-me-maybe-zookeeper)
         11. Security : 
               - Storing Personal Data : encrtyped form 
@@ -1355,8 +1357,10 @@ Distributed Systems estimate
     System call = 1 us
     Context switching between linux threads : 10 us
     Ngnix to process http request : 100 us
-    SSD write latency : 500 us
-    SSD read latency = 16 us
+    SATA SSD write latency : ~200~ us
+    SATA SSD read latency : ~100 us
+    NVME SSD write latency : ~20 us
+    NVMe SSD read latency : ~10us
     Round trip within the same datacenter 	 = 500 us 
     Redis cache latency including network : 1 ms (usually 500 us by internal redis)
     Between two availability zones : 5 ms
