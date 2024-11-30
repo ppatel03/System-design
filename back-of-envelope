@@ -1626,6 +1626,7 @@ Distributed best practices
           https://help.serena.com/doc_center/cm/ver14_2_0_1/admin_console/adminhelp/ddevg_replication_logs/what_is_a_replication_log.htm
       Raft is used in Kafka, etcd, CockroachDB
       Other alternative is Zookeepeer which uses ZAB(zookeeper atomic broadcast) which works similar to Raft
+        - Read this how : https://medium.com/@adityashete009/the-zab-algorithm-502781c54498
 
 
   Failure handling algo
