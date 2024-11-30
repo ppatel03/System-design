@@ -2540,8 +2540,8 @@ Distributed best practices
 
             But what if its a write skew or phantom (where a write in one transaction changes the result of a search query in another transaction, is called a phantom)
               - use "materialize conflicts" technique by creating rows. Example, creating meeting room time slots records to ensure no two rooms are in one time slot. But this will not work in cases like unique username or atleast one oncall, you cannot create records of all possible usernames.
-              - Use serializable isolation
-              - To improve performance, you can use Snapshot Serializable solution
+              - Use serializable isolation : all read and write transactions are serializable
+              - To improve performance by unblocking, you can use Snapshot Serializable solution where you keep reading from consistent snapshot while writes would be serializable by first checking if the snapshot version is correct before processing the write. 
 
             https://efficientcodeblog.wordpress.com/2017/12/25/leaderless-replication-dynamo-style-quorum-consensus-eventual-consistency-high-availability-and-low-latency/ 
             But what if its distributed -  multileader or leaderless replication ? 
