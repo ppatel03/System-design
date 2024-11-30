@@ -1897,6 +1897,25 @@ Distributed best practices
     - use nouns
     - avoid verbs 
     - do not use CRUD in naming since it would be obvious with HTTP methods - GET, POST , PUT , DELETE
+    - for idempotency, avoid POST and only limit to PUT and DELETE 
+      - difference between POST and PUT
+        - Purpose : 
+          - POST: Used to create a new resource. The server decides the URI (Uniform Resource Identifier) of the created resource.
+              Example: Submitting a form to create a new user.
+              URI: POST /users
+          - PUT: Used to update an existing resource or create a resource at a specific URI if it does not already exist.
+              Example: Updating the profile of a specific user or creating it if absent.
+              URI: PUT /users/{id}
+        - Idempotence
+          - POST: Not idempotent. Multiple POST requests with the same data can result in multiple resources being created.
+              Example: Sending the same POST twice could create two different users.
+          - PUT: Idempotent. Multiple PUT requests with the same data result in the same resource state.
+              Example: Sending the same PUT request twice updates the resource to the same state.
+        - URL Structure
+          - POST: The server assigns the URI for the created resource.
+            Example: POST /articles -> Creates a new article with a server-defined ID.
+          - PUT: The client specifies the exact URI for the resource.
+            Example: PUT /articles/123 -> Updates the article with ID 123 or creates it if it doesn’t exist.
     - use plural for accessing the collection
         /customers - gets all customers
     - use {} for accessing by id 
