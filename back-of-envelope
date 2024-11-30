@@ -1681,7 +1681,7 @@ Distributed best practices
     Hash - SHA-1 <  Murmur hash <  SHA-256 in terms of collision
     SHA-1 is hash function and not encryption one
         https://stackoverflow.com/questions/31532498/is-sha-1-length-always-40-symbols
-        SHA-1 produces a 160-bit (20-byte) hash value known as a message digest. A SHA-1 hash value is typically rendered as a hexadecimal number, 40 digits long.
+        SHA-1 produces a 160-bit (20-byte) hash value known as a message digest. A SHA-1 hash value is typically rendered as a hexadecimal number, 40 chars long.
 
 
     SHA-256 is more secure https://www.keycdn.com/support/sha1-vs-sha256
