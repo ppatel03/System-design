@@ -491,6 +491,7 @@ Time to understand scalability, latency aspects
               - Block server (avoid uploading entire file and instead focus only on changed lines by breaking into blocks, compression, encryption. The server supports delta detection)
                 - why dropbox breaks into 4MB
                    - max block size is 4MB in block storage - http://tinyurl.com/2ya6opzs
+                   - However most computer architectures support 4KB blocks due to page size in main memory, 4KB sector size in SSDs, avoids fragmentation. But modern architectures like ARM or RISC support configurable upto 4MB for large data workflows for i/o efficiency, reduced metadata overhead like HDFS 
                  - why File chunking, hashing and encryption on block server over client side
                   - client side is less secure, needs different implements on iOS, Android, WEB
                 
