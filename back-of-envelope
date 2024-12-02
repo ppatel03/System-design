@@ -3336,6 +3336,7 @@ Distributed systems today and Benchmarking on common systems
                         1. time based load testing based on demand source ratio ( say 1:2 for FB vs insta calls at 6:00 pm pst )
                         2. get throughput and stopper metrics
                         3. move backwards from stopper metrics and assign quotas on throughput ( say max throughput is 15 ins, then FB can max have 5 ins and insta can have max 10 ins )
+                        4. for hard limit quotas, inform the teams to use promise cache
                         4. integrate ML in time based load testing
                       Pros : easier to manage
                       Cons : too much fragmentation esp. different peak hours for different demand source
