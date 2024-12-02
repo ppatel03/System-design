@@ -3294,6 +3294,9 @@ Distributed systems today and Benchmarking on common systems
                 - from Code guru profiler stats
                 - async io
                 - biosnoop to avoid unwanted disk access
+                - logging optimization 
+                - memoization 
+                - promise caching
             - Utilization
               - defragmentation using Live migration
             - HW efficiency
