@@ -3350,9 +3350,6 @@ Distributed systems today and Benchmarking on common systems
                       - For viral content, we use promise cache to avoid multiple requests for same resource.
                       - Service level rate limiter with spike buffer
 
-                   So Sharded + non-Sharded with quotas solved 35% of the challenge. 10% of the case which were not solvable for following use cases.
-                    1. service with multiple demand sources and are unbounded with quotas 
-                    They need additional code changes implementing promise cache.
                    
                 How autoscaling is done ? 
               
