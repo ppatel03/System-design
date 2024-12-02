@@ -3197,21 +3197,21 @@ Distributed systems today and Benchmarking on common systems
         - Inefficiency or infrequent DB queries 
         - Logging optimization 
           - synchronous to async logging
-          - log rotation based on application to avoid large files 
+          - log rotation granularity based on application to avoid large files 
           - archive old logs to disk using typical linux fsync command (Forces all in-memory data of a file, along with its metadata)
-          - avoid log formatting 
+          - avoid string formatting in logs if that log level is not even enabled 
       - Software efficiency
         - For horizontal software written in C, using Folly libraries rather than traditional ones (in memory json manipulation or string-formatting)
             - folly::small_vector over std::vector: Ideal for small collections, reducing heap allocations and improving cache locality.
             - folly::F14 Hash Tables: Highly efficient hash table implementations with superior performance compared to standard std::unordered_map.
             - folly::fbvector : A drop-in replacement for std::vector with improved memory management and performance characteristics.
             - String Manipulation: Folly includes several optimized string handling utilities (e.g., folly::fbstring), which are faster and more memory-efficient than std::string in many scenarios. fbstring uses small-string optimization to minimize allocations for short strings, which is particularly useful in text-heavy applications.
-            - Logging and Debugging: Folly includes high-performance logging tools like folly::logging, which is optimized for low-latency, high-frequency logging scenarios. This helps reduce the overhead associated with logging in production.
+        - Logging and Debugging: Folly includes high-performance logging tools like folly::logging, which is optimized for low-latency, high-frequency logging scenarios. This helps reduce the overhead associated with logging in production.
             - Logging optimization 
               - synchronous to async logging
-              - log rotation based on application to avoid large files 
+              - log rotation granularity based on application to avoid large files 
               - archive old logs to disk using typical linux fsync command (Forces all in-memory data of a file, along with its metadata)
-              - avoid log formatting 
+              - avoid string formatting in logs if that log level is not even enabled  
         - ML ranking : vector optimizations with sparse matrix. 
         - Implementation of Async IO
         - using BPF (say biosnoop command )
@@ -3220,6 +3220,10 @@ Distributed systems today and Benchmarking on common systems
         - unused host 
         - Kubernetes right sizing using AWS Karpenter - https://www.youtube.com/watch?v=FIBc8GkjFU0&ab_channel=ContainersfromtheCouch 
           - https://karpenter.sh/ 
+          - Say if a new pod is needed say just needed instance type i3en.xl, 
+            - Cluster Autoscaler reserves a new node (AWS instances) of fixed sixed in node group of i3en.12xl
+            - Karpenter reserves a new node (AWS instances) of flexible size which is i3en.xl. Secondly, it dynamically resolves fragementation across instance types.
+              - Research on AWS Karpenter : move it across AWS instance families rather than just types AND also perform defragmentation using instance families using live migration.
 
       - HW efficiency
         - replace new hardware based on bottlneck resource
