@@ -3189,12 +3189,17 @@ Distributed systems today and Benchmarking on common systems
     Examples of 
       - Demand efficiency 
         - adding cache at function level like "Memoize" by simply tracing amount of function calls on a request 
-        - Promise cache
+        - Promise cache by simply checking large number of concurrent requests to DB server (MySQL cassandra) for same data 
         - removing GKs 
         - removing dead ifs 
         - removing old frameworks (simple pattern matching)
         - unsued tables in MySQL, Dataware houses and their pipelines/models 
         - Inefficiency or infrequent DB queries 
+        - Logging optimization 
+          - synchronous to async logging
+          - log rotation based on application to avoid large files 
+          - archive old logs to disk using typical linux fsync command (Forces all in-memory data of a file, along with its metadata)
+          - avoid log formatting 
       - Software efficiency
         - For horizontal software written in C, using Folly libraries rather than traditional ones (in memory json manipulation or string-formatting)
             - folly::small_vector over std::vector: Ideal for small collections, reducing heap allocations and improving cache locality.
@@ -3202,6 +3207,11 @@ Distributed systems today and Benchmarking on common systems
             - folly::fbvector : A drop-in replacement for std::vector with improved memory management and performance characteristics.
             - String Manipulation: Folly includes several optimized string handling utilities (e.g., folly::fbstring), which are faster and more memory-efficient than std::string in many scenarios. fbstring uses small-string optimization to minimize allocations for short strings, which is particularly useful in text-heavy applications.
             - Logging and Debugging: Folly includes high-performance logging tools like folly::logging, which is optimized for low-latency, high-frequency logging scenarios. This helps reduce the overhead associated with logging in production.
+            - Logging optimization 
+              - synchronous to async logging
+              - log rotation based on application to avoid large files 
+              - archive old logs to disk using typical linux fsync command (Forces all in-memory data of a file, along with its metadata)
+              - avoid log formatting 
         - ML ranking : vector optimizations with sparse matrix. 
         - Implementation of Async IO
         - using BPF (say biosnoop command )
