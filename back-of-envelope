@@ -3220,9 +3220,9 @@ Distributed systems today and Benchmarking on common systems
         - unused host 
         - Kubernetes right sizing using AWS Karpenter - https://www.youtube.com/watch?v=FIBc8GkjFU0&ab_channel=ContainersfromtheCouch 
           - https://karpenter.sh/ 
-          - Say if a new pod is needed say just needed instance type i3en.xl, 
+          - Say if a new pod is needed say just needed instance size i3en.xl, 
             - Cluster Autoscaler reserves a new node (AWS instances) of fixed sixed in node group of i3en.12xl
-            - Karpenter reserves a new node (AWS instances) of flexible size which is i3en.xl. Secondly, it dynamically resolves fragementation across instance types.
+            - Karpenter reserves a new node (AWS instances) of flexible size which is i3en.xl. Secondly, it dynamically resolves fragementation across instance sizes of same type.
               - Research on AWS Karpenter : move it across AWS instance families rather than just types AND also perform defragmentation across instance families using live migration.
 
       - HW efficiency
