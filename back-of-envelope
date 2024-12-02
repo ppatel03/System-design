@@ -3329,18 +3329,19 @@ Distributed systems today and Benchmarking on common systems
                   1.  limit based on demand sources 
                       - perform sharding of services by demand sources after load testing 
                       - Set quotas accordingly.
+                      - for hard limit quotas, inform the teams to use promise cache
                       Pros : great utilization 
                       Cons : cubersome to manage for 100+ demand sources especially shared endpoints like WWW
 
                   2. multiple 100+ demand sources : 
-                      - This is hard 
+                      - This is hard but performing below steps helped 
                         1. time based load testing based on demand source ratio ( say 1:2 for FB vs insta calls at 6:00 pm pst )
-                        2. get throughput and stopper metrics
+                        2. group demand sources based on throughput and stopper metrics
                         3. move backwards from stopper metrics and assign quotas on throughput ( say max throughput is 15 ins, then FB can max have 5 ins and insta can have max 10 ins )
                         4. for hard limit quotas, inform the teams to use promise cache
-                        4. integrate ML in time based load testing
+                        5. integrate ML in time based load testing
                       Pros : easier to manage
-                      Cons : too much fragmentation esp. different peak hours for different demand source
+                      Cons : too much resource overhead on load testing because of time-based and grouping
                 
 
                  QUESTION : 
