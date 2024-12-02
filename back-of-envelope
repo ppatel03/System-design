@@ -3101,6 +3101,17 @@ Distributed systems today and Benchmarking on common systems
         https://www.atlantic.net/vps-hosting/how-to-check-linux-cpu-usage-or-utilization/ 
         Host level metrics and also per process metrics 
         This command in Linux is used to report and monitor system input/output (I/O) device statistics, including information about disk utilization and performance.
+      Types of profiling techniques : 
+        Sampling Profiling
+          The profiler periodically "samples" the state of the program at set intervals (e.g., every 10 milliseconds).
+          It takes a snapshot of the program's current state (e.g., which function is being executed or which memory areas are in use) and aggregates this data over time.
+          Advantages: Low overhead, less intrusive to the application.
+          Disadvantages: Less precise, as it only captures snapshots rather than continuous data.
+        Instrumentation Profiling
+          In this approach, the profiler actively logs data during each function call or memory allocation/deallocation.
+          Advantages: Provides more detailed and precise data (e.g., exact execution times, specific memory usage).
+          Disadvantages: Can introduce higher overhead due to the frequent logging of data, affecting the program's performance
+       
     Performance monitoring needs to be done at different levels 
       Example of Meta stack - https://atscaleconference.com/systemscale-ai-observability/
       ![Alt text](image-1.png)
