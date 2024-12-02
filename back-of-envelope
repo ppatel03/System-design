@@ -1278,6 +1278,43 @@ Time to understand scalability, latency aspects
                       - Cons
                         - large learning curve for developers
                   - Reactors based Pub Sub model in Java which supports backpresssure : https://www.baeldung.com/reactor-core 
+
+              55. Different types of replication logs :
+                Statement-based replication
+                  The leader logs every statement and sends it to its followers (every INSERT, UPDATE or DELETE).
+
+                  This type of replication has some problems:
+
+                  Non-deterministic functions such as NOW() or RAND() will generate different values on replicas.
+                  Statements that depend on existing data, like auto-increments, must be executed in the same order in each replica.
+                  Statements with side effects may result on different results on each replica.
+                  A solution to this is to replace any nondeterministic function with a fixed return value in the leader.
+
+                Write-ahead log (WAL) shipping
+                  The log is an append-only sequence of bytes containing all writes to the database. The leader can send it to its followers. This way of replication is used in PostgresSQL and Oracle.
+
+                  The main disadvantage is that the log describes the data at a very low level (like which bytes were changed in which disk blocks), coupling it to the storage engine.
+
+                  Usually is not possible to run different versions of the database in leaders and followers. This can have a big operational impact, like making it impossible to have a zero-downtime upgrade of the database.
+
+                Logical (row-based) log replication
+                    Basically a sequence of records describing writes to database tables at the granularity of a row:
+
+                    For an inserted row, the new values of all columns.
+                    For a deleted row, the information that uniquely identifies that column.
+                    For an updated row, the information to uniquely identify that row and all the new values of the columns.
+                    A transaction that modifies several rows, generates several of such logs, followed by a record indicating that the transaction was committed. MySQL binlog uses this approach.
+
+                    Since logical log is decoupled from the storage engine internals, it's easier to make it backwards compatible.
+
+                    Logical logs are also easier for external applications to parse, useful for data warehouses, custom indexes and caches (change data capture).
+
+                Trigger-based replication
+                  There are some situations were you may need to move replication up to the application layer.
+
+                  A trigger lets you register custom application code that is automatically executed when a data change occurs. This is a good opportunity to log this change into a separate table, from which it can be read by an external process.
+
+                  Main disadvantages is that this approach has greater overheads, is more prone to bugs but it may be useful due to its flexibility.
                    
 
       e. SOME POPULAR OPTIONS BY COMPANIES
