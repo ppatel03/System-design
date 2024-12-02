@@ -3362,7 +3362,7 @@ Distributed systems today and Benchmarking on common systems
                     - checks the impact on throughput and stopper metrics 
                     - decomission the hosts
                   - while scaling up.
-                    - similar strategy but to save costs further it tries to consume capacity from released common pool of machines rather than dedicated hosts 
+                    - similar strategy but to save costs further it tries to consume capacity from released flexible pool of machines rather than service selected machine type 
 
                 What about autoscaling on stateful services ? 
                   - this is hard and manual often and needs to be carefully done if automation 
