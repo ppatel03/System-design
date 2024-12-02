@@ -3326,12 +3326,13 @@ Distributed systems today and Benchmarking on common systems
                   This usually happens with different demand sources. One thing observed was with different demand sources, throughput metric was consistent but stopper metrics could change. Example, call from FB feed to ranking platform is CPU bound but from Insta feed to ranking platform is Mem bound.
                   SOLUTION : 
                   
-                  1. Sharded services based on demand sources : 
-                      - Do load testing at each demand source level and determine stopper metrics for each. Set quotas accordingly.
+                  1.  limit based on demand sources 
+                      - perform sharding of services by demand sources after load testing 
+                      - Set quotas accordingly.
                       Pros : great utilization 
-                      Cons : cubersome to manage for 1000+ demand sources especially shared endpoints like WWW
+                      Cons : cubersome to manage for 100+ demand sources especially shared endpoints like WWW
 
-                  2. Non-sharded services + all stopper metrics based on demand sources : 
+                  2. multiple 100+ demand sources : 
                       - This is hard 
                         1. time based load testing based on demand source ratio ( say 1:2 for FB vs insta calls at 6:00 pm pst )
                         2. get throughput and stopper metrics
