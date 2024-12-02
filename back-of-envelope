@@ -3223,7 +3223,7 @@ Distributed systems today and Benchmarking on common systems
           - Say if a new pod is needed say just needed instance type i3en.xl, 
             - Cluster Autoscaler reserves a new node (AWS instances) of fixed sixed in node group of i3en.12xl
             - Karpenter reserves a new node (AWS instances) of flexible size which is i3en.xl. Secondly, it dynamically resolves fragementation across instance types.
-              - Research on AWS Karpenter : move it across AWS instance families rather than just types AND also perform defragmentation using instance families using live migration.
+              - Research on AWS Karpenter : move it across AWS instance families rather than just types AND also perform defragmentation across instance families using live migration.
 
       - HW efficiency
         - replace new hardware based on bottlneck resource
