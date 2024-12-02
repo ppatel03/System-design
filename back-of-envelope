@@ -3298,7 +3298,7 @@ Distributed systems today and Benchmarking on common systems
                 - memoization 
                 - promise caching
                 - dead if
-            - Utilization
+            - Utilization ( no problems on autoscaling )
               - defragmentation using Live migration
             - HW efficiency
               - degrade efficiency by smartly select high risk hosts based on temperature, age and DCO bandwidth
