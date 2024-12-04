@@ -303,7 +303,7 @@ Time to understand scalability, latency aspects
             - Requiremnt : 10K ids per second, so 64-bit ( 2^64 ~ 10^16) is more than enough
             - Single database (bottleneck SPOF)
             - Multi-database set up with increments by K for K DBs (scaling problem, ID synchronization)
-            - UUID (128 bits long but not go up with time)
+            - UUID - UUID is a 128-bit number used to identify information in computer systems. UUID has a very low probability of getting collusion. Quoted from Wikipedia, “after generating 1 billion UUIDs every second for approximately 100 years would the probability of creating a single duplicate reach 50%” [1]. Cons : (128 bits long but our requirements is 64 bits and they not go up with time)
             - Ticket Server like Flickr (SPOF)
             - Twitter snowflake approach (64 bits = 1 sign + 41 timestamp + 5 datacenter + 5 machine + 12 sequence )
               - timestamp in milliseconds is 13 digits 
@@ -326,7 +326,7 @@ Time to understand scalability, latency aspects
                 -       vs  depend on unique id generator 
                 - collision vs collision free 
                 - cannot figure next url vs easy to figure out next url if unique id increments by 1 for new entry 
-            - Others : Rate limiter, Scaling with stateless, DB scaling with replication & sharding, Analytics 
+            - Others : Rate limiter (avoid overflow), Scaling with stateless, DB scaling with replication & sharding, Analytics 
           6. Web Crawler 
             - High level : 
               URL frontier (Seed urls)-> Queue-> Downloader (DNS resolover) ->Q-> Content Parser( DB) -> Q-> Link Extractor -> Q ->send to frontier
