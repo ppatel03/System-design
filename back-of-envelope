@@ -400,6 +400,7 @@ Time to understand scalability, latency aspects
               - High level 
                 - Client <-> Chat Server (websocket)              -> key value DB
                           -> API servers (help discover servers)  -> key value DB
+                - Chat Server discovery with help of Zookeeper
               - 1:1 flow :  User A <-> Chat Server A -> Queue for User B -> Chat Server B <-> User B
                                                             |
                             User C <-> Chat Server A --------
