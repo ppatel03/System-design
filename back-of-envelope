@@ -341,7 +341,7 @@ Time to understand scalability, latency aspects
             - Extensibility : Rather than just "text", support new content types say images or video 
             - Detect and avoid malciousness
               - redundant content using deduplication with hashing
-              - avoid spider traps by setting max length (A spider trap is a web page that causes a crawler in an infinite loop. For instance, an infinite deep directory structure is listed as follows: http://www.spidertrapexample.com/foo/bar/foo/bar/foo/bar/...)
+              - avoid spider traps by setting max length (A spider trap is a web page that causes a crawler in an infinite loop either through dynamically generated links or recursive links.)
               -  noise (ads, code snippets)
             - Others : Server side rendering, Scaling with statelessness, DB replication and sharding, Analytics
                 - Server side rendering using Dynamic rendering : https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering 
