@@ -406,7 +406,7 @@ Time to understand scalability, latency aspects
                             User C <-> Chat Server A --------
               - Group  chat flow : similar to above where User A can send messsage to multiple Queue's for B and C both
                   Wechat still uses per user per message queue. So Group chats, user duplicates messages to all his/her friend's queue
-              - Message flows 1:1 with synchronization on muliple devices
+              - Message flows 1:1 with synchronization on muliple devices by simply having each device storing max_current_message_id. 
 
         -------------------------------- Interesting open question on websocket ----------------------------
 
