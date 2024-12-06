@@ -531,7 +531,7 @@ Time to understand scalability, latency aspects
                         - Cons 
                             - popular cities will have many business under same geohash
                             - boundary issues (closer business in different geohash. So go with shared prefix with an exception that equator divison has no shared prefix.)
-                      - use Quadtree (keep dividing till min number of business in each grid) - Yext
+                      - use Quadtree (keep dividing into 4 quadrants till min number of business in each grid) - Yext
                         It is in-memory structure, so performing the calculations
                           - Each grid can store a maximal of 100 businesses
                           - Number of leaf nodes = ~200 million / 100 = ~2 million
