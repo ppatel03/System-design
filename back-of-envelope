@@ -541,6 +541,10 @@ Time to understand scalability, latency aspects
                             - solves popular cities problem of Geohash
                         - Cons 
                            - in memory challenge and operational start up time to construct / update quad tree
+                            - Estimate of time taken on 3GHz cpu ~ 3 * 10 ^ 9 cpu cycles /s 
+                              - Balanced tree construction ~ c * n log n where c = # of cpu cycles per operation 
+                              - c = 100 ( add/sub/comparison takes 5-10 cycles + avl tree balancing ~40 + L1/L2 cache miss ~40 + branch misprediction ~15 )
+                              - so 100 * 2*10^6 * log base 2 (2*10^6) ~ 6 billion cycle ~ 6 s
                       - Google S2 - Google Maps, Tinder
                   Browser/Client -> LB -> API Service -> Geo hash DB (redis)
                                                       -> DB (business info)
