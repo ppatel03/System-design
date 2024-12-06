@@ -449,8 +449,9 @@ Time to understand scalability, latency aspects
           10. Design A Search Autocomplete System
               - High level design (trie)
                   - Trie Data structure with frequency stored at every node with EOW = true 
-                  - But to fetch top 5 suggestions, complexity O(length of search)  + O(# of children * longest length ) + O(sort)
-                  - To optimize,  Trie cache which stores prefix -> list of chars and their frequency. 
+                  - But to fetch top 5 suggestions, complexity O(length of search)  + O(# of children * longest length of child) + O(sort)
+                    - if we limit prefix length to search and cache top 5 search at every node, then complexity will be constant
+                  -  Trie cache will be in memory in form of trie structure since fetching directly from DB with prefix will be slow ( 26 ^ longest word) 
                   - Trie cache is updated daily via logs collected. So data gathering in the back-end (offline) to populate new values in the trie daily
 
                   Client/Browser -> API Server -> Trie Cache -> Trie DB 
@@ -465,11 +466,11 @@ Time to understand scalability, latency aspects
               - High level design 
                 - Upload flow (Grokking)
                     Browser/Client ->  API Service   ------------->    MetaData DB 
-                                            |                              ^
-                                            |                              | update once transcoding is complete 
-                                            v                              |
-                                    Orginal Storage    -----------------> Transcode Service -----> Transcoded Storage (S3) -> CDN
-                                                                          (DAG - audio, video(resolution, fps, bit rate thumbnail watermark), metadata)
+                          |                                                 ^
+                          |(presigned url)                                  | update once transcoding is complete 
+                          |                                                 |
+                          |-------->Orginal Storage    -----------------> Transcode Service -----> Transcoded Storage (S3) -> CDN
+                                                         (DAG - audio, video(resolution, fps, bit rate thumbnail watermark), metadata)
 
                 - Why Video transcoding (different resolutions, video formats (HLS, DASH), fps, bit rate)
                 - DAG model for video ( Video, Audio, Metadata. Video has further parallel step -> transcoding different resolutions, thumbnail, watermark)
