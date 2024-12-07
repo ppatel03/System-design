@@ -604,17 +604,16 @@ Time to understand scalability, latency aspects
             15. Distributed Message Queue
               - point to point and pub-sub model 
               - topics, partition and brokers 
-              - consumer group (multiple consumers in a group can access the message from the topic by subscribing to multiple partitions. To avoid sync, one partition could only be accessed by one consumer in the group)
+              - consumer group (multiple consumers in a group can access the message from the topic by subscribing to multiple partitions. To avoid sync issues, one partition could only be accessed by one consumer in the group)
               - high level design 
                   Producer -> Queue (brokers   holding  partition.   ) -----------------------------------------> Consumer group 
                                   |                           
                                 Zookeeper                     
-              1.  (offset of consumers, paritition info, etc.)      
-              2. Coordination service  
-                  a. Service discovery: which brokers are alive.                                                
-                  b. Leader election: one of the brokers is selected as the active controller. There is only one active controller in the cluster. The active controller is 
-                     responsible for assigning partitions.
-                  c. Apache Zookeeper [2] or etcd [3] are commonly used to elect a controller.
+                   1. (offset of consumers, paritition info, etc.)      
+                   2. Coordination service  
+                      a. Service discovery: which brokers are alive.                                                
+                      b. Leader election: one of the brokers is selected as the active controller. There is only one active controller in the cluster. The active controller is responsible for assigning partitions.
+                      c. Apache Zookeeper [2] or etcd [3] are commonly used to elect a controller.
 
 
               - data storage (WAL which will perform sequential IO using disk. Each file could be like a segment. )
