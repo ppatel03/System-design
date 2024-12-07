@@ -676,7 +676,7 @@ Time to understand scalability, latency aspects
                   - room (room id, room type id, floor) populated during check-in
               - Idempotency through checkout id
               - concurrency issues 
-                - Pessimistic locking (like Serializable isolation, low performant, depends on DB support for locking)
+                - Pessimistic locking (like Serializable isolation, low performant and block the reads, depends on DB support for locking)
                 - Optimistic locking 
                   - using versioning (like in serializable snapshot isolation but has write contention)
                   - using unique key constraint (depends on DB support and has write contention)
