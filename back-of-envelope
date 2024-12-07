@@ -620,6 +620,7 @@ Time to understand scalability, latency aspects
               - message structure (key, value, topic, partition, offset, timestamp, size, crc for intergrity)
               - router at producer and co-ordinator at consumer to join the parition
               - consumer - push vs pull, rebalancing using co-ordinator
+                - Despite the naming similarity, the consumer group coordinator is different from the coordination service
               - replication - partitions replicas into multiple brokers , in sync replicas 
               - scalability 
                   - producer easy since no cordination needed, 
