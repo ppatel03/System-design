@@ -1411,6 +1411,7 @@ Distributed Systems estimate
     Between two availability zones : 5 ms
     Send packet CA (California) ->Netherlands->CA	= 150 ms 
     Disk seek	= 10 ms
+    For 7200 RPM disk, Sequential write latency (typical small data block): ~5-10 ms
     Human brain to process an object = 10-20 ms. So 25 fps is should than enough
     NTP error delay threshold = 30-50 ms
     DNS response time ranges : 10ms to 200ms.
