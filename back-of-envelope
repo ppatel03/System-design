@@ -1473,7 +1473,7 @@ Distributed Systems estimate
 
     AWS availability ~ 99.99% https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/appendix-a-designed-for-availability-for-select-aws-services.html
     AWS A100 GPU Lambda ~ 1$ per hour https://lambdalabs.com/service/gpu-cloud 
-    AWS memory limit    ~ 24 TB RAM
+    AWS memory limit    ~ 32 TB RAM
     AWS DB (MySQL) limit ~ 64 TB storage
     AWS disk size ~ unlimited via EBS
     Max socket connections : 65,536 https://www.ibm.com/docs/en/zos/2.1.0?topic=domain-maximum-number-sockets 
