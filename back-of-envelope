@@ -3415,7 +3415,7 @@ Distributed systems today and Benchmarking on common systems
                   This usually happens with different demand sources. One thing observed was with different demand sources, throughput metric was consistent but stopper metrics could change. Example, call from FB feed to ranking platform is CPU bound but from Insta feed to ranking platform is Mem bound.
                   SOLUTION : 
                   
-                  1.  limit based on demand sources 
+                  1.  fewer demand sources 
                       - perform sharding of services by demand sources after load testing 
                       - Set quotas accordingly.
                       - for hard limit quotas, inform the teams to use promise cache
