@@ -1390,9 +1390,54 @@ Distributed Systems estimate
     Estimates in KB
 
     Send 1 KB sequential from 1 Gbps network = 10 us  
-    Send 1 KB sequential from memory  = 0.25 us   (4 GB/s = 0.25 *  10 ^ -6 s) 
+    Send 1 KB sequential from memory  = 0.25 us   (100 GB/s = 0.25 *  10 ^ -6 s) 
     Send 1 KB sequential from SSD   = 1 us    (1 GB/s = 1 * 10 ^ -6 s )
     Send 1 KB sequential from disk    = 30 us     (30 MB/s = 0.03 * 10 ^ -3 s ) 
+
+    1. DRAM
+    Memory is the fastest storage tier, designed for low latency and high throughput.
+
+      Metric	Typical Values
+      Latency	50–100 nanoseconds (0.05–0.1 µs)
+      Bandwidth	~25–100 GB/s per channel (DDR4/DDR5)
+      IOPS	N/A (not block-oriented like storage devices)
+
+      Notes:
+
+      Modern DDR5 can exceed 100 GB/s in bandwidth with multiple channels.
+      Latency is ultra-low, as DRAM is directly connected to the CPU.
+
+    2. SSD
+    SSDs have much lower latency and higher throughput compared to HDDs.
+
+    SATA SSDs (connected via SATA 3.0 interface):
+      Metric	Typical Values
+        Latency	~50–100 µs (0.05–0.1 ms)
+        Bandwidth	~500–600 MB/s (limited by SATA 3.0)
+        IOPS	~50,000–100,000 IOPS (4K reads/writes)
+      NVMe SSDs (connected via PCIe interface):
+        Metric	Typical Values
+        Latency	~10–50 µs (0.01–0.05 ms)
+        Bandwidth	2–7 GB/s (PCIe Gen3 x4); 7–14 GB/s (PCIe Gen4 x4)
+        IOPS	~500,000–1,000,000+ IOPS (4K reads/writes)
+
+        Notes:
+
+            NVMe SSDs are orders of magnitude faster than SATA SSDs due to direct communication with the CPU over PCIe lanes.
+            Random IOPS performance is critical for workloads like databases and virtual machines.
+
+    3. HDDs (Hard Disk Drives)
+        HDDs are mechanical devices, slower than both memory and SSDs.
+
+        Metric	Typical Values
+        Latency	~3–10 ms (combination of seek + rotational delay)
+        Bandwidth	~100–250 MB/s (sequential reads/writes)
+        IOPS	~100–200 IOPS (4K reads/writes)
+        Notes:
+
+        HDD latency is dominated by mechanical delays (seek time and rotational latency).
+        Throughput improves with higher RPM and denser platters but is still far slower than SSDs.
+
 
 
     L1/L2 cache = 1 ns
