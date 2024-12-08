@@ -3200,6 +3200,9 @@ Distributed systems today and Benchmarking on common systems
           In this approach, the profiler actively logs data during each function call or memory allocation/deallocation.
           Advantages: Provides more detailed and precise data (e.g., exact execution times, specific memory usage).
           Disadvantages: Can introduce higher overhead due to the frequent logging of data, affecting the program's performance
+        Event-Based Profiling:
+          Configure the profiler to start only when specific conditions are met (e.g., high CPU utilization or memory pressure).
+          Example: Use CloudWatch Alarms to trigger profiling when CPU usage exceeds 80%.
        
     Performance monitoring needs to be done at different levels 
       Example of Meta stack - https://atscaleconference.com/systemscale-ai-observability/
@@ -3304,6 +3307,16 @@ Distributed systems today and Benchmarking on common systems
         - ML ranking : vector optimizations with sparse matrix. 
         - Implementation of Async IO
         - using BPF (say biosnoop command )
+        - Case study : Example of unexplained spikes latency and cost in EKS/ECS cluster 
+          - Problem Statement : 
+            1. The latency occurred intermittently and at random services.
+            2. Metrics pointed to general delays in network communication, but no specific service or node showed clear patterns.
+            3. The system handled thousands of requests per second, so capturing detailed traces was costly and impractical.
+          - Root causes : 
+            1. Application Level: Blocking I/O operations in Java applications limited scalability and throughput, exhausting thread pools under high load.
+            2. Network Level: TCP retransmissions, kube-proxy inefficiencies, and misconfigured retry mechanisms compounded latency issues.
+            3. Infrastructure Level: Saturated socket buffers and inefficient service routing worsened the bottleneck.
+          - Details : https://docs.google.com/document/d/1c_B2-Jcz4tlmtyoOMsnX5hZzlMtP4LHJPYW6GZPJ8bY/edit?tab=t.0
       - Utilization efficiency 
         - Autoscaling using capacity modelling (throughput and stopper metrics)
         - unused host 
@@ -3361,6 +3374,7 @@ Distributed systems today and Benchmarking on common systems
         - Meta 
           - Demand efficiency 
             - through memoization
+            - promise cache
             - long tail but impactful - unused GKs, unused DBs and their jobs, infrequent query 
           - Software efficiency 
             - using folly libraries 
@@ -3387,10 +3401,12 @@ Distributed systems today and Benchmarking on common systems
                 - memoization 
                 - promise caching
                 - dead if
+                - case study of eBPF observability
+                  - https://docs.google.com/document/d/1c_B2-Jcz4tlmtyoOMsnX5hZzlMtP4LHJPYW6GZPJ8bY/edit?tab=t.0
             - Utilization ( no problems on autoscaling )
               - defragmentation using Live migration
             - HW efficiency
-              - degrade efficiency by smartly select high risk hosts based on temperature, age, power supply and DCO bandwidth
+              - degrade efficiency by smartly select high risk hosts based on temperature, age, power supply, DCO bandwidth and capacity to evacuate 
           
 
             Solution for Autoscaling
@@ -3417,7 +3433,7 @@ Distributed systems today and Benchmarking on common systems
                   
                   1.  fewer demand sources 
                       - perform sharding of services by demand sources after load testing 
-                      - Set quotas accordingly.
+                      - Set quotas accordingly. ( say max throughput is 15 ins, then FB can max have 5 ins and insta can have max 10 ins )
                       - for hard limit quotas, inform the teams to use promise cache
                       Pros : great utilization 
                       Cons : cubersome to manage for 100+ demand sources especially shared endpoints like WWW
@@ -3426,9 +3442,7 @@ Distributed systems today and Benchmarking on common systems
                       - This is hard but performing below steps helped 
                         1. time based load testing based on demand source ratio ( say 1:2 for FB vs insta calls at 6:00 pm pst )
                         2. group demand sources based on throughput and stopper metrics
-                        3. move backwards from stopper metrics and assign quotas on throughput ( say max throughput is 15 ins, then FB can max have 5 ins and insta can have max 10 ins )
-                        4. for hard limit quotas, inform the teams to use promise cache
-                        5. integrate ML in time based load testing
+                        3. integrate ML in time based load testing
                       Pros : easier to manage
                       Cons : too much resource overhead on load testing because of time-based and grouping
                 
