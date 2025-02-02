@@ -277,7 +277,11 @@ Time to understand scalability, latency aspects
           - To solve hot Node partition, you assign virtual replicas on ring to get even distribution of keys, 
           - To solve hotspot key problem,  you can increase number of replicas but its common acorss all paritions and NOT customized for a partition or for a key
             - Replication strategies for Cassandra (https://www.baeldung.com/cassandra-replication-partitioning )
-            - So Smart strategy for hotspot key :
+                - Cassandra provides pluggable replication strategies by allowing different implementations of the AbstractReplicationStrategy class. Out of the box, Cassandra provides a couple of implementations, SimpleStrategy and NetworkTopologyStrategy.
+                - Once the partitioner calculates the token and places the data in the main node, the SimpleStrategy places the replicas in the consecutive nodes around the ring.
+                - On the other hand, the NetworkTopologyStrategy allows us to specify a different replication factor for each data center. Within a data center, it allocates replicas to nodes in different racks in order to maximize availability.
+                - The NetworkTopologyStrategy is the recommended strategy for keyspaces in production deployments, regardless of whether it’s a single data center or multiple data center deployment 
+            - Resolution for hotspot key :
               - detect the hot spot key using sampling method (like in Pig) or dashboard (like in CockroachDB)
               - for that hotspot key, assign the copy number to each key and create combined partition key for Cassandra (https://stackoverflow.com/a/27889289/1540256 )
             - CockraochDB provides dashboard insights for hot spot (https://www.cockroachlabs.com/blog/the-hot-content-problem-metadata-storage-for-media-streaming/ )
