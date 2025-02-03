@@ -268,7 +268,7 @@ Time to understand scalability, latency aspects
       c. Think about edge cases for product
         1. Rate limiter 
           - Algorithms (Token bucket - bucket fill rate and bucket capacity(has issue with parameters tuning), Leaky bucket using queue (issue with tuning), fixed windo (has boundary issue), So sliding window is the best), 
-          - distributed counting using redis (single threaded and hence atomic). Race condition can be avoid using Redis sorted set
+          - distributed counting using redis (single threaded and hence atomic). Race condition can be avoid using Redis sorted set + help of Lua script which executes atomically
           - Rate limiting rules config 
           - Exceeded rate limit HTTP error : 429 too many request
           - Amazon API gateway uses token bucket 
