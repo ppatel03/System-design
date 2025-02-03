@@ -271,6 +271,11 @@ Time to understand scalability, latency aspects
           - distributed counting using redis (single threaded and hence atomic). Race condition can be avoid using Redis sorted set
           - Rate limiting rules config 
           - Exceeded rate limit HTTP error : 429 too many request
+          - Amazon API gateway uses token bucket 
+          - Some great links 
+            - https://medium.com/geekculture/system-design-design-a-rate-limiter-81d200c9d392
+            - https://systemsdesign.cloud/SystemDesign/RateLimiter 
+
         2. Consistent Hashing 
           - Ring formation, 
           - add/remove server, 
