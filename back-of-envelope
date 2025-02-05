@@ -353,7 +353,7 @@ Time to understand scalability, latency aspects
               - avoid spider traps by setting max depth (A spider trap is a web page that causes a crawler in an infinite loop either through dynamically generated links or recursive links.)
               -  noise (ads, code snippets)
             - Others : Server side rendering, Scaling with statelessness, DB replication and sharding, Analytics
-                - Server side rendering using Dynamic rendering : https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering 
+                - Server side rendering using Dynamic rendering ( Dynamic Rendering: A technique where the server serves pre-rendered content to crawlers while serving client-side rendered content to regular users.)
           7. Design A Notification System
             - Different types of notification
               - App notification
