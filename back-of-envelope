@@ -354,6 +354,13 @@ Time to understand scalability, latency aspects
               -  noise (ads, code snippets)
             - Others : Server side rendering, Scaling with statelessness, DB replication and sharding, Analytics
                 - Server side rendering using Dynamic rendering ( Dynamic Rendering: A technique where the server serves pre-rendered content to crawlers while serving client-side rendered content to regular users.)
+                  -Dynamic rendering is done with help of user-agent header 
+                    - Crawler
+                      - GET /page HTTP/1.1
+                        Host: example.com
+                        User-Agent: Googlebot
+                    - Normal user
+                      - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36
           7. Design A Notification System
             - Different types of notification
               - App notification
