@@ -590,8 +590,6 @@ Time to understand scalability, latency aspects
 
                 - leverage redis pub sub
               - Periodic location update 
-              - Operation savings : 
-                  - User is by default subscribed to his/her friend's channel whether they are active or not. Saves the cost of new user joining the nearby service and having all his/her friend's subscribe to it.
               - Data model
                   - user id -> lat, long 
               - Why cache is needed ? - to store recent data with TTL
@@ -610,6 +608,9 @@ Time to understand scalability, latency aspects
                   - any change in ring structure will cause websocket servers resubscribing for all of its channel ids. 
                       - basically it computes the server using the hashfunction. 
                       - If the computed node is different, then it resubsribe
+
+              - Operation savings : 
+                  - User is by default subscribed to his/her friend's channel whether they are active or not. Saves the cost of new user joining the nearby service and having all his/her friend's subscribe to it.
 
               - Adding / removing friends is straightforward - just pass an event to subscribe/unsubscribe
               - User with many friends (not a problem since their friends channel would be distributed across)
