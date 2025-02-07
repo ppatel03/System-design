@@ -805,16 +805,30 @@ Time to understand scalability, latency aspects
                   Client -> LB -> Wallet Service -> DB 
 
               - But what if DB is sharded 
-                1. 2PC (lock + commit) - depends on DB support, XA standard to implement it for heterogeneous systems, needs co-ordinator support
-                2. TCC (Try Confirm/Cancel)  - leaves DB in inconsistent state but application has full control to handle it. Same with 2PC, needs co-ordinator support.
+                1. 2PC (lock + commit) 
+                  - depends on DB support, XA standard to implement it for heterogeneous systems. 
+                  - Cons 
+                    - The biggest problem with 2PC is that it’s not performant, as locks can be held for a very long time while waiting for a message from the other nodes. 
+                    - Another issue with 2PC is that the coordinator can be a single point of failure
+                2. TCC (Try Confirm/Cancel)  - say transfer $1 from account A in database A to account B in database B
+                  - In Try phase, it executes minus transaction in database A and no-op for database B. If both calls are successful, then it goes ahead with Confirm phase where it has no-op transaction in database A and add transaction for database B. If try or confirm phase is NOT successful, then it goes to cancel where it undo all the operations.
+                  - Cons : 
+                    - leaves DB in inconsistent state but application has full control to handle it. 
+                    - Same with 2PC, needs co-ordinator support.
                 3. Saga - Best choice for microservice. Can be Decentralized and Orchestration using co-ordinator but unlike TCC, its slow. 
                 For 2 and 3 to handle unbalances state, use phase status table (transaction_id, phase_type, name, status, out_of_order flag for network lag)
 
               - Event sourcing with materialized views 
 
                 So  With Saga or TCC
-                      Client -> LB -> Wallet Service (Orchestrator) ---> Commands to Partition 1 which has A balance --> DB partition 1
-                                                                    ---> Commans to Partition 2 which has B balance  --> DB partition 2
+                      Client -> LB -> Wallet Service (Orchestrator) ---> Commands -->  Queue  --> Consumer/Executor ->  DB partition 1
+                                          |                           to Partition 1                      |
+                                          |                            which has A                       State DB
+                                  queries State DB for status           balance 
+                                                                    ---> Commands -->  Queue  --> Consumer/Executor --> DB partition 2
+                                                                     to Partition 2                       |
+                                                                     which has B                        State DB
+                                                                     balance  
                                                                     
             24. Distributed Job scheduler
               - High level design
