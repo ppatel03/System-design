@@ -896,13 +896,14 @@ Time to understand scalability, latency aspects
           a. Discuss Isolations if needed : 
               - Read committed by default to guarantee no dirty reads and writes. (default MySQL, Postgresql)
 
-              - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle, MySQL).  Great example here - https://techcommunity.microsoft.com/t5/sql-server-blog/serializable-vs-snapshot-isolation-level/ba-p/383281 
+              - Check if you need Snapshot isolation to avoid non-repeatable reads (Oracle, MySQL).  Snapshot isolation solves by reading from consistent snapshot of DB. Great example here - https://techcommunity.microsoft.com/t5/sql-server-blog/serializable-vs-snapshot-isolation-level/ba-p/383281 
 
               But what if an update in target row could cause side effect in other rows which is also called write skew (eg., check unique username or atleast one oncall or no meetings for that room at time X) ? 
+              - When it read from consistent snapshot, username was not unique or 1 oncall was present or no meeting at that time. But when writing, multiple users try to write it at the same time causing incorrect state of DB with 2 duplicate users or 0 oncall or meeting overbooked.
 
-              - Serializable isolation (CockroachDB for distributed and Postgresql for single node) for phantoms(write skew) where you cannot reserve locks on returned rows and write in one transaction say row X,Y affects the other say row A,B 
+              - Solution is Serializable isolation (CockroachDB for distributed and Postgresql for single node) for phantoms(write skew) where you cannot reserve locks on returned rows and write in one transaction say row X,Y affects the other say row A,B 
                 - keep in mind that 
-                  - unique username COULD BE SOLVED with unique constraint also. 
+                  - unique username COULD BE SOLVED with unique constraint also. But unique constraint creates another unique index which slows down writes 
                   - meeting rooms COULD BE SOLVED with adding rows based on future time slots and creating lock per row. This is process is called materialization of conflicts but its not always feasible (too many wastage of space esp. for companies with 10K meeting rooms ).  
 
                 FOR MOST SQL DATABASES, WRITES TO B+ tree based FILE OR LOCATION IS LOCKED TO AVOID WRITE CONFLICTS ??  
@@ -1133,6 +1134,9 @@ Time to understand scalability, latency aspects
                   Column-oriented storage is simple: don't store all the values from one row together, but store all values from each column together instead. If each column is stored in a separate file, a query only needs to read and parse those columns that are used in a query, which can save a lot of work.
 
                   Column-oriented storage often lends itself very well to compression as the sequences of values for each column look quite repetitive, which is a good sign for compression. A technique that is particularly effective in data warehouses is bitmap encoding.
+                  Challenge with bitmap encoding : 
+                    1. High Cardinality: Columns with many distinct values (e.g., UserID) are poorly suited, as storing a bitmap per value becomes inefficient.
+                    2. Sparse Data: If most bits in a bitmap are 0, compression gains diminish (though techniques like run-length encoding can mitigate this).
 
                   Remember : Cassandra and HBase have a concept of column families, which they inherited from Bigtable. THIS IS DIFFERENT FROM COLUMN-ORIENTED STORAGE
             37. How messages can be transfered over the network ? - Pg 116
