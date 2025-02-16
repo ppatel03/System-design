@@ -1689,6 +1689,20 @@ Distributed best practices
       - helps in migration esp. monolithic to microservice. It has Strangler Facade which takes the decision whethere this API call should be made to monolithic or microservice. 
     Sharding 
       - Consistent hashing, Range based 
+  
+  Algorithms for System Design Interviews
+    Bloom Filter: Check if a requested item is in the cache before performing disk operations.
+    Geohash: Used to build location-based services.
+    HyperLogLog: Counting unique queries performed by users in a search.
+    Consistent Hashing: Used for efficient data distribution between the cluster’s nodes.
+    Merkle Tree: Used to detect inconsistencies between data replicas across multiple nodes.
+    Raft Algorithm: Used to achieve consensus on log replication.
+    Lossy Count: Network traffic analysis, web analytics, and identifying heavy hitters.
+    QuadTree: Used to build location-based services.
+    Operational Transformation: Used to support collaborative editing systems.
+    Leaky Bucket: Used for rate limiting
+    Rsync: Synchronizing files and directories between two different systems.
+    Ray Casting: Used for geospatial analysis, collision detection in video games, and computer graphics.
 
   Smallest short length required ( say for tiny url )
     The hashValue consists of characters from [0-9, a-z, A-Z], containing 10 + 26 + 26 = 62 possible characters. To figure out the length of hashValue, find the smallest n such that 62^n ≥ 365 billion. 
