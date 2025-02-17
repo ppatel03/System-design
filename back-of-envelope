@@ -2099,6 +2099,7 @@ Distributed best practices
     https://www.youtube.com/watch?v=4rLW7zg21gI 
       Process is responsible for executing set of instructions from an application
       Process will contain multiple threads
+    If interested, how computer boot process work : https://www.youtube.com/watch?v=XpFsMB6FoOs&ab_channel=ByteByteGo 
 
 
   Logging (errors), Metrics Monitoring (system level, business) and automated Deployment
@@ -2376,7 +2377,7 @@ Distributed best practices
         - Architecture consists of control plane called Istiod and envoy proxies each hosted besides each application in the pod 
         - To configure, 
           - you DO NOT HAVE TO ADJUST DEPLOYMENT OR CONFIG FILES (YAML) within each microservice. 
-          - ALL THE CONFIGURATIONS FOR ISTIO COMPONENTS WILL BE DONE IN ISTIO ITSELF. 
+          - ALL THE CONFIGURATIONS FOR ISTIO COMPONENTS WILL BE DONE IN ISTIOD ITSELF. 
           - Istio can be configured using the syntax of kubernetes yaml files by using CRD (custom component in kubernetes which allows using third party technologies like istio, prometheus). Now to deploy, you can easily apply them using kubectl (command line tools for kubernets) commands. So no need to learn new configuration language syntax.
           - for each CRD (using VirtualService and Desination Rules)
             - configure traffic routing  
@@ -2953,7 +2954,7 @@ Distributed systems today and Benchmarking on common systems
 
                                                                               (Lambda architecture)
 
-         Client --> LB ---> Leaderboard service ---------> Queue ---------> Count min sketch ( 1 min window precomputation) 
+         Client --> LB ---> Leaderboard service ---------> Queue ---------> Count 1 min sketch ( 1 min window precomputation) 
 
 
                                                                  ---------> large time window (1 hour window precomputation) -> MySQL 
@@ -3079,7 +3080,7 @@ Distributed systems today and Benchmarking on common systems
 
     Kafka
       https://www.youtube.com/watch?v=UNUz1-msbOM
-      latency : 1 ms
+      latency : 5 ms
       Why fast :
       - sequential access from the disk with append-omly log 
       - zero copy principle ( copy path from disk -> os buffer -> application buffer -> socket buffer -> nic buffer TO  disk -> os buffer  -> socket buffer )
@@ -3108,7 +3109,7 @@ Distributed systems today and Benchmarking on common systems
         5 ms
         600 MB/s on 25 Gbps network on AWS 
         1 million messages per second
-        i3en.2xlarge instance type (with 8 vCores, 64 GB RAM, 2 x 2,500 GB NVMe SSDs)
+        i3en.2xlarge instance type (with 16 vCores, 64 GB RAM, 2 x 2,500 GB NVMe SSDs)
         Good performance but do not use it for large storage
 
       When to use Kafka ? 
@@ -3489,9 +3490,8 @@ Distributed systems today and Benchmarking on common systems
 
                   2. multiple 100+ demand sources : 
                       - This is hard but performing below steps helped 
-                        1. time based load testing based on demand source ratio ( say 1:2 for FB vs insta calls at 6:00 pm pst )
-                        2. group demand sources based on throughput and stopper metrics
-                        3. integrate ML in time based load testing
+                        1. group demand sources based on throughput and stopper metrics
+                        2. integrate ML to undestand anamolies on existing groups and perform re-group using clustering algorithm
                       Pros : easier to manage
                       Cons : too much resource overhead on load testing because of time-based and grouping
                 
